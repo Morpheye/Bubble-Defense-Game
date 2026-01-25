@@ -50,6 +50,10 @@ public abstract class Projectile {
         return isValid;
     }
 
+    public void invalidate() {
+        this.isValid = false;
+    }
+
     public String getId() {
         return id;
     }

@@ -4,8 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import cyv.app.BubbleGame;
 import cyv.app.game.components.BallObject;
-import cyv.app.game.components.player.HearthObject;
-import cyv.app.render.game.ObjectRenderer;
+import cyv.app.render.game.renders.ObjectRenderer;
 
 public class HearthRenderer extends ObjectRenderer<BallObject> {
     private final Texture hTex;

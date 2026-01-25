@@ -4,7 +4,9 @@ import cyv.app.BubbleGame;
 import cyv.app.game.components.BallObject;
 import cyv.app.game.components.particle.Particle;
 import cyv.app.game.components.projectile.Projectile;
+import cyv.app.render.game.renders.ObjectRenderer;
 import cyv.app.render.game.renders.particle.AttackParticleRenderer;
+import cyv.app.render.game.renders.projectile.DropletProjectileRenderer;
 import cyv.app.render.game.renders.unit.HearthRenderer;
 
 import java.util.HashMap;
@@ -39,7 +41,7 @@ public class RendererRegistry {
     }
 
     private static void registerProjectiles(BubbleGame game) {
-
+        projectileRenders.put("projectile_droplet", new DropletProjectileRenderer(game));
     }
 
     public static ObjectRenderer<BallObject> getBallRenderer(String id) {

@@ -1,4 +1,4 @@
-package cyv.app.render.game;
+package cyv.app.render.game.renders;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import cyv.app.BubbleGame;

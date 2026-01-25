@@ -19,8 +19,9 @@ import cyv.app.game.components.enemy.AbstractEnemyObject;
 import cyv.app.game.components.enemy.BasicFireSpirit;
 import cyv.app.game.components.particle.Particle;
 import cyv.app.game.components.player.AbstractUnitObject;
-
-import java.util.logging.Logger;
+import cyv.app.game.components.player.UnitTurret;
+import cyv.app.game.components.projectile.Projectile;
+import cyv.app.render.game.renders.ObjectRenderer;
 
 public class GameScreen implements Screen {
     public static final int TICK_LENGTH = 1000 / 20;
@@ -72,7 +73,7 @@ public class GameScreen implements Screen {
             viewport.unproject(screenPos); // screen -> world
 
             if (Gdx.input.isButtonPressed(com.badlogic.gdx.Input.Buttons.LEFT))
-                level.spawnBall(new AbstractUnitObject("dummy", screenPos.x, screenPos.y, 40, 1) {});
+                level.spawnBall(new UnitTurret(screenPos.x, screenPos.y));
             else if (Gdx.input.isButtonPressed(com.badlogic.gdx.Input.Buttons.RIGHT))
                 level.spawnBall(new BasicFireSpirit(screenPos.x, screenPos.y));
         }
@@ -174,10 +175,23 @@ public class GameScreen implements Screen {
                 }
             }
         }
+
+        batch.setColor(1, 1, 1, 1);
     }
 
     private void renderProjectiles(long now) {
-        float alpha = (now - lastTickTime) / (float) TICK_LENGTH;
+        float delta = (now - lastTickTime) / (float) TICK_LENGTH;
+
+        for (Projectile p : level.getProjectiles()) {
+            ObjectRenderer<Projectile> renderer = RendererRegistry.getProjectileRenderer(p.getId());
+            if (renderer != null) try {
+                renderer.render(batch, p, delta);
+            } catch (IllegalArgumentException e) {
+                Gdx.app.error("Renderer", "Invalid projectile type", e);
+            }
+        }
+
+        batch.setColor(1, 1, 1, 1);
     }
 
     private void renderParticles(long now) {

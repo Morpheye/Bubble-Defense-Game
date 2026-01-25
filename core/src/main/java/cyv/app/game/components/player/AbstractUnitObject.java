@@ -16,6 +16,7 @@ import static cyv.app.game.Level.INSIGNIFICANT_F;
 public abstract class AbstractUnitObject extends BallObject implements ILivingObject {
     private long timeLastDamaged = -10000;
     private int health = getMaxHealth();
+    private BallObject lastAnchor = null;
 
     public AbstractUnitObject(String id, float x, float y, float radius, float density) {
         super(id, x, y, radius, density);
@@ -35,9 +36,7 @@ public abstract class AbstractUnitObject extends BallObject implements ILivingOb
     }
 
     @Override
-    public int getMaxHealth() {
-        return 50;
-    }
+    public abstract int getMaxHealth();
 
     public int getRegenerationDelay() {
         return 20 * 10;
@@ -59,6 +58,10 @@ public abstract class AbstractUnitObject extends BallObject implements ILivingOb
     @Override
     public long getTimeLastDamaged() {
         return timeLastDamaged;
+    }
+
+    public BallObject getLastAnchor() {
+        return lastAnchor;
     }
 
     @Override
@@ -90,6 +93,8 @@ public abstract class AbstractUnitObject extends BallObject implements ILivingOb
             addVx(dx / dist * Math.min(dist, HOMING_FORCE));
             addVy(dy / dist * Math.min(dist, HOMING_FORCE));
         }
+
+        lastAnchor = closest;
     }
 
     @Override

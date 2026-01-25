@@ -21,7 +21,7 @@ public class BasicFireSpirit extends AbstractEnemyObject {
      * @return Movement speed
      */
     public float getMovementSpeed() {
-        return 0.5f;
+        return 0.25f;
     }
 
     /**
@@ -72,7 +72,7 @@ public class BasicFireSpirit extends AbstractEnemyObject {
 
         for (BallObject obj : levelIn.getBalls()) {
             if (obj == this) continue;
-            if (obj.getTeam() == Team.ENEMY) continue;
+            if (obj.getTeam() == getTeam()) continue;
 
             float dx = obj.getX() - getX();
             float dy = obj.getY() - getY();
