@@ -10,9 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TextureManager {
-    final int IMAGE_TILE_WIDTH = 4;
-    final int IMAGE_TILE_HEIGHT = 4;
-
     private final Map<String, Texture> textures = new HashMap<>();
     private final Map<String, TextureRegion[][]> tileMaps = new HashMap<>();
 
@@ -40,11 +37,11 @@ public class TextureManager {
         return textures.get(id);
     }
 
-    public void loadTileMap(String id, String path) {
+    public void loadTextureMap(String id, String path, int width, int height) {
         if (tileMaps.containsKey(id)) throw new IllegalArgumentException("Id " + id + " already exists.");
         Texture tex = new Texture(path);
         TextureRegion[][] tiles = TextureRegion.split(tex,
-            tex.getWidth() / IMAGE_TILE_WIDTH, tex.getHeight() / IMAGE_TILE_HEIGHT);
+            tex.getWidth() / width, tex.getHeight() / height);
         tileMaps.put(id, tiles);
     }
 

@@ -19,7 +19,8 @@ import cyv.app.game.components.enemy.AbstractEnemyObject;
 import cyv.app.game.components.enemy.BasicFireSpirit;
 import cyv.app.game.components.particle.Particle;
 import cyv.app.game.components.player.AbstractUnitObject;
-import cyv.app.game.components.projectile.Projectile;
+
+import java.util.logging.Logger;
 
 public class GameScreen implements Screen {
     public static final int TICK_LENGTH = 1000 / 20;
@@ -128,16 +129,15 @@ public class GameScreen implements Screen {
     }
 
     private void renderBalls(long now) {
-        float alpha = (now - lastTickTime) / (float) TICK_LENGTH;
+        float delta = (now - lastTickTime) / (float) TICK_LENGTH;
 
         Texture pixel = game.getAssets().getTexture("pixel");
         Texture pbTex = game.getAssets().getTexture("player_bubble_back");
         Texture ebTex = game.getAssets().getTexture("enemy_bubble_back");
-        Texture hTex = game.getAssets().getTexture("hearth");
 
         for (BallObject b : level.getBalls()) {
-            float renderX = b.getLastX() * (1 - alpha) + b.getX() * alpha;
-            float renderY = b.getLastY() * (1 - alpha) + b.getY() * alpha;
+            float renderX = b.getLastX() * (1 - delta) + b.getX() * delta;
+            float renderY = b.getLastY() * (1 - delta) + b.getY() * delta;
             float radius = b.getRadius();
             float size = radius * 2f;
 
@@ -147,9 +147,13 @@ public class GameScreen implements Screen {
             else if (b instanceof AbstractEnemyObject)
                 batch.draw(ebTex, renderX - radius, renderY - radius, size, size);
 
-            // TODO: draw bubble inside. Maybe create a new class for rendering entities
-            if (b.getId().equals("hearth"))
-                batch.draw(hTex, renderX - radius, renderY - radius, size, size);
+            // render inside entity
+            ObjectRenderer<BallObject> renderer = RendererRegistry.getBallRenderer(b.getId());
+            if (renderer != null) try {
+                renderer.render(batch, b, delta);
+            } catch (IllegalArgumentException e) {
+                Gdx.app.error("Renderer", "Invalid ball type", e);
+            }
 
             // render healthbar
             if (b instanceof ILivingObject) {
@@ -173,29 +177,19 @@ public class GameScreen implements Screen {
     }
 
     private void renderProjectiles(long now) {
-
+        float alpha = (now - lastTickTime) / (float) TICK_LENGTH;
     }
 
     private void renderParticles(long now) {
-        float alpha = (now - lastTickTime) / (float) TICK_LENGTH;
+        float delta = (now - lastTickTime) / (float) TICK_LENGTH;
 
         for (Particle p : level.getParticles()) {
-            float renderX = p.getLastX() * (1 - alpha) + p.getX() * alpha;
-            float renderY = p.getLastY() * (1 - alpha) + p.getY() * alpha;
-            float rotation = p.getLastRotation() * (1 - alpha) + p.getRotation() * alpha;
-            float radius = p.getRadius();
-            float size = radius * 2f;
-
-            float a = Math.min(1, (p.getLifetime() - p.getTimeLived() + alpha) / p.getFadeTime());
-            batch.setColor(1, 1, 1, a);
-
-            // TODO: make more robust
-            if (p.getId().equals("particle_attack")) {
-                Texture tex = game.getAssets().getTexture("particle_attack");
-                batch.draw(tex, renderX - radius, renderY - radius, radius, radius, size, size,
-                    1f, 1f, rotation, 0, 0, tex.getWidth(), tex.getHeight(), false, p.isMirrored());
+            ObjectRenderer<Particle> renderer = RendererRegistry.getParticleRenderer(p.getId());
+            if (renderer != null) try {
+                renderer.render(batch, p, delta);
+            } catch (IllegalArgumentException e) {
+                Gdx.app.error("Renderer", "Invalid particle type", e);
             }
-
         }
 
         batch.setColor(1, 1, 1, 1);

@@ -5,6 +5,7 @@ import cyv.app.game.Level;
 import cyv.app.game.components.player.HearthObject;
 import cyv.app.render.TextureManager;
 import cyv.app.render.game.GameScreen;
+import cyv.app.render.game.RendererRegistry;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class BubbleGame extends Game {
@@ -12,15 +13,15 @@ public class BubbleGame extends Game {
 
     @Override
     public void create() {
+        this.assets = new TextureManager();
         loadAssets();
+        RendererRegistry.registerRenders(this);
 
         // TODO: make level select screen
         setScreen(new GameScreen(this, new Level(10, 7, new HearthObject(500, 350)) {}));
     }
 
     private void loadAssets() {
-        this.assets = new TextureManager();
-
         // core assets
         assets.loadTexture("player_bubble_back", "textures/entities/player_bubble_back.png");
         assets.loadTexture("enemy_bubble_back", "textures/entities/enemy_bubble_back.png");
@@ -30,7 +31,9 @@ public class BubbleGame extends Game {
         assets.loadTexture("particle_attack", "textures/particles/attack.png");
 
         // tiles
-        assets.loadTileMap("grass", "textures/tiles/grass.png");
+        final int IMAGE_TILE_WIDTH = 4;
+        final int IMAGE_TILE_HEIGHT = 4;
+        assets.loadTextureMap("grass", "textures/tiles/grass.png", IMAGE_TILE_WIDTH, IMAGE_TILE_HEIGHT);
     }
 
     public TextureManager getAssets() {

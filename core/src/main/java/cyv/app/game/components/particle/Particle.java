@@ -41,6 +41,10 @@ public class Particle {
         setLastY(getY());
         setLastRotation(getRotation());
 
+        // move
+        setX(getX() + getVx());
+        setY(getY() + getVy());
+
         this.timeLived++;
     }
 
