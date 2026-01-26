@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils;
 import cyv.app.game.components.BallObject;
 import cyv.app.game.components.ILivingObject;
 import cyv.app.game.components.particle.Particle;
+import cyv.app.game.components.particle.common.WaterParticle;
 import cyv.app.game.components.player.HearthObject;
 import cyv.app.game.components.projectile.Projectile;
 
@@ -29,9 +30,13 @@ public abstract class Level {
     private final Set<Particle> particles = new HashSet<>();
 
     // front-end info
+    private PlayerController controller = null;
     private float camera_center_x;
     private float camera_center_y;
     private float camera_scale; // corresponds to the width of the camera
+
+    // internal
+    public int ticks;
 
     public Level(int sizeX, int sizeY, HearthObject hearth) {
         this.sizeX = sizeX;
@@ -46,14 +51,35 @@ public abstract class Level {
         this.hearth = hearth;
         this.balls.add(hearth);
         this.grid = new int[sizeX][sizeY];
-
     }
+
+    /**
+     * Delay in ticks between water naturally accumulating.
+     * If this value is negative, water doesn't naturally generate.
+     * @return Water generation delay
+     */
+    public abstract int waterGenerationDelay();
+
+    /**
+     * Gets the amount of water the player has at the start of the level
+     * @return Starting water amount
+     */
+    public abstract int getStartingWater();
 
     /**
      * Starts the level
      */
     public void start() {
         // TODO: start the waves and events
+    }
+
+    public PlayerController getController() {
+        return controller;
+    }
+
+    public void setPlayerController(PlayerController controller) {
+        this.controller = controller;
+        controller.setWater(getStartingWater());
     }
 
     public HearthObject getHearth() {
@@ -64,6 +90,11 @@ public abstract class Level {
      * Ticks the physics and combat of the level
      */
     public void tick() {
+        // ------------------------------------------------------------------
+        // Step 0: non-physics related stuff
+        // ------------------------------------------------------------------
+        doScheduledTasks();
+
         // constants
         final float DRAG = 0.9f;
         final float COLLISION_PUSH_FORCE = 0.1f;
@@ -233,14 +264,22 @@ public abstract class Level {
         for (BallObject b : balls) {
             b.finishTick();
         }
-
         balls.removeIf(b -> {
             if (!(b instanceof ILivingObject)) return false;
             ILivingObject l = (ILivingObject) b;
             return l.isDead();
         });
+
+        this.ticks++;
     }
 
+    private void doScheduledTasks() {
+        // generate water
+        if (ticks != 0 && ticks % waterGenerationDelay() == 0 && controller != null && hearth != null) {
+            controller.addWater(1);
+            spawnParticle(new WaterParticle(hearth.getX(), hearth.getY() + 15));
+        }
+    }
 
     public int getSizeX() {
         return sizeX;

@@ -11,7 +11,7 @@ public class HearthRenderer extends ObjectRenderer<BallObject> {
 
     public HearthRenderer(BubbleGame gameIn) {
         super(gameIn);
-        this.hTex = getGameIn().getAssets().getTexture("hearth");
+        this.hTex = getGameIn().getAssets().getTexture("unit_hearth");
     }
 
     @Override

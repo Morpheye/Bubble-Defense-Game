@@ -3,9 +3,8 @@ package cyv.app.game.components.enemy;
 import cyv.app.game.Level;
 import cyv.app.game.Team;
 import cyv.app.game.components.BallObject;
-import cyv.app.game.components.GravityType;
 import cyv.app.game.components.ILivingObject;
-import cyv.app.game.components.particle.AttackParticle;
+import cyv.app.game.components.particle.common.AttackParticle;
 
 /**
  * Represents any ball object that is an enemy.

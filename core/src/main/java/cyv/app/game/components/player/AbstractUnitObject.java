@@ -64,6 +64,10 @@ public abstract class AbstractUnitObject extends BallObject implements ILivingOb
         return lastAnchor;
     }
 
+    protected void setLastAnchor(BallObject anchor) {
+        this.lastAnchor = anchor;
+    }
+
     @Override
     public void doAcceleration(Level levelIn) {
         final float HOMING_FORCE = 1f;

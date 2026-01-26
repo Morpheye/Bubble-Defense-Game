@@ -15,7 +15,7 @@ public class TileRenderer {
     public static void renderTiles(BubbleGame game, SpriteBatch batch, int[][] grid) {
         // temp: theme is always "grass"
         final String THEME = "grass";
-        TextureRegion[][] tiles = game.getAssets().getTileMap(THEME);
+        TextureRegion[][] tiles = game.getAssets().getTextureMap(THEME);
 
         // loop through the grid of tiles
         for (int x = 0; x < grid.length; x++) {

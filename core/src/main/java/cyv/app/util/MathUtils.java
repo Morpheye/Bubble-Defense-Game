@@ -7,4 +7,9 @@ public class MathUtils {
         if (degrees < -180f) degrees += 360f;
         return degrees;
     }
+
+    public static float lerpAngleDeg(float from, float to, float alpha) {
+        float diff = ((to - from + 540f) % 360f) - 180f; // shortest signed difference
+        return from + diff * alpha;
+    }
 }

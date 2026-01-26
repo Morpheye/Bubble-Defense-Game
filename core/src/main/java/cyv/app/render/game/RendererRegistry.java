@@ -7,6 +7,8 @@ import cyv.app.game.components.projectile.Projectile;
 import cyv.app.render.game.renders.ObjectRenderer;
 import cyv.app.render.game.renders.particle.AttackParticleRenderer;
 import cyv.app.render.game.renders.projectile.DropletProjectileRenderer;
+import cyv.app.render.game.renders.particle.WaterProjectileRenderer;
+import cyv.app.render.game.renders.unit.DropletTurretRenderer;
 import cyv.app.render.game.renders.unit.HearthRenderer;
 
 import java.util.HashMap;
@@ -29,7 +31,9 @@ public class RendererRegistry {
     }
 
     private static void registerUnits(BubbleGame game) {
-        ballRenderers.put("hearth", new HearthRenderer(game));
+        ballRenderers.put("unit_hearth", new HearthRenderer(game));
+
+        ballRenderers.put("unit_droplet_turret", new DropletTurretRenderer(game));
     }
 
     private static void registerEnemies(BubbleGame game) {
@@ -38,6 +42,7 @@ public class RendererRegistry {
 
     private static void registerParticles(BubbleGame game) {
         particleRenders.put("particle_attack", new AttackParticleRenderer(game));
+        particleRenders.put("particle_water", new WaterProjectileRenderer(game));
     }
 
     private static void registerProjectiles(BubbleGame game) {

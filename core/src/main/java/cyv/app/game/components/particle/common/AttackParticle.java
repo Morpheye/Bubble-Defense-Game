@@ -1,4 +1,6 @@
-package cyv.app.game.components.particle;
+package cyv.app.game.components.particle.common;
+
+import cyv.app.game.components.particle.Particle;
 
 public class AttackParticle extends Particle {
     public AttackParticle(float x, float y, float radius, float r) {

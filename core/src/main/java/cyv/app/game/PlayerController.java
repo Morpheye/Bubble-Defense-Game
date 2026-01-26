@@ -8,12 +8,24 @@ import java.util.List;
  * Class containing information about what the player has brought into a level.
  */
 public class PlayerController {
+    private int water = 0;
     private final List<AbstractBlueprint<?>> blueprints;
     private int selectedIndex = -1;
 
     public PlayerController(List<AbstractBlueprint<?>> blueprints) {
-        // TODO: add additional parameters for what tools and perks the player has unlocked
         this.blueprints = blueprints;
+    }
+
+    public int getWater() {
+        return water;
+    }
+
+    public void setWater(int amount) {
+        this.water = amount;
+    }
+
+    public void addWater(int amount) {
+        this.water += amount;
     }
 
     /**

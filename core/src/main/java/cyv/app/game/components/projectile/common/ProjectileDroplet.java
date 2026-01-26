@@ -1,6 +1,7 @@
-package cyv.app.game.components.projectile;
+package cyv.app.game.components.projectile.common;
 
 import cyv.app.game.Team;
+import cyv.app.game.components.projectile.DamageProjectile;
 
 public class ProjectileDroplet extends DamageProjectile {
     private static final float SPEED = 25;

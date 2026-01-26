@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class TextureManager {
     private final Map<String, Texture> textures = new HashMap<>();
-    private final Map<String, TextureRegion[][]> tileMaps = new HashMap<>();
+    private final Map<String, TextureRegion[][]> textureMaps = new HashMap<>();
 
     public TextureManager() {
         // by default, comes with the "pixel" texture
@@ -34,24 +34,27 @@ public class TextureManager {
     }
 
     public Texture getTexture(String id) {
-        return textures.get(id);
+        Texture tex = textures.get(id);
+        if (tex == null) return null;
+        tex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        return tex;
     }
 
     public void loadTextureMap(String id, String path, int width, int height) {
-        if (tileMaps.containsKey(id)) throw new IllegalArgumentException("Id " + id + " already exists.");
+        if (textureMaps.containsKey(id)) throw new IllegalArgumentException("Id " + id + " already exists.");
         Texture tex = new Texture(path);
         TextureRegion[][] tiles = TextureRegion.split(tex,
             tex.getWidth() / width, tex.getHeight() / height);
-        tileMaps.put(id, tiles);
+        textureMaps.put(id, tiles);
     }
 
-    public void unloadTileMap(String id) {
-        TextureRegion[][] reg = tileMaps.remove(id);
+    public void unloadTextureMap(String id) {
+        TextureRegion[][] reg = textureMaps.remove(id);
         if (reg != null) reg[0][0].getTexture().dispose();
     }
 
-    public TextureRegion[][] getTileMap(String id) {
-        return tileMaps.get(id);
+    public TextureRegion[][] getTextureMap(String id) {
+        return textureMaps.get(id);
     }
 
     public void dispose() {
@@ -59,8 +62,8 @@ public class TextureManager {
             unloadTexture(id);
         }
 
-        for (String id : new ArrayList<>(tileMaps.keySet())) {
-            unloadTileMap(id);
+        for (String id : new ArrayList<>(textureMaps.keySet())) {
+            unloadTextureMap(id);
         }
     }
 }

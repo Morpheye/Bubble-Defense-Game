@@ -22,5 +22,5 @@ public abstract class AbstractBlueprint<T extends AbstractUnitObject> {
      * Creates the object associated with the factory.
      * @return New instance of object
      */
-    public abstract T produce();
+    public abstract T produce(float x, float y);
 }

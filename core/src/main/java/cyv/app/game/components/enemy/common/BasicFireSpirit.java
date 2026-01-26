@@ -1,11 +1,10 @@
-package cyv.app.game.components.enemy;
+package cyv.app.game.components.enemy.common;
 
 import cyv.app.game.Level;
-import cyv.app.game.Team;
 import cyv.app.game.components.BallObject;
 import cyv.app.game.components.IAnchorObject;
 import cyv.app.game.components.ILivingObject;
-import cyv.app.game.components.player.AbstractUnitObject;
+import cyv.app.game.components.enemy.AbstractEnemyObject;
 
 import static cyv.app.game.Level.INSIGNIFICANT_F;
 
@@ -80,10 +79,10 @@ public class BasicFireSpirit extends AbstractEnemyObject {
             float range = getAttackRange() + getRadius() + obj.getRadius();
 
             // check if within melee range
-            if (distSq <= range * range) {
+            if (distSq <= range * range && distSq < closestDistSq) {
                 closestDistSq = distSq;
                 closest = obj;
-                break;
+                continue;
             }
 
             if (!(obj instanceof IAnchorObject)) continue;

@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
@@ -13,13 +15,14 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import cyv.app.BubbleGame;
 import cyv.app.game.Level;
+import cyv.app.game.PlayerController;
 import cyv.app.game.components.BallObject;
 import cyv.app.game.components.ILivingObject;
 import cyv.app.game.components.enemy.AbstractEnemyObject;
-import cyv.app.game.components.enemy.BasicFireSpirit;
+import cyv.app.game.components.enemy.common.BasicFireSpirit;
 import cyv.app.game.components.particle.Particle;
 import cyv.app.game.components.player.AbstractUnitObject;
-import cyv.app.game.components.player.UnitTurret;
+import cyv.app.game.components.player.common.UnitDropletTurret;
 import cyv.app.game.components.projectile.Projectile;
 import cyv.app.render.game.renders.ObjectRenderer;
 
@@ -27,14 +30,20 @@ public class GameScreen implements Screen {
     public static final int TICK_LENGTH = 1000 / 20;
 
     private final BubbleGame game;
-    private final OrthographicCamera camera;
-    private final Viewport viewport;
+    private final OrthographicCamera gameCamera;
+    private final Viewport gameViewport;
+    private final OrthographicCamera uiCamera;
+    private final Viewport uiViewport;
+
     private final SpriteBatch batch;
     private final ShapeRenderer shapeRenderer;
+    private final BitmapFont font;
+    private final float baseCapHeight;
+    private final GlyphLayout layout;
 
     // game components
-    // TODO: add PlayerController
     private final Level level;
+    private PlayerController controller;
     private long lastTickTime = 0;
 
     public GameScreen(BubbleGame game, Level level) {
@@ -46,16 +55,29 @@ public class GameScreen implements Screen {
         float aspect = 16.0f / 9;
         float camHeight = camWidth / aspect;
 
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, camWidth, camHeight);
-        camera.position.set(level.getCameraCenterX() * Level.TILE_SIZE,
+        gameCamera = new OrthographicCamera();
+        gameCamera.setToOrtho(false, camWidth, camHeight);
+        gameCamera.position.set(level.getCameraCenterX() * Level.TILE_SIZE,
             level.getCameraCenterY() * Level.TILE_SIZE, 0);
+        gameViewport = new FitViewport(camWidth, camHeight, gameCamera);
+        gameViewport.apply();
 
-        viewport = new FitViewport(camWidth, camHeight, camera);
-        viewport.apply();
+        uiCamera = new OrthographicCamera();
+        uiViewport = new FitViewport(1280, 720, uiCamera);
+        uiViewport.apply();
 
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
+
+        font = new BitmapFont(); // default font
+        baseCapHeight = font.getData().capHeight;
+        layout = new GlyphLayout();
+        font.setUseIntegerPositions(true); // smoother scaling
+    }
+
+    public void setPlayerController(PlayerController controller) {
+        this.controller = controller;
+        level.setPlayerController(controller);
     }
 
     @Override
@@ -70,10 +92,10 @@ public class GameScreen implements Screen {
         // TODO: create a more robust input handling system
         if (Gdx.input.justTouched()) {
             Vector3 screenPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-            viewport.unproject(screenPos); // screen -> world
+            gameViewport.unproject(screenPos); // screen -> world
 
             if (Gdx.input.isButtonPressed(com.badlogic.gdx.Input.Buttons.LEFT))
-                level.spawnBall(new UnitTurret(screenPos.x, screenPos.y));
+                level.spawnBall(new UnitDropletTurret(screenPos.x, screenPos.y));
             else if (Gdx.input.isButtonPressed(com.badlogic.gdx.Input.Buttons.RIGHT))
                 level.spawnBall(new BasicFireSpirit(screenPos.x, screenPos.y));
         }
@@ -82,8 +104,9 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // render level components
-        renderGame(now);
+        // render level and gui components
+        drawGame(now);
+        drawGui(now);
 
     }
 
@@ -91,11 +114,11 @@ public class GameScreen implements Screen {
      * Renders the components of the game (not the UI)
      * @param now current time in milliseconds
      */
-    private void renderGame(long now) {
+    private void drawGame(long now) {
         // set camera to center on level
-        camera.position.set(level.getCameraCenterX(), level.getCameraCenterY(), 0);
-        camera.update();
-        shapeRenderer.setProjectionMatrix(camera.combined);
+        gameCamera.position.set(level.getCameraCenterX(), level.getCameraCenterY(), 0);
+        gameCamera.update();
+        shapeRenderer.setProjectionMatrix(gameCamera.combined);
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
@@ -111,25 +134,21 @@ public class GameScreen implements Screen {
         // prepare batcher
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        batch.setProjectionMatrix(camera.combined);
+        batch.setProjectionMatrix(gameCamera.combined);
         batch.begin();
 
         // draw tiles
         TileRenderer.renderTiles(game, batch, level.getGrid());
 
         // draw balls
-        renderBalls(now);
-
-        // TODO: draw projectiles
-        renderProjectiles(now);
-
-        // draw particles
-        renderParticles(now);
+        drawBalls(now);
+        drawProjectiles(now);
+        drawParticles(now);
 
         batch.end();
     }
 
-    private void renderBalls(long now) {
+    private void drawBalls(long now) {
         float delta = (now - lastTickTime) / (float) TICK_LENGTH;
 
         Texture pixel = game.getAssets().getTexture("pixel");
@@ -152,7 +171,7 @@ public class GameScreen implements Screen {
             ObjectRenderer<BallObject> renderer = RendererRegistry.getBallRenderer(b.getId());
             if (renderer != null) try {
                 renderer.render(batch, b, delta);
-            } catch (IllegalArgumentException e) {
+            } catch (ClassCastException e) {
                 Gdx.app.error("Renderer", "Invalid ball type", e);
             }
 
@@ -179,14 +198,14 @@ public class GameScreen implements Screen {
         batch.setColor(1, 1, 1, 1);
     }
 
-    private void renderProjectiles(long now) {
+    private void drawProjectiles(long now) {
         float delta = (now - lastTickTime) / (float) TICK_LENGTH;
 
         for (Projectile p : level.getProjectiles()) {
             ObjectRenderer<Projectile> renderer = RendererRegistry.getProjectileRenderer(p.getId());
             if (renderer != null) try {
                 renderer.render(batch, p, delta);
-            } catch (IllegalArgumentException e) {
+            } catch (ClassCastException e) {
                 Gdx.app.error("Renderer", "Invalid projectile type", e);
             }
         }
@@ -194,14 +213,14 @@ public class GameScreen implements Screen {
         batch.setColor(1, 1, 1, 1);
     }
 
-    private void renderParticles(long now) {
+    private void drawParticles(long now) {
         float delta = (now - lastTickTime) / (float) TICK_LENGTH;
 
         for (Particle p : level.getParticles()) {
             ObjectRenderer<Particle> renderer = RendererRegistry.getParticleRenderer(p.getId());
             if (renderer != null) try {
                 renderer.render(batch, p, delta);
-            } catch (IllegalArgumentException e) {
+            } catch (ClassCastException e) {
                 Gdx.app.error("Renderer", "Invalid particle type", e);
             }
         }
@@ -209,9 +228,48 @@ public class GameScreen implements Screen {
         batch.setColor(1, 1, 1, 1);
     }
 
+    private void drawGui(long now) {
+        uiCamera.update();
+        batch.setProjectionMatrix(uiCamera.combined);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        batch.begin();
+
+        if (controller != null) drawPlayerController(now);
+
+        batch.end();
+    }
+
+    private void drawPlayerController(long now) {
+        // water indicator
+        Texture wiTex = game.getAssets().getTexture("gui_water_indicator");
+        final float WIDTH = 150f;
+        final float HEIGHT = 50f;
+        final float X_OFFSET = 10f;
+        final float Y_OFFSET = uiViewport.getScreenHeight() - 10f - HEIGHT;
+        batch.draw(wiTex, X_OFFSET, Y_OFFSET, WIDTH, HEIGHT);
+
+        // scale font and render water text
+        final float desiredTextHeight = HEIGHT * 0.375f;
+        setFontSize(font, desiredTextHeight);
+        String waterText = String.valueOf(controller.getWater());
+        layout.setText(font, waterText);
+        float textX = X_OFFSET + WIDTH - 8f;
+        float textY = Y_OFFSET + HEIGHT / 2f + layout.height / 2f;
+
+        font.draw(batch, layout, textX - layout.width, textY);
+    }
+
+    private void setFontSize(BitmapFont font, float targetPixelHeight) {
+        BitmapFont.BitmapFontData data = font.getData();
+        float scale = targetPixelHeight / baseCapHeight;
+        data.setScale(scale);
+    }
+
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height, true);
+        gameViewport.update(width, height, true);
+        uiViewport.update(width, height, true);
     }
 
     @Override
@@ -222,8 +280,10 @@ public class GameScreen implements Screen {
     @Override public void hide() {}
     @Override public void pause() {}
     @Override public void resume() {}
+
     @Override public void dispose() {
         shapeRenderer.dispose();
         batch.dispose();
+        font.dispose();
     }
 }
