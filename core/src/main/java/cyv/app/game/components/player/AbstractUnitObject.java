@@ -14,12 +14,13 @@ import static cyv.app.game.Level.INSIGNIFICANT_F;
  * Represents any ball object that is a player unit or hearth.
  */
 public abstract class AbstractUnitObject extends BallObject implements ILivingObject {
+    public static final float UNIT_SIZE = 40f;
     private long timeLastDamaged = -10000;
     private int health = getMaxHealth();
     private BallObject lastAnchor = null;
 
-    public AbstractUnitObject(String id, float x, float y, float radius, float density) {
-        super(id, x, y, radius, density);
+    public AbstractUnitObject(String id, float x, float y, float density) {
+        super(id, x, y, UNIT_SIZE, density);
         setTeam(Team.PLAYER);
     }
 

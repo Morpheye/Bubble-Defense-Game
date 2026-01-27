@@ -11,7 +11,7 @@ public class HearthObject extends AbstractUnitObject implements IAnchorObject {
     private final float spawnY;
 
     public HearthObject(float x, float y) {
-        super("unit_hearth", x, y, 40, 10);
+        super("unit_hearth", x, y, 10);
         this.spawnX = x;
         this.spawnY = y;
     }

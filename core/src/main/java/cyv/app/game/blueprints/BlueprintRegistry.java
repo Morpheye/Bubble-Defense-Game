@@ -1,5 +1,6 @@
 package cyv.app.game.blueprints;
 
+import cyv.app.BubbleGame;
 import cyv.app.game.blueprints.contents.BlueprintDropletTurret;
 
 import java.util.HashMap;
@@ -12,8 +13,8 @@ public class BlueprintRegistry {
     private static final Set<String> ownedBlueprints = new HashSet<>();
     // TODO: implement ownedBlueprints
 
-    public static void registerBlueprints() {
-        registry.put("unit_droplet_turret", new BlueprintDropletTurret());
+    public static void registerBlueprints(BubbleGame game) {
+        registry.put("blueprint_droplet_turret", new BlueprintDropletTurret(game));
     }
 
     public static AbstractBlueprint<?> getBlueprint(String name) {

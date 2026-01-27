@@ -3,12 +3,15 @@ package cyv.app.render.game.renders.unit;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import cyv.app.BubbleGame;
+import cyv.app.game.Level;
 import cyv.app.game.components.BallObject;
+import cyv.app.game.components.player.HearthObject;
 import cyv.app.game.components.player.common.UnitDropletTurret;
 import cyv.app.render.game.renders.ObjectRenderer;
+import cyv.app.render.game.renders.UnitRenderer;
 import cyv.app.util.MathUtils;
 
-public class DropletTurretRenderer extends ObjectRenderer<BallObject> {
+public class DropletTurretRenderer extends UnitRenderer {
     private final TextureRegion mount;
     private final TextureRegion barrel;
 
@@ -59,6 +62,28 @@ public class DropletTurretRenderer extends ObjectRenderer<BallObject> {
             scaleX, 1f,                  // flip horizontally if left
             renderRotation               // corrected rotation
         );
+    }
 
+    @Override
+    public void renderHologram(SpriteBatch batch, Level levelIn, float renderX, float renderY) {
+        float radius = 40;
+        float size = radius * 2f;
+        batch.setColor(1, 1, 1, 0.5f);
+
+        // draw mount first
+        batch.draw(mount, renderX - radius, renderY - radius, size, size);
+        // draw barrel
+        HearthObject hearthObject = levelIn.getHearth();
+        float rotation = (float) Math.toDegrees(
+            Math.atan2(renderY - hearthObject.getY(), renderX - hearthObject.getX()));
+        boolean facingLeft = rotation > 90f || rotation < -90f;
+        float renderRotation = facingLeft ? rotation + 180f : rotation;
+
+        // flip by using negative scaleX
+        float scaleX = facingLeft ? -1f : 1f;
+        batch.draw(barrel, renderX - radius, renderY - radius + radius / 10, radius, radius,
+            size, size, scaleX, 1f, renderRotation);
+
+        batch.setColor(1, 1, 1, 1);
     }
 }

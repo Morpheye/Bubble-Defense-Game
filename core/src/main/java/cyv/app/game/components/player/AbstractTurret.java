@@ -12,7 +12,7 @@ public abstract class AbstractTurret extends AbstractUnitObject {
     private long timeLastAttacked = -10000;
 
     public AbstractTurret(String id, float x, float y) {
-        super(id, x, y, 40, 1);
+        super(id, x, y, 1);
     }
 
     @Override

@@ -9,6 +9,7 @@ import cyv.app.render.TextureManager;
 import cyv.app.render.game.GameScreen;
 import cyv.app.render.game.RendererRegistry;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
@@ -18,45 +19,23 @@ public class BubbleGame extends Game {
     @Override
     public void create() {
         this.assets = new TextureManager();
-        loadAssets();
+        assets.loadNormalTextures();
         RendererRegistry.registerRenders(this);
-        BlueprintRegistry.registerBlueprints();
+        BlueprintRegistry.registerBlueprints(this);
 
         // TODO: make level select screen
         Level level = new Level(10, 7, new HearthObject(500, 350)) {
             public int waterGenerationDelay() {return 50;}
-            public int getStartingWater() {return 15;}
+            public int getStartingWater() {return 50;}
         };
         GameScreen screen = new GameScreen(this, level);
-        PlayerController controller = new PlayerController(Collections.emptyList());
+        PlayerController controller = new PlayerController(Arrays.asList(
+            BlueprintRegistry.getBlueprint("blueprint_droplet_turret"),
+            BlueprintRegistry.getBlueprint("blueprint_droplet_turret")
+        ));
         screen.setPlayerController(controller);
         setScreen(screen);
 
-    }
-
-    private void loadAssets() {
-        // core assets
-        assets.loadTexture("player_bubble_back", "textures/entities/player_bubble_back.png");
-        assets.loadTexture("enemy_bubble_back", "textures/entities/enemy_bubble_back.png");
-        assets.loadTexture("unit_hearth", "textures/entities/hearth.png");
-        assets.loadTexture("water_icon", "textures/gui/water_icon.png");
-
-        // gui
-        assets.loadTexture("gui_water_indicator", "textures/gui/water_indicator.png");
-
-        // units
-        assets.loadTextureMap("unit_droplet_turret", "textures/entities/units/droplet_turret.png", 2, 1);
-
-        // particles
-        assets.loadTexture("particle_attack", "textures/particles/attack.png");
-
-        // projectiles
-        assets.loadTexture("projectile_droplet", "textures/projectiles/droplet.png");
-
-        // tiles
-        final int IMAGE_TILE_WIDTH = 4;
-        final int IMAGE_TILE_HEIGHT = 4;
-        assets.loadTextureMap("grass", "textures/tiles/grass.png", IMAGE_TILE_WIDTH, IMAGE_TILE_HEIGHT);
     }
 
     public TextureManager getAssets() {

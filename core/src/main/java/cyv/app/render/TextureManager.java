@@ -10,16 +10,55 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TextureManager {
+    public final Texture PIXEL;
     private final Map<String, Texture> textures = new HashMap<>();
     private final Map<String, TextureRegion[][]> textureMaps = new HashMap<>();
+    private boolean texturesLoaded = false;
 
     public TextureManager() {
+        loadPregameTextures();
+        PIXEL = textures.get("pixel");
+    }
+
+    private void loadPregameTextures() {
         // by default, comes with the "pixel" texture
         Pixmap map = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         map.setColor(Color.WHITE);
         map.fill();
         textures.put("pixel", new Texture(map));
         map.dispose();
+    }
+
+    public void loadNormalTextures() {
+        if (texturesLoaded) return;
+        texturesLoaded = true;
+
+        // core assets
+        loadTexture("player_bubble_back", "textures/entities/player_bubble_back.png");
+        loadTexture("enemy_bubble_back", "textures/entities/enemy_bubble_back.png");
+        loadTexture("unit_hearth", "textures/entities/hearth.png");
+        loadTexture("water_icon", "textures/gui/water_icon.png");
+
+        // gui
+        loadTexture("gui_water_indicator", "textures/gui/water_indicator.png");
+
+        // blueprints
+        loadTexture("blueprint_selected", "textures/gui/blueprint_selected.png");
+        loadTexture("blueprint_empty", "textures/gui/blueprint_empty.png");
+
+        // units
+        loadTextureMap("unit_droplet_turret", "textures/entities/units/droplet_turret.png", 2, 1);
+
+        // particles
+        loadTexture("particle_attack", "textures/particles/attack.png");
+
+        // projectiles
+        loadTexture("projectile_droplet", "textures/projectiles/droplet.png");
+
+        // tiles
+        final int IMAGE_TILE_WIDTH = 4;
+        final int IMAGE_TILE_HEIGHT = 4;
+        loadTextureMap("grass", "textures/tiles/grass.png", IMAGE_TILE_WIDTH, IMAGE_TILE_HEIGHT);
     }
 
     public void loadTexture(String id, String path) {
