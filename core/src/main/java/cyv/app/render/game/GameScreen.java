@@ -369,7 +369,12 @@ public class GameScreen implements Screen {
     }
 
     private void drawHologram(long now) {
+        // no draw if out of bounds
         if (controller == null) return;
+        if (inputUiX < 0 || inputUiX > uiViewport.getScreenWidth() ||
+            inputUiY < 0 || inputUiY > uiViewport.getScreenHeight()) return;
+        if (level.isTileSolid(inputGameX, inputGameY)) return;
+
         gameViewport.apply();
         batch.setProjectionMatrix(gameCamera.combined);
         batch.begin();
@@ -386,13 +391,17 @@ public class GameScreen implements Screen {
                 renderer.renderHologram(batch, level, inputGameX, inputGameY);
             }
         }
-
         batch.end();
     }
 
     private void doLogic() {
         // if released and unit is selected, deploy it
         if (isInputJustReleased && controller.getSelectedIndex() != -1 && !isOverlappingBlueprints) {
+            // don't deploy if out of bounds, or over a solid tile
+            if (inputUiX < 0 || inputUiX > uiViewport.getScreenWidth() ||
+                inputUiY < 0 || inputUiY > uiViewport.getScreenHeight()) return;
+            if (level.isTileSolid(inputGameX, inputGameY)) return;
+
             AbstractBlueprint<?> blueprint = controller.getBlueprints().get(controller.getSelectedIndex());
             if (controller.getWater() >= blueprint.getCost()) {
                 controller.use(); // water and cooldown handled there

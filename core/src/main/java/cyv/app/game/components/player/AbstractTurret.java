@@ -59,12 +59,15 @@ public abstract class AbstractTurret extends AbstractUnitObject {
 
     public abstract float getRotationRange();
 
+    public abstract float getSightRange();
+
     @Override
     public void doLogic(Level levelIn) {
         // check the angle of this turret relative to its anchor
         BallObject anchor = getLastAnchor();
         float baseAngle = 0;
         float rotationRange = getRotationRange();
+        float sightRangeSq = getSightRange() * getSightRange();
 
         if (anchor != null) {
             float dx = getX() - anchor.getX();
@@ -92,8 +95,9 @@ public abstract class AbstractTurret extends AbstractUnitObject {
             // smallest signed angular difference
             float delta = MathUtils.normalizeAngle(angle - baseAngle);
 
-            // outside rotational arc
+            // outside range
             if (Math.abs(delta) > rotationRange * 2) continue;
+            if (distSq > sightRangeSq) continue;
 
             if (distSq < closestDistSq) {
                 closestDistSq = distSq;

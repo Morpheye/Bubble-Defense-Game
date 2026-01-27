@@ -12,7 +12,7 @@ public class BasicFireSpirit extends AbstractEnemyObject {
     private BallObject target;
 
     public BasicFireSpirit(float x, float y) {
-        super("enemy_basicFireSpirit", x, y, 40, 1);
+        super("enemy_fire_spirit", x, y, 40, 1);
     }
 
     /**

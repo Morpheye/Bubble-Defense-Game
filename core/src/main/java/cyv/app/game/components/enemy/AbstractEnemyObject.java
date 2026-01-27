@@ -1,5 +1,6 @@
 package cyv.app.game.components.enemy;
 
+import cyv.app.game.ActiveLevelWave;
 import cyv.app.game.Level;
 import cyv.app.game.Team;
 import cyv.app.game.components.BallObject;
@@ -13,6 +14,7 @@ public abstract class AbstractEnemyObject extends BallObject implements ILivingO
     private long timeLastDamaged = -10000;
     private long timeLastMeleeAttacked = -10000;
     private int health = getMaxHealth();
+    private ActiveLevelWave wave = null; // enemies can be part of a wave
 
     public AbstractEnemyObject(String id, float x, float y, float radius, float density) {
         super(id, x, y, radius, density);
@@ -96,7 +98,11 @@ public abstract class AbstractEnemyObject extends BallObject implements ILivingO
     @Override
     public void setHealth(int health) {
         if (health < this.health) timeLastDamaged = getTimeLived();
+        int difference = health - this.health;
         this.health = health;
+
+        // if part of a wave, update its cumulative health
+        if (wave != null) wave.changeCumulativeHealth(difference);
     }
 
     @Override
@@ -116,5 +122,9 @@ public abstract class AbstractEnemyObject extends BallObject implements ILivingO
     @Override
     public long getTimeLastDamaged() {
         return timeLastDamaged;
+    }
+
+    public void setWave(ActiveLevelWave wave) {
+        this.wave = wave;
     }
 }

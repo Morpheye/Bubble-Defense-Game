@@ -36,7 +36,8 @@ public abstract class Level {
     private float camera_scale; // corresponds to the width of the camera
 
     // internal
-    public int ticks;
+    private int enemyCount = 0;
+    private int ticks;
 
     public Level(int sizeX, int sizeY, HearthObject hearth) {
         this.sizeX = sizeX;
@@ -45,7 +46,7 @@ public abstract class Level {
         // temporary camera constants
         this.camera_center_x = TILE_SIZE * sizeX / 2;
         this.camera_center_y = TILE_SIZE * sizeY / 2;
-        this.camera_scale = 1600;
+        this.camera_scale = (sizeX - 2) * TILE_SIZE;
 
         // objects
         this.hearth = hearth;
@@ -65,6 +66,12 @@ public abstract class Level {
      * @return Starting water amount
      */
     public abstract int getStartingWater();
+
+    /**
+     * Whether the victory condition of the level has been met
+     * @return Victory?
+     */
+    public abstract boolean victoryConditionMet();
 
     /**
      * Starts the level
@@ -90,6 +97,8 @@ public abstract class Level {
      * Ticks the physics and combat of the level
      */
     public void tick() {
+        if (ticks == 0) start();
+
         // ------------------------------------------------------------------
         // Step 0: non-physics related stuff
         // ------------------------------------------------------------------
@@ -170,7 +179,7 @@ public abstract class Level {
                             float totalMass = b1.getMass() + b2.getMass();
 
                             float push = overlap * COLLISION_PUSH_FORCE;
-                            if (b1.getTeam() == Team.ENEMY && b2.getTeam() == Team.ENEMY) push *= 0.075f;
+                            if (b1.getTeam() == Team.ENEMY && b2.getTeam() == Team.ENEMY) push *= 0.025f;
 
                             b1.setPredictedX(b1.getPredictedX() - nx * push * b2.getMass() / totalMass);
                             b1.setPredictedY(b1.getPredictedY() - ny * push * b2.getMass() / totalMass);
@@ -197,8 +206,7 @@ public abstract class Level {
 
                     for (int tx = minTileX; tx <= maxTileX; tx++) {
                         for (int ty = minTileY; ty <= maxTileY; ty++) {
-                            if (tx < 0 || ty < 0 || tx >= sizeX || ty >= sizeY) continue;
-                            if (grid[tx][ty] != 1) continue;
+                            if (!isTileSolid(tx, ty)) continue;
 
                             float tileMinX = tx * TILE_SIZE;
                             float tileMaxX = tileMinX + TILE_SIZE;
@@ -267,17 +275,30 @@ public abstract class Level {
         balls.removeIf(b -> {
             if (!(b instanceof ILivingObject)) return false;
             ILivingObject l = (ILivingObject) b;
-            return l.isDead();
+            boolean toRemove = l.isDead();
+            if (toRemove) enemyCount--;
+            return toRemove;
         });
 
         this.ticks++;
+    }
+
+    public boolean isTileSolid(float worldX, float worldY) {
+        int tx = (int) Math.floor(worldX / TILE_SIZE);
+        int ty = (int) Math.floor(worldY / TILE_SIZE);
+        return isTileSolid(tx, ty);
+    }
+
+    public boolean isTileSolid(int tx, int ty) {
+        if (tx < 0 || ty < 0 || tx >= sizeX || ty >= sizeY) return true;
+        return grid[tx][ty] == 1;
     }
 
     private void doScheduledTasks() {
         // generate water
         if (ticks != 0 && ticks % waterGenerationDelay() == 0 && controller != null && hearth != null) {
             controller.addWater(1);
-            spawnParticle(new WaterParticle(hearth.getX(), hearth.getY() + 15));
+            spawnParticle(new WaterParticle(hearth.getX(), hearth.getY() + 15, 15));
         }
     }
 
@@ -303,6 +324,7 @@ public abstract class Level {
      */
     public void spawnBall(BallObject obj) {
         balls.add(obj);
+        if (obj.getTeam() == Team.ENEMY) enemyCount++;
         obj.onSpawn(this);
     }
 
@@ -352,5 +374,13 @@ public abstract class Level {
 
     public void setCameraScale(float scale) {
         this.camera_scale = scale;
+    }
+
+    public int getTicks() {
+        return ticks;
+    }
+
+    public int getEnemyCount() {
+        return enemyCount;
     }
 }

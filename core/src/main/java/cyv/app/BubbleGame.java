@@ -1,9 +1,12 @@
 package cyv.app;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import cyv.app.game.Level;
 import cyv.app.game.PlayerController;
+import cyv.app.game.StandardLevel;
 import cyv.app.game.blueprints.BlueprintRegistry;
+import cyv.app.game.components.enemy.EnemyGeneratorRegistry;
 import cyv.app.game.components.player.HearthObject;
 import cyv.app.render.TextureManager;
 import cyv.app.render.game.GameScreen;
@@ -22,16 +25,16 @@ public class BubbleGame extends Game {
         assets.loadNormalTextures();
         RendererRegistry.registerRenders(this);
         BlueprintRegistry.registerBlueprints(this);
+        EnemyGeneratorRegistry.registerGenerators();
 
         // TODO: make level select screen
-        Level level = new Level(10, 7, new HearthObject(500, 350)) {
-            public int waterGenerationDelay() {return 50;}
-            public int getStartingWater() {return 50;}
-        };
+        final int SIZE_X = 16 + 2;
+        final int SIZE_Y = 9 + 2;
+        Level level = StandardLevel.parseLevel(Gdx.files.internal("levels/level_1_1.json").readString("UTF-8"));
         GameScreen screen = new GameScreen(this, level);
         PlayerController controller = new PlayerController(Arrays.asList(
             BlueprintRegistry.getBlueprint("blueprint_droplet_turret"),
-            BlueprintRegistry.getBlueprint("blueprint_droplet_turret")
+            BlueprintRegistry.getBlueprint("blueprint_water_pump")
         ));
         screen.setPlayerController(controller);
         setScreen(screen);

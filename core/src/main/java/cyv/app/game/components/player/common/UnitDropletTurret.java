@@ -4,6 +4,8 @@ import cyv.app.game.components.player.AbstractTurret;
 import cyv.app.game.components.projectile.Projectile;
 import cyv.app.game.components.projectile.common.ProjectileDroplet;
 
+import static cyv.app.game.Level.TILE_SIZE;
+
 public class UnitDropletTurret extends AbstractTurret {
     public UnitDropletTurret(float x, float y) {
         super("unit_droplet_turret", x, y);
@@ -28,6 +30,12 @@ public class UnitDropletTurret extends AbstractTurret {
     public float getRotationRange() {
         // by default, can see in an arc of 30 degrees
         return 30f;
+    }
+
+    @Override
+    public float getSightRange() {
+        // sight range of 7 tiles
+        return 7 * TILE_SIZE;
     }
 
     @Override
