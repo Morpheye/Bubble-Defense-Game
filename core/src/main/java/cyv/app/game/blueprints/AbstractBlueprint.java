@@ -3,10 +3,8 @@ package cyv.app.game.blueprints;
 import com.badlogic.gdx.graphics.Texture;
 import cyv.app.BubbleGame;
 import cyv.app.game.components.player.AbstractUnitObject;
-import cyv.app.render.game.RendererRegistry;
+import cyv.app.render.game.renders.RendererRegistry;
 import cyv.app.render.game.renders.UnitRenderer;
-
-import javax.swing.*;
 
 /**
  * Represents an abstract factory that can be added to the player controller to allow

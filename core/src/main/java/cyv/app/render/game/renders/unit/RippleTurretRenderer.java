@@ -7,29 +7,28 @@ import cyv.app.BubbleGame;
 import cyv.app.game.Level;
 import cyv.app.game.components.BallObject;
 import cyv.app.game.components.player.HearthObject;
-import cyv.app.game.components.player.common.UnitDropletTurret;
-import cyv.app.render.game.renders.ObjectRenderer;
+import cyv.app.game.components.player.common.UnitRippleTurret;
 import cyv.app.render.game.renders.UnitRenderer;
 import cyv.app.util.MathUtils;
 
 import static cyv.app.game.components.player.AbstractUnitObject.UNIT_SIZE;
 
-public class DropletTurretRenderer extends UnitRenderer {
+public class RippleTurretRenderer extends UnitRenderer {
     private final TextureRegion mount;
     private final TextureRegion barrel;
     private final Texture aimTex;
 
-    public DropletTurretRenderer(BubbleGame gameIn) {
+    public RippleTurretRenderer(BubbleGame gameIn) {
         super(gameIn);
         this.aimTex = gameIn.getAssets().getTexture("gui_aim_highlight");
-        TextureRegion[][] reg = gameIn.getAssets().getTextureMap("unit_droplet_turret");
+        TextureRegion[][] reg = gameIn.getAssets().getTextureMap("unit_ripple_turret");
         this.mount = reg[0][0];
         this.barrel = reg[0][1];
     }
 
     @Override
     public void render(SpriteBatch batch, BallObject b, float delta) {
-        UnitDropletTurret turret = (UnitDropletTurret) b;
+        UnitRippleTurret turret = (UnitRippleTurret) b;
 
         float renderX = b.getLastX() * (1 - delta) + b.getX() * delta;
         float renderY = b.getLastY() * (1 - delta) + b.getY() * delta;
@@ -51,7 +50,7 @@ public class DropletTurretRenderer extends UnitRenderer {
         float renderRotation = facingLeft ? rotation + 180f : rotation;
 
         // recoil offset (use real rotation for this)
-        float barrelOffset = size * 0.1f * (float) Math.pow((float)(atkCd - ticksSinceAttack) / atkCd, 3);
+        float barrelOffset = size * 0.1f * (float) Math.pow((float)(atkCd - ticksSinceAttack) / atkCd, 1);
         float boX = -barrelOffset * (float)Math.cos(rad);
         float boY = -barrelOffset * (float)Math.sin(rad);
 
@@ -79,10 +78,10 @@ public class DropletTurretRenderer extends UnitRenderer {
         HearthObject hearthObject = levelIn.getHearth();
         float rotation = (float) Math.toDegrees(
             Math.atan2(renderY - hearthObject.getY(), renderX - hearthObject.getX()));
-        float range = UnitDropletTurret.ROTATION_RANGE;
-        batch.draw(aimTex, renderX, renderY, 0, 0, UnitDropletTurret.SIGHT_RANGE, 16, 1f, 1f,
+        float range = UnitRippleTurret.ROTATION_RANGE;
+        batch.draw(aimTex, renderX, renderY, 0, 0, UnitRippleTurret.SIGHT_RANGE, 16, 1f, 1f,
             rotation - range, 0, 0, aimTex.getWidth(), aimTex.getHeight(), false, false);
-        batch.draw(aimTex, renderX, renderY, 0, 0, UnitDropletTurret.SIGHT_RANGE, 16, 1f, -1f,
+        batch.draw(aimTex, renderX, renderY, 0, 0, UnitRippleTurret.SIGHT_RANGE, 16, 1f, -1f,
             rotation + range, 0, 0, aimTex.getWidth(), aimTex.getHeight(), false, false);
 
         // then draw mount

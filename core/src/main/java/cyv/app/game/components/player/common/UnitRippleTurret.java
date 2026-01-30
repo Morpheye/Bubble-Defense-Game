@@ -3,15 +3,16 @@ package cyv.app.game.components.player.common;
 import cyv.app.game.components.player.AbstractTurret;
 import cyv.app.game.components.projectile.Projectile;
 import cyv.app.game.components.projectile.common.ProjectileDroplet;
+import cyv.app.game.components.projectile.common.ProjectileRipple;
 
 import static cyv.app.game.Level.TILE_SIZE;
 
-public class UnitDropletTurret extends AbstractTurret {
-    public static final float SIGHT_RANGE = 6 * TILE_SIZE;
-    public static final float ROTATION_RANGE = 30f;
+public class UnitRippleTurret extends AbstractTurret {
+    public static final float SIGHT_RANGE = 4f * TILE_SIZE;
+    public static final float ROTATION_RANGE = 45f;
 
-    public UnitDropletTurret(float x, float y) {
-        super("unit_droplet_turret", x, y);
+    public UnitRippleTurret(float x, float y) {
+        super("unit_ripple_turret", x, y);
     }
 
     @Override
@@ -25,7 +26,6 @@ public class UnitDropletTurret extends AbstractTurret {
      */
     @Override
     public int getAttackCooldown() {
-        // defaults to once per second
         return 20;
     }
 
@@ -50,7 +50,7 @@ public class UnitDropletTurret extends AbstractTurret {
         float oX = (float) Math.cos(rad) * getRadius();
         float oY = (float) Math.sin(rad) * getRadius();
 
-        return new ProjectileDroplet(getX() + oX, getY() + oY, rotation, getTeam());
+        return new ProjectileRipple(getX() + oX, getY() + oY, rotation, getTeam(), SIGHT_RANGE);
     }
 
 }

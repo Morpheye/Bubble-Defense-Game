@@ -40,20 +40,26 @@ public class TextureManager {
         loadTexture("water_icon", "textures/gui/water_icon.png");
 
         // gui
+        loadTexture("gui_aim_highlight", "textures/gui/aim_highlight.png");
         loadTexture("gui_water_indicator", "textures/gui/water_indicator.png");
+        loadTexture("gui_pause_button", "textures/gui/pause.png");
 
         // blueprints
         loadTexture("blueprint_selected", "textures/gui/blueprint_selected.png");
         loadTexture("blueprint_empty", "textures/gui/blueprint_empty.png");
+        loadTexture("blueprint_droplet_turret", "textures/gui/blueprints/droplet_turret.png");
 
         // units
         loadTextureMap("unit_droplet_turret", "textures/entities/units/droplet_turret.png", 2, 1);
+        loadTexture("unit_water_pump", "textures/entities/units/water_pump.png");
+        loadTextureMap("unit_ripple_turret", "textures/entities/units/ripple_turret.png", 2, 1);
 
         // particles
         loadTexture("particle_attack", "textures/particles/attack.png");
 
         // projectiles
         loadTexture("projectile_droplet", "textures/projectiles/droplet.png");
+        loadTexture("projectile_ripple", "textures/projectiles/ripple.png");
 
         // tiles
         final int IMAGE_TILE_WIDTH = 4;

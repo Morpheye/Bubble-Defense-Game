@@ -4,14 +4,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import cyv.app.BubbleGame;
 import cyv.app.game.components.particle.Particle;
-import cyv.app.game.components.projectile.Projectile;
 import cyv.app.render.game.renders.ObjectRenderer;
-import cyv.app.util.MathUtils;
 
-public class WaterProjectileRenderer extends ObjectRenderer<Particle> {
+public class WaterParticleRenderer extends ObjectRenderer<Particle> {
     private final Texture tex;
 
-    public WaterProjectileRenderer(BubbleGame gameIn) {
+    public WaterParticleRenderer(BubbleGame gameIn) {
         super(gameIn);
         this.tex = getGameIn().getAssets().getTexture("water_icon");
     }

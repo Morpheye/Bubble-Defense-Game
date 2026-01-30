@@ -2,6 +2,7 @@ package cyv.app.game.blueprints;
 
 import cyv.app.BubbleGame;
 import cyv.app.game.blueprints.contents.BlueprintDropletTurret;
+import cyv.app.game.blueprints.contents.BlueprintRippleTurret;
 import cyv.app.game.blueprints.contents.BlueprintWaterPump;
 
 import java.util.HashMap;
@@ -17,6 +18,7 @@ public class BlueprintRegistry {
     public static void registerBlueprints(BubbleGame game) {
         registry.put("blueprint_droplet_turret", new BlueprintDropletTurret(game));
         registry.put("blueprint_water_pump", new BlueprintWaterPump(game));
+        registry.put("blueprint_ripple_turret", new BlueprintRippleTurret(game));
     }
 
     public static AbstractBlueprint<?> getBlueprint(String name) {

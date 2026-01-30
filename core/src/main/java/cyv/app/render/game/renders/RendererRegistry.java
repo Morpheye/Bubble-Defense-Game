@@ -1,4 +1,4 @@
-package cyv.app.render.game;
+package cyv.app.render.game.renders;
 
 import cyv.app.BubbleGame;
 import cyv.app.game.components.BallObject;
@@ -7,9 +7,12 @@ import cyv.app.game.components.projectile.Projectile;
 import cyv.app.render.game.renders.ObjectRenderer;
 import cyv.app.render.game.renders.particle.AttackParticleRenderer;
 import cyv.app.render.game.renders.projectile.DropletProjectileRenderer;
-import cyv.app.render.game.renders.particle.WaterProjectileRenderer;
+import cyv.app.render.game.renders.particle.WaterParticleRenderer;
+import cyv.app.render.game.renders.projectile.RippleProjectileRenderer;
 import cyv.app.render.game.renders.unit.DropletTurretRenderer;
 import cyv.app.render.game.renders.unit.HearthRenderer;
+import cyv.app.render.game.renders.unit.RippleTurretRenderer;
+import cyv.app.render.game.renders.unit.WaterPumpRenderer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +37,8 @@ public class RendererRegistry {
         ballRenderers.put("unit_hearth", new HearthRenderer(game));
 
         ballRenderers.put("unit_droplet_turret", new DropletTurretRenderer(game));
+        ballRenderers.put("unit_water_pump", new WaterPumpRenderer(game));
+        ballRenderers.put("unit_ripple_turret", new RippleTurretRenderer(game));
     }
 
     private static void registerEnemies(BubbleGame game) {
@@ -42,11 +47,12 @@ public class RendererRegistry {
 
     private static void registerParticles(BubbleGame game) {
         particleRenders.put("particle_attack", new AttackParticleRenderer(game));
-        particleRenders.put("particle_water", new WaterProjectileRenderer(game));
+        particleRenders.put("particle_water", new WaterParticleRenderer(game));
     }
 
     private static void registerProjectiles(BubbleGame game) {
         projectileRenders.put("projectile_droplet", new DropletProjectileRenderer(game));
+        projectileRenders.put("projectile_ripple", new RippleProjectileRenderer(game));
     }
 
     public static ObjectRenderer<BallObject> getBallRenderer(String id) {

@@ -7,13 +7,11 @@ import cyv.app.game.PlayerController;
 import cyv.app.game.StandardLevel;
 import cyv.app.game.blueprints.BlueprintRegistry;
 import cyv.app.game.components.enemy.EnemyGeneratorRegistry;
-import cyv.app.game.components.player.HearthObject;
 import cyv.app.render.TextureManager;
 import cyv.app.render.game.GameScreen;
-import cyv.app.render.game.RendererRegistry;
+import cyv.app.render.game.renders.RendererRegistry;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class BubbleGame extends Game {
@@ -34,7 +32,8 @@ public class BubbleGame extends Game {
         GameScreen screen = new GameScreen(this, level);
         PlayerController controller = new PlayerController(Arrays.asList(
             BlueprintRegistry.getBlueprint("blueprint_droplet_turret"),
-            BlueprintRegistry.getBlueprint("blueprint_water_pump")
+            BlueprintRegistry.getBlueprint("blueprint_water_pump"),
+            BlueprintRegistry.getBlueprint("blueprint_ripple_turret")
         ));
         screen.setPlayerController(controller);
         setScreen(screen);

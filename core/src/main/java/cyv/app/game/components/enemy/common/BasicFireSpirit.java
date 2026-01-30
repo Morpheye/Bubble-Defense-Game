@@ -20,7 +20,7 @@ public class BasicFireSpirit extends AbstractEnemyObject {
      * @return Movement speed
      */
     public float getMovementSpeed() {
-        return 0.25f;
+        return 0.2f;
     }
 
     /**

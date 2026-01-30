@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
@@ -25,7 +24,12 @@ import cyv.app.game.components.enemy.AbstractEnemyObject;
 import cyv.app.game.components.particle.Particle;
 import cyv.app.game.components.player.AbstractUnitObject;
 import cyv.app.game.components.projectile.Projectile;
+import cyv.app.render.FontRenderer;
+import cyv.app.render.TextureManager;
+import cyv.app.render.game.gui.Gui;
+import cyv.app.render.game.gui.contents.GuiPauseMenu;
 import cyv.app.render.game.renders.ObjectRenderer;
+import cyv.app.render.game.renders.RendererRegistry;
 import cyv.app.render.game.renders.UnitRenderer;
 
 import java.util.List;
@@ -34,6 +38,7 @@ public class GameScreen implements Screen {
     public static final int TICK_LENGTH = 1000 / 20;
 
     private final BubbleGame game;
+    private final TextureManager manager;
     private final OrthographicCamera gameCamera;
     private final Viewport gameViewport;
     private final OrthographicCamera uiCamera;
@@ -41,9 +46,7 @@ public class GameScreen implements Screen {
 
     private final SpriteBatch batch;
     private final ShapeRenderer shapeRenderer;
-    private final BitmapFont font;
-    private final float baseCapHeight;
-    private final GlyphLayout layout;
+    private final FontRenderer fontRenderer;
 
     // game components
     private final Level level;
@@ -60,8 +63,12 @@ public class GameScreen implements Screen {
     private boolean isInputJustReleased = false;
     private boolean isOverlappingBlueprints = false;
 
+    // gui
+    private Gui gui = null;
+
     public GameScreen(BubbleGame game, Level level) {
         this.game = game;
+        this.manager = game.getAssets();
         this.level = level;
 
         // set up camera
@@ -82,11 +89,7 @@ public class GameScreen implements Screen {
 
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
-
-        font = new BitmapFont(); // default font
-        baseCapHeight = font.getData().capHeight;
-        layout = new GlyphLayout();
-        font.setUseIntegerPositions(true); // smoother scaling
+        fontRenderer = new FontRenderer(new BitmapFont());
     }
 
     public void setPlayerController(PlayerController controller) {
@@ -97,14 +100,12 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         long now = System.currentTimeMillis();
-        if (now - lastTickTime >= TICK_LENGTH) {
+        if (now - lastTickTime >= TICK_LENGTH && (gui == null || !gui.pausesGame())) {
             lastTickTime = now;
             level.tick();
             controller.tick();
         }
-
-        // detect mouse click
-        // TODO: create a more robust input handling system
+        float d = Math.min(1, (now - lastTickTime) / (float) TICK_LENGTH);
 
         // clear screen
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
@@ -112,17 +113,17 @@ public class GameScreen implements Screen {
 
         // render level and gui components
         handleInput();
-        drawGame(now);
-        drawGui(now);
-        drawHologram(now);
+        drawGame(d);
+        drawIngameGui(d);
+        drawHologram(d);
+        drawExternalGui(d);
         doLogic();
     }
 
     /**
      * Renders the components of the game (not the UI)
-     * @param now current time in milliseconds
      */
-    private void drawGame(long now) {
+    private void drawGame(float delta) {
         // set camera to center on level
         gameCamera.position.set(level.getCameraCenterX(), level.getCameraCenterY(), 0);
         gameCamera.update();
@@ -149,17 +150,16 @@ public class GameScreen implements Screen {
         TileRenderer.renderTiles(game, batch, level.getGrid());
 
         // draw balls
-        drawBalls(now);
-        drawProjectiles(now);
-        drawParticles(now);
+        drawBalls(delta);
+        drawProjectiles(delta);
+        drawParticles(delta);
 
         batch.end();
     }
 
-    private void drawBalls(long now) {
-        float delta = (now - lastTickTime) / (float) TICK_LENGTH;
-        Texture pbTex = game.getAssets().getTexture("player_bubble_back");
-        Texture ebTex = game.getAssets().getTexture("enemy_bubble_back");
+    private void drawBalls(float delta) {
+        Texture pbTex = manager.getTexture("player_bubble_back");
+        Texture ebTex = manager.getTexture("enemy_bubble_back");
 
         for (BallObject b : level.getBalls()) {
             float renderX = b.getLastX() * (1 - delta) + b.getX() * delta;
@@ -195,7 +195,7 @@ public class GameScreen implements Screen {
                     Color healthColor = new Color();
                     healthColor.set(1f - healthRatio, healthRatio, 0f, 0.5f);
                     batch.setColor(healthColor);
-                    batch.draw(game.getAssets().PIXEL, barX, barY, barWidth * healthRatio, barHeight);
+                    batch.draw(manager.PIXEL, barX, barY, barWidth * healthRatio, barHeight);
                     batch.setColor(Color.WHITE);
                 }
             }
@@ -204,9 +204,7 @@ public class GameScreen implements Screen {
         batch.setColor(1, 1, 1, 1);
     }
 
-    private void drawProjectiles(long now) {
-        float delta = (now - lastTickTime) / (float) TICK_LENGTH;
-
+    private void drawProjectiles(float delta) {
         for (Projectile p : level.getProjectiles()) {
             ObjectRenderer<Projectile> renderer = RendererRegistry.getProjectileRenderer(p.getId());
             if (renderer != null) try {
@@ -219,9 +217,7 @@ public class GameScreen implements Screen {
         batch.setColor(1, 1, 1, 1);
     }
 
-    private void drawParticles(long now) {
-        float delta = (now - lastTickTime) / (float) TICK_LENGTH;
-
+    private void drawParticles(float delta) {
         for (Particle p : level.getParticles()) {
             ObjectRenderer<Particle> renderer = RendererRegistry.getParticleRenderer(p.getId());
             if (renderer != null) try {
@@ -234,22 +230,37 @@ public class GameScreen implements Screen {
         batch.setColor(1, 1, 1, 1);
     }
 
-    private void drawGui(long now) {
+    private void drawIngameGui(float delta) {
         uiCamera.update();
         batch.setProjectionMatrix(uiCamera.combined);
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         batch.begin();
 
-        if (controller != null) drawPlayerController(now);
+        if (controller != null) drawPlayerController(delta);
+        // draw pause button
+        if (gui == null || !gui.pausesGame()) {
+            Texture pauseButtonTex = manager.getTexture("gui_pause_button");
+            float x = uiViewport.getScreenWidth() - PAUSE_BUTTON_SIZE - PAUSE_MARGIN;
+            float y = uiViewport.getScreenHeight() - PAUSE_BUTTON_SIZE - PAUSE_MARGIN;
+            batch.draw(pauseButtonTex, x, y, PAUSE_BUTTON_SIZE, PAUSE_BUTTON_SIZE);
+
+            boolean inBounds = inputUiX >= x && inputUiY >= y && inputUiX <= x + PAUSE_BUTTON_SIZE &&
+                inputUiY <= y + PAUSE_BUTTON_SIZE;
+            if ((gui == null || !gui.blocksInput()) && inBounds) {
+                batch.setColor(0.2f, 0.8f, 1, 0.5f);
+                batch.draw(manager.PIXEL, x, y, PAUSE_BUTTON_SIZE, PAUSE_BUTTON_SIZE);
+                batch.setColor(1, 1, 1, 1);
+            }
+        }
 
         batch.end();
     }
 
-    private void drawPlayerController(long now) {
+    private void drawPlayerController(float delta) {
         // water indicator
-        Texture wiTex = game.getAssets().getTexture("gui_water_indicator");
-        Texture sTex = game.getAssets().getTexture("blueprint_selected");
+        Texture wiTex = manager.getTexture("gui_water_indicator");
+        Texture sTex = manager.getTexture("blueprint_selected");
         final float SCREEN_HEIGHT = uiViewport.getScreenHeight();
         // internal rendering constants
         float WIDTH = 150f;
@@ -258,12 +269,11 @@ public class GameScreen implements Screen {
 
         // scale font and render water text
         float desiredTextHeight = HEIGHT * 0.4f;
-        setFontSize(font, desiredTextHeight);
         String waterText = String.valueOf(controller.getWater());
-        layout.setText(font, waterText);
-        float textX = BLUEPRINT_X_MARGIN + WIDTH - 8f;
-        float textY = BLUEPRINT_Y_MARGIN + HEIGHT / 2f + layout.height / 2f;
-        font.draw(batch, layout, textX - layout.width, SCREEN_HEIGHT - textY + desiredTextHeight);
+        fontRenderer.setSize(desiredTextHeight);
+        float textX = BLUEPRINT_X_MARGIN + WIDTH - 12f;
+        float textY = SCREEN_HEIGHT - (BLUEPRINT_Y_MARGIN + HEIGHT / 2f);
+        fontRenderer.drawRight(batch, waterText, textX, textY + desiredTextHeight / 2f);
 
         // render blueprints
         List<AbstractBlueprint<?>> blueprints = controller.getBlueprints();
@@ -278,9 +288,11 @@ public class GameScreen implements Screen {
             // detect selection
             float blueprintTop = SCREEN_HEIGHT - B_YOFFSET;
             float blueprintBottom = SCREEN_HEIGHT - B_YOFFSET - BLUEPRINT_HEIGHT;
-            if (canUse && isInputJustPressed &&
-                inputUiX >= BLUEPRINT_X_MARGIN && inputUiX <= BLUEPRINT_X_MARGIN + BLUEPRINT_WIDTH &&
-                inputUiY >= blueprintBottom && inputUiY <= blueprintTop) {
+            boolean withinBounds = inputUiX >= BLUEPRINT_X_MARGIN &&
+                inputUiX <= BLUEPRINT_X_MARGIN + BLUEPRINT_WIDTH &&
+                inputUiY >= blueprintBottom && inputUiY <= blueprintTop;
+            if ((gui == null || !gui.blocksInput()) && canUse && isInputJustPressed &&
+                inputUiX >= BLUEPRINT_X_MARGIN && withinBounds) {
                 if (controller.getSelectedIndex() == i) controller.setSelectedIndex(-1);
                 else controller.setSelectedIndex(i);
             }
@@ -288,12 +300,12 @@ public class GameScreen implements Screen {
             // draw selection / loading bars
             if (!canUse) {
                 batch.setColor(0, 0, 0, 0.5f);
-                batch.draw(game.getAssets().PIXEL, BLUEPRINT_X_MARGIN, SCREEN_HEIGHT - B_YOFFSET - BLUEPRINT_HEIGHT,
+                batch.draw(manager.PIXEL, BLUEPRINT_X_MARGIN, SCREEN_HEIGHT - B_YOFFSET - BLUEPRINT_HEIGHT,
                     BLUEPRINT_WIDTH, BLUEPRINT_HEIGHT);
                 float cooldown_ratio = (float) (controller.getTicks() - controller.getTimeLastUsed(i))
                     / blueprint.getCooldown();
                 if (cooldown_ratio < 1)
-                    batch.draw(game.getAssets().PIXEL, BLUEPRINT_X_MARGIN,
+                    batch.draw(manager.PIXEL, BLUEPRINT_X_MARGIN,
                         SCREEN_HEIGHT - B_YOFFSET - (BLUEPRINT_HEIGHT * (1 - cooldown_ratio)),
                         BLUEPRINT_WIDTH, BLUEPRINT_HEIGHT * (1 - cooldown_ratio));
                 batch.setColor(Color.WHITE);
@@ -304,18 +316,26 @@ public class GameScreen implements Screen {
                 float blueprintCenterY = SCREEN_HEIGHT - B_YOFFSET - BLUEPRINT_HEIGHT / 2f;
                 batch.draw(sTex, blueprintCenterX - S_WIDTH / 2f, blueprintCenterY - S_HEIGHT / 2f,
                     S_WIDTH, S_HEIGHT);
+            } else if (withinBounds && (gui == null || !gui.blocksInput())) {
+                final float S_WIDTH = BLUEPRINT_WIDTH * (float) 528 / 512;
+                final float S_HEIGHT = BLUEPRINT_HEIGHT * (float) 272 / 256;
+                float blueprintCenterX = BLUEPRINT_X_MARGIN + BLUEPRINT_WIDTH / 2f;
+                float blueprintCenterY = SCREEN_HEIGHT - B_YOFFSET - BLUEPRINT_HEIGHT / 2f;
+                batch.setColor(1, 1, 1, 0.5f);
+                batch.draw(sTex, blueprintCenterX - S_WIDTH / 2f, blueprintCenterY - S_HEIGHT / 2f,
+                    S_WIDTH, S_HEIGHT);
+                batch.setColor(1, 1, 1, 1);
             }
 
             // draw cost
             float blueprintY = SCREEN_HEIGHT - B_YOFFSET - BLUEPRINT_HEIGHT;
             desiredTextHeight = BLUEPRINT_HEIGHT * 0.35f;
-            setFontSize(font, desiredTextHeight);
             String costText = String.valueOf(blueprint.getCost());
-            layout.setText(font, costText);
             final float PADDING = 6f;
-            textX = BLUEPRINT_X_MARGIN + BLUEPRINT_WIDTH - PADDING - layout.width;
-            textY = blueprintY + PADDING + layout.height;
-            font.draw(batch, layout, textX, textY);
+            fontRenderer.setSize(desiredTextHeight);
+            textX = BLUEPRINT_X_MARGIN + BLUEPRINT_WIDTH - PADDING;
+            textY = blueprintY + PADDING + desiredTextHeight;
+            fontRenderer.drawRight(batch, costText, textX, textY);
         }
     }
 
@@ -344,11 +364,18 @@ public class GameScreen implements Screen {
                 inputUiY = uiViewport.getScreenHeight() - rawY;
             }
         }
-        // ---- UPDATE STATES ----
-        isInputJustPressed = currentlyDown && !isInputDown; // compare with current frame's down
-        isInputJustReleased = !currentlyDown && isInputDown; // NEW: detect release
+
+        // update states
+        isInputJustPressed = currentlyDown && !isInputDown;
+        isInputJustReleased = !currentlyDown && isInputDown;
         // store previous state for next frame
         isInputDown = currentlyDown;
+
+        // update gui
+        if (gui != null) {
+            gui.updateMousePos(inputUiX, inputUiY, isInputJustPressed);
+            if (isInputJustReleased) gui.onInputReleased();
+        }
 
         // blueprint overlap check
         isOverlappingBlueprints = false;
@@ -368,7 +395,7 @@ public class GameScreen implements Screen {
         }
     }
 
-    private void drawHologram(long now) {
+    private void drawHologram(float delta) {
         // no draw if out of bounds
         if (controller == null) return;
         if (inputUiX < 0 || inputUiX > uiViewport.getScreenWidth() ||
@@ -380,7 +407,7 @@ public class GameScreen implements Screen {
         batch.begin();
 
         if (!isOverlappingBlueprints && isInputDown && controller.getSelectedIndex() != -1) {
-            Texture pbTex = game.getAssets().getTexture("player_bubble_back");
+            Texture pbTex = manager.getTexture("player_bubble_back");
             AbstractBlueprint<?> blueprint = controller.getBlueprints().get(controller.getSelectedIndex());
             UnitRenderer renderer = blueprint.getHologramRenderer();
             if (renderer != null) {
@@ -394,9 +421,23 @@ public class GameScreen implements Screen {
         batch.end();
     }
 
+    private void drawExternalGui(float delta) {
+        if (gui == null) return;
+        uiViewport.apply();
+        batch.setProjectionMatrix(uiCamera.combined);
+        batch.begin();
+
+        gui.render(batch, fontRenderer, manager, uiViewport, delta);
+
+        batch.end();
+    }
+
     private void doLogic() {
+        boolean checkGameInput = gui == null || !gui.blocksInput();
+
         // if released and unit is selected, deploy it
-        if (isInputJustReleased && controller.getSelectedIndex() != -1 && !isOverlappingBlueprints) {
+        if (checkGameInput && isInputJustReleased && controller.getSelectedIndex() != -1 &&
+            !isOverlappingBlueprints) {
             // don't deploy if out of bounds, or over a solid tile
             if (inputUiX < 0 || inputUiX > uiViewport.getScreenWidth() ||
                 inputUiY < 0 || inputUiY > uiViewport.getScreenHeight()) return;
@@ -410,18 +451,32 @@ public class GameScreen implements Screen {
                 level.spawnBall(obj);
             }
         }
-    }
 
-    private void setFontSize(BitmapFont font, float targetPixelHeight) {
-        BitmapFont.BitmapFontData data = font.getData();
-        float scale = targetPixelHeight / baseCapHeight;
-        data.setScale(scale);
+        // pause logic
+        float x = uiViewport.getScreenWidth() - PAUSE_BUTTON_SIZE - PAUSE_MARGIN;
+        float y = uiViewport.getScreenHeight() - PAUSE_BUTTON_SIZE - PAUSE_MARGIN;
+        boolean inBounds = inputUiX >= x && inputUiY >= y && inputUiX <= x + PAUSE_BUTTON_SIZE &&
+            inputUiY <= y + PAUSE_BUTTON_SIZE;
+        boolean pauseKeyPressed = Gdx.input.isKeyJustPressed(Input.Keys.P);
+        if (pauseKeyPressed || (gui == null && inBounds && isInputJustPressed)) {
+            if (gui != null) setGui(null);
+            else {
+                controller.setSelectedIndex(-1);
+                setGui(new GuiPauseMenu(this, manager));
+            }
+        }
     }
 
     @Override
     public void resize(int width, int height) {
         gameViewport.update(width, height, true);
         uiViewport.update(width, height, true);
+    }
+
+    public void setGui(Gui newGui) {
+        if (gui != null) gui.onClose();
+        gui = newGui;
+        if (newGui != null) newGui.onOpen();
     }
 
     @Override
@@ -436,7 +491,7 @@ public class GameScreen implements Screen {
     @Override public void dispose() {
         shapeRenderer.dispose();
         batch.dispose();
-        font.dispose();
+        fontRenderer.dispose();
     }
 
     private final float BLUEPRINT_X_MARGIN = 10f;
@@ -444,4 +499,6 @@ public class GameScreen implements Screen {
     private final float BLUEPRINT_WIDTH = 120f;
     private final float BLUEPRINT_HEIGHT = 60f;
     private final float BLUEPRINT_Y_GAP = 10f;
+    private final float PAUSE_MARGIN = 10f;
+    private final float PAUSE_BUTTON_SIZE = 50f;
 }
