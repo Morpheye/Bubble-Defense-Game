@@ -1,0 +1,120 @@
+You (the player) acquire blueprints which grant you the knowledge of how to paint defensive
+bubble structures to fend off waves of fire, at the guidance of the Water Spirit.
+
+In the early worlds, the Fire Spirit will make a few appearances, appearing as the antagonist
+of the game, mocking you and the Water Spirit and preaching of your Hearth's (floating island)
+destruction. At the end (and sometimes more frequently) of each world, she will send a
+powerful mini-boss after you. However, when the mini-boss is defeated, she will show noticeable
+sorrow.
+
+The final boss of the main adventure mode will be the Fire Spirit herself, and rather than the
+typical mini-boss behavior of picking off your front lines and randomly attacking your units,
+she will put a significant emphasis on directly attacking the Hearth, forcing you to change
+your defensive structure noticeably.
+
+Upon defeating the Fire Spirit, the Water Spirit will congratulate you, and the man inside the
+Hearth will reveal himself for the first time as the grandfather of the player. The Water
+Spirit is your grandmother, both of which have passed away. The game will show you the man's
+life accomplishments, having served as a firefighter for fifty years, saving thousands of
+lives. The flashback ends with the man on his deathbed, surrounded by his descendants, but
+notably not his wife (the grandmother). After the flashback ends, your grandfather hauntingly
+remarks that the Fire Spirit is not gone yet. Upon returning to the main menu after exiting
+the level, the game will notify you that you can choose to freely replay Adventure Mode levels
+and also select whether you wish to replay former cutscenes and tutorials.
+
+Notably, starting from the very first level, each Adventure Mode level now has an option to
+replay it in Advanced difficulty. You may only play an Adventure Mode level in Advanced
+difficulty if you have beaten the prior level in this difficulty as well, so this effectively
+serves as an extension of the original Adventure Mode. In Advanced difficulty levels, there is
+a roaring thunderstorm present, and purple, oily rain will cover the screen. This rain is
+canonically poisonous, and thus does not amplify the player's water accumulation.
+
+Advanced Adventure Mode levels also continue on the game's lore, but this lore and all cutscenes
+and dialogue relating to it will not be shown unless the user has stated in their preferences
+that their age is above a maturity threshold, due to some of its themes being graphic and
+inappropriate for younger children. Additionally, when the player first attempts to play an
+Advanced level, they will receive a pop-up warning that the Advanced level's lore will explore
+heavy themes regarding grief, death, and guilt, and will depict graphic imagery, with the option
+right there to toggle off the cutscenes.
+
+The first noticeable change is that the Water Spirit will very rarely give gameplay advice to
+you anymore, mainly as there are fewer unique mechanics to introduce and also because you've
+already beaten the base game. However, very early on, a brief dialogue will occur between your
+grandfather, grandmother, and an arbitrary enemy spirit. In this dialogue, the enemy taunts and
+pleads to your grandfather, asking him why he never saved it. Your grandfather, stricken in grief
+and anger, screams at him to get out. The Water Spirit attempts to console him, telling him that
+he did everything he could, to no avail.
+
+As you progress through the Advanced Adventure Mode levels, you learn more about the exact details
+of your grandfather's life, via a long cutscene split apart across the many levels.
+
+Beyond being a firefighter, he was a powerful wizard, willing water to serve at his command. He was
+easily the strongest firefighter of his unit, able to charge into flaming buildings and retrieve
+victims, himself barely burned, with water weaving around him. But his power came at the cost of a
+curse. Despite the thousands of calls he was dispatched to, and thousands more people he rescued,
+the dreaded day came, where he would hear the location of the blaze: his own apartment.
+
+TLDR: He found that the water he once easily commanded was completely stagnant. Despite this oddity,
+he still ran in to find his then-pregnant wife and baby, only had the strength to carry the baby out,
+attempted to run back into save his wife but ended up collapsing inside with her and blacking out. He
+woke up after being saved by medical professionals and other firefighters, but his wife ended up dying
+in the hospital. Your grandmother passed away knowing how she would go, thus she went without regrets.
+The baby, which would grow up to be your mother, was mostly unharmed. However, your grandfather never
+forgave himself for failing to save your grandmother and his unborn daughter, foolishly believing he
+could fight the curse.
+
+Following that incident, your grandfather developed a heavy smoking addiction. In the many scenes of
+him smoking, the color of the smoke is a dark, oily purple, very similar to the color of the rain in
+the levels. You will eventually be shown the scene of your grandfather on his deathbed again with his
+living family, but this time, he is surrounded by dark, purple spirits floating above him. After his
+passing, he realises that he cannot go to the afterlife, due to how heavy his guilt and regrets are.
+
+Near the end of the Advanced Adventure Mode, the Fire Spirit herself appears in dialogue, asking the
+same question: "Why didn't you save me?" The Fire Spirit was the unborn child of your grandfather, in
+your grandmother's womb when she succumbed to her injuries. Your grandmother defends your grandfather,
+arguing it wasn't his fault but hers, but this argument between the two and your grandfather's battle
+with his own guilt, fueled by the torment of the Fire Spirit and the many other smaller spirits
+escalates until the Advanced version of the original Adventure Mode final boss level. In this level, it
+is revealed that every single fiery enemy you must defeat is the spirit of a life that your grandfather
+couldn't save, corrupted by the demon behind his curse. Since your grandmother never birthed a son,
+the curse died with your grandfather, and thus the demon corrupted the casualties of fire that your
+grandfather couldn't save and used them to torture him with guilt.
+
+At the end of this battle, your grandmother (the Water Spirit) purifies the Fire Spirit by dousing her in
+water, successfully severing the demon's influence from her. Your grandfather, grandmother, and unborn
+aunt reconcile their differences. Your grandfather looks towards the entrance towards the afterlife, where
+it should be hovering on top of the volcano, but finds he still cannot enter, meaning there's something more
+that hasn't been resolved. It is at this time that the demon of his curse erupts from the volcano, showering
+the screen in purple gloom.
+
+After this cutscene, the player unlocks a secret final boss level, playable only in Advanced difficulty
+(this level does not correspond to a level in the base Adventure Mode). The dark-purple demon appears as
+the boss of this level, where both fire and water unite, turning your grandfather's various water turrets
+into powerful steam cannons. Each blast of pure steam damages the oily, carcinogenic smoke that composes
+the demon and the vast army he summons to attack. This level is far, far more difficult than anything seen
+so far in the game (a good reference of difficulty is Super Mario 3D World vs its final level, Champion's
+Road).
+
+When the demon is defeated, the poison rain fades, and the gate to the afterlife opens. Your grandfather
+has finally relinquished himself of his guilt, and may enter the afterlife. The same is true with your
+unborn aunt. As your grandmother prepares to guide the two towards the light, you ask if what you did was
+real.
+
+She replies, "It depends. If what battles you fight in your dreams allow you to conquer your real fears,
+then they are no less real than anything else you do. Are you strong enough to return home?"
+
+You then ask, "Will we ever meet again?"
+
+She replies, "Of course, dummy. We'll meet in the afterlife eventually. Until then, we'll still be here in
+your dreams. We'll still use water to paint the skies. We'll visit you whenever you want. But for now, you
+still have a lot more fighting left to do at home. Wake up."
+
+With this, the sounds of the hospital fade into existence, as the scene fades into black. You suddenly
+awaken, sitting up straight in a hospital bed, finally free from your coma. A year ago, a fire seemingly
+spread out of nowhere in your home, nearly ending your life. In your slumber, teetering between life and
+death, despite the demon's presence in your family being very real up until that fire, you finally freed
+your bloodline from its influence.
+
+The credits roll, then the player is returned to the main menu of the game. At this point, the player
+is considered to have 100%'d the game. (I'm not sure if the final level should be locked until the player
+completes every last bit of content the game has to offer)
