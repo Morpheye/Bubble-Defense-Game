@@ -2,6 +2,9 @@ package cyv.app;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import cyv.app.contents.levels.World1;
 import cyv.app.game.Level;
 import cyv.app.game.PlayerController;
 import cyv.app.game.StandardLevel;
@@ -10,12 +13,15 @@ import cyv.app.game.components.enemy.EnemyGeneratorRegistry;
 import cyv.app.render.TextureManager;
 import cyv.app.render.game.GameScreen;
 import cyv.app.render.game.renders.RendererRegistry;
+import cyv.app.render.levelSelect.LevelSelectScreen;
 
 import java.util.Arrays;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class BubbleGame extends Game {
     private TextureManager assets;
+    private SpriteBatch batcher;
+    private ShapeRenderer shapeRenderer;
 
     @Override
     public void create() {
@@ -25,10 +31,16 @@ public class BubbleGame extends Game {
         BlueprintRegistry.registerBlueprints(this);
         EnemyGeneratorRegistry.registerGenerators();
 
+        this.batcher = new SpriteBatch();
+        this.shapeRenderer = new ShapeRenderer();
+
         // TODO: make level select screen
-        final int SIZE_X = 16 + 2;
-        final int SIZE_Y = 9 + 2;
-        Level level = StandardLevel.parseLevel(Gdx.files.internal("levels/level_1_1.json").readString("UTF-8"));
+        if (true) {
+            setScreen(new LevelSelectScreen(this, new World1()));
+            return;
+        }
+
+        Level level = StandardLevel.parseLevel(Gdx.files.internal("levels/level_1_2.json").readString("UTF-8"));
         GameScreen screen = new GameScreen(this, level);
         PlayerController controller = new PlayerController(Arrays.asList(
             BlueprintRegistry.getBlueprint("blueprint_droplet_turret"),
@@ -44,9 +56,18 @@ public class BubbleGame extends Game {
         return this.assets;
     }
 
+    public SpriteBatch getBatcher() {
+        return batcher;
+    }
+
+    public ShapeRenderer getShapeRenderer() {
+        return shapeRenderer;
+    }
+
     @Override
     public void dispose() {
         this.assets.dispose();
+        this.batcher.dispose();
+        this.shapeRenderer.dispose();
     }
-
 }

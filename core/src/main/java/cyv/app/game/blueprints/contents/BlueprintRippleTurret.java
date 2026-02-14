@@ -22,7 +22,7 @@ public class BlueprintRippleTurret extends AbstractBlueprint<UnitRippleTurret> {
 
     @Override
     public Texture getTexture() {
-        return getGame().getAssets().getTexture("blueprint_empty");
+        return getGame().getAssets().getTexture("blueprint_ripple_turret");
     }
 
     @Override

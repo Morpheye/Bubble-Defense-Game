@@ -24,7 +24,7 @@
     },
     {
       "generators": [{"weight": 1, "cost": 1, "id": "enemy_fire_spirit"}],
-      "spawnTiles": [[17, 5], [2, 0], [2, 10]],
+      "spawnTilePattern": "THIRDS",
       "costLimit": 2
     },
     {
@@ -35,14 +35,14 @@
     {
       "generators": [{"weight": 1, "cost": 1, "id": "enemy_fire_spirit"}],
       "spawnTiles": [[0, 7], [17, 3], [0, 0], [4, 10], [13, 0], [17, 10]],
-      "costLimit": 8
+      "costLimit": 8,
+      "advanceThresholdOverride": 1.0
     },
     {
       "generators": [{"weight": 1, "cost": 1, "id": "enemy_fire_spirit"}],
-      "spawnTiles": [[0, 7], [17, 3], [0, 0], [4, 10], [13, 0], [17, 10],
-        [0, 3], [17, 7], [0, 2], [0, 10], [17, 0], [17, 8]],
+      "spawnTilePattern": "FULL_BORDER",
       "costLimit": 12,
-      "huge": true
+      "isHuge": true
     }
   ]
 }

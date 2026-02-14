@@ -17,6 +17,9 @@ public class LevelWave {
     private final int[][] spawnTiles;
     private final int costLimit;
 
+    private float advanceThresholdOverride = -1; // amount of this wave's health depletion needed
+    private int waveDelayOverride = -1; // the time needed to wait after this wave is done
+
     public LevelWave(int costlimit, int[][] spawnTiles, Set<EnemyGenerator> enemies) {
         this.enemies = enemies;
         this.spawnTiles = spawnTiles;
@@ -29,13 +32,21 @@ public class LevelWave {
         int health = 0;
 
         int costRemaining = costLimit;
+
+        // --- Prepare weighted enemy selection ---
         int totalWeight = 0;
         for (EnemyGenerator g : enemies) totalWeight += g.weight;
+
+        // --- Prepare evenly distributed spawn order ---
+        int[][] shuffledTiles = spawnTiles.clone();
+        shuffleArray(shuffledTiles);  // custom shuffle
+        int tileIndex = 0;
 
         while (costRemaining > 0) {
             EnemyGenerator chosen = null;
             int random = MathUtils.random(totalWeight - 1);
             int cumulative = 0;
+
             for (EnemyGenerator g : enemies) {
                 cumulative += g.weight;
                 if (random < cumulative) {
@@ -43,16 +54,55 @@ public class LevelWave {
                     break;
                 }
             }
-            // Stop if we can't afford anything
+
             if (chosen == null || chosen.cost > costRemaining) break;
-            AbstractEnemyObject enemy = chosen.generate(this);
+
+            // --- Round-robin tile selection ---
+            int[] tile = shuffledTiles[tileIndex];
+            tileIndex++;
+
+            if (tileIndex >= shuffledTiles.length) {
+                shuffleArray(shuffledTiles); // reshuffle for next cycle
+                tileIndex = 0;
+            }
+
+            float x = (tile[0] + 0.5f) * TILE_SIZE;
+            float y = (tile[1] + 0.5f) * TILE_SIZE;
+
+            AbstractEnemyObject enemy = chosen.generator.apply(x, y);
             set.add(enemy);
+
             count++;
             health += enemy.getHealth();
             costRemaining -= chosen.cost;
         }
 
-        return new ActiveLevelWave(set, count, health);
+        return new ActiveLevelWave(set, count, health, advanceThresholdOverride, waveDelayOverride);
+    }
+
+    private static void shuffleArray(int[][] array) {
+        for (int i = array.length - 1; i > 0; i--) {
+            int j = MathUtils.random(i);
+            int[] temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+    }
+
+    public float getAdvanceThresholdOverride() {
+        return advanceThresholdOverride;
+    }
+
+    public void setAdvanceThresholdOverride(float advanceThresholdOverride) {
+        this.advanceThresholdOverride = advanceThresholdOverride;
+    }
+
+    public int getWaveDelayOverride() {
+        return waveDelayOverride;
+    }
+
+    public void setWaveDelayOverride(int waveDelayOverride) {
+        this.waveDelayOverride = waveDelayOverride;
     }
 
     public static class EnemyGenerator {
@@ -63,13 +113,6 @@ public class LevelWave {
             this.weight = weight;
             this.cost = cost;
             this.generator = generator;
-        }
-
-        public AbstractEnemyObject generate(LevelWave wave) {
-            int[] tile = wave.spawnTiles[(int) (Math.random() * wave.spawnTiles.length)];
-            float x = (tile[0] + 0.5f) * TILE_SIZE;
-            float y = (tile[1] + 0.5f) * TILE_SIZE;
-            return generator.apply(x, y);
         }
     }
 }

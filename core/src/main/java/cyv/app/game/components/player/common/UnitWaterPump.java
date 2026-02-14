@@ -5,7 +5,8 @@ import cyv.app.game.components.particle.common.WaterParticle;
 import cyv.app.game.components.player.AbstractUnitObject;
 
 public class UnitWaterPump extends AbstractUnitObject {
-    private int nextProductionTime = 20 * 5;
+    public static final int MAX_PRODUCTION_TIME = 20 * 15;
+    private long nextProductionTime = 20 * 5;
 
     public UnitWaterPump(float x, float y) {
         super("unit_water_pump", x, y, 1);
@@ -14,6 +15,10 @@ public class UnitWaterPump extends AbstractUnitObject {
     @Override
     public int getMaxHealth() {
         return 50;
+    }
+
+    public long getNextProductionTime() {
+        return nextProductionTime;
     }
 
     @Override
@@ -25,7 +30,7 @@ public class UnitWaterPump extends AbstractUnitObject {
             // every 10 to 15 seconds.
             levelIn.getController().addWater(2);
             levelIn.spawnParticle(new WaterParticle(getX(), getY(), 20));
-            nextProductionTime += 20 * 10 + (int) (Math.random() * 20 * 6);
+            nextProductionTime += 20 * 10 + (int) (Math.random() * (20 * 6));
         }
     }
 }

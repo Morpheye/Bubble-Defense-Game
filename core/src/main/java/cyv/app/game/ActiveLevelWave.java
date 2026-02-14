@@ -6,15 +6,23 @@ import java.util.Set;
 
 public class ActiveLevelWave {
     private final Set<AbstractEnemyObject> enemies;
-    private int enemyCount;
-    private int cumulativeHealth;
     private final int startingHealth;
 
-    public ActiveLevelWave(Set<AbstractEnemyObject> enemies, int enemyCount, int cumulativeHealth) {
+    private final float advanceThresholdOverride;
+    private final int waveDelayOverride;
+
+    private int enemyCount;
+    private int cumulativeHealth;
+
+    public ActiveLevelWave(Set<AbstractEnemyObject> enemies, int enemyCount, int cumulativeHealth,
+                           float advanceThresholdOverride, int waveDelayOverride) {
         this.enemies = enemies;
         this.enemyCount = enemyCount;
         this.cumulativeHealth = cumulativeHealth;
         this.startingHealth = cumulativeHealth;
+
+        this.advanceThresholdOverride = advanceThresholdOverride;
+        this.waveDelayOverride = waveDelayOverride;
 
         for (AbstractEnemyObject e : enemies) e.setWave(this);
     }
@@ -49,5 +57,13 @@ public class ActiveLevelWave {
 
     public int getStartingHealth() {
         return startingHealth;
+    }
+
+    public float getAdvanceThresholdOverride() {
+        return advanceThresholdOverride;
+    }
+
+    public int getWaveDelayOverride() {
+        return waveDelayOverride;
     }
 }

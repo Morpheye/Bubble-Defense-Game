@@ -48,10 +48,12 @@ public class TextureManager {
         loadTexture("blueprint_selected", "textures/gui/blueprint_selected.png");
         loadTexture("blueprint_empty", "textures/gui/blueprint_empty.png");
         loadTexture("blueprint_droplet_turret", "textures/gui/blueprints/droplet_turret.png");
+        loadTexture("blueprint_water_pump", "textures/gui/blueprints/water_pump.png");
+        loadTexture("blueprint_ripple_turret", "textures/gui/blueprints/ripple_turret.png");
 
         // units
         loadTextureMap("unit_droplet_turret", "textures/entities/units/droplet_turret.png", 2, 1);
-        loadTexture("unit_water_pump", "textures/entities/units/water_pump.png");
+        loadTextureMap("unit_water_pump", "textures/entities/units/water_pump.png", 2, 1);
         loadTextureMap("unit_ripple_turret", "textures/entities/units/ripple_turret.png", 2, 1);
 
         // particles

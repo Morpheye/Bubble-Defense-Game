@@ -1,0 +1,66 @@
+{
+  "sizeX": 18,
+  "sizeY": 11,
+  "waterGenerationDelay": 50,
+  "startingWater": 50,
+  "spawnDelay": 200,
+  "waveDelay": 40,
+  "waveAdvanceThreshold": 0.8,
+  "waves": [
+    {
+      "generators": [{"weight": 1, "cost": 1, "id": "enemy_fire_spirit"}],
+      "spawnTilePattern": "FULL_BORDER",
+      "costLimit": 1
+    },
+    {
+      "generators": [{"weight": 1, "cost": 1, "id": "enemy_fire_spirit"}],
+      "spawnTilePattern": "FULL_BORDER",
+      "costLimit": 1
+    },
+    {
+      "generators": [{"weight": 1, "cost": 1, "id": "enemy_fire_spirit"}],
+      "spawnTilePattern": "FULL_BORDER",
+      "costLimit": 2
+    },
+    {
+      "generators": [{"weight": 1, "cost": 1, "id": "enemy_fire_spirit"}],
+      "spawnTilePattern": "FULL_BORDER",
+      "costLimit": 2
+    },
+    {
+      "generators": [{"weight": 1, "cost": 1, "id": "enemy_fire_spirit"}],
+      "spawnTilePattern": "FULL_BORDER",
+      "costLimit": 3
+    },
+    {
+      "generators": [{"weight": 1, "cost": 1, "id": "enemy_fire_spirit"}],
+      "spawnTilePattern": "FULL_BORDER",
+      "costLimit": 4
+    },
+    {
+      "generators": [{"weight": 2, "cost": 1, "id": "enemy_fire_spirit"},
+        {"weight": 1, "cost": 2, "id": "enemy_fire_spirit"}],
+      "spawnTilePattern": "FULL_BORDER",
+      "costLimit": 8
+    },
+    {
+      "generators": [{"weight": 2, "cost": 1, "id": "enemy_fire_spirit"},
+        {"weight": 1, "cost": 2, "id": "enemy_fire_spirit"}],
+      "spawnTilePattern": "FULL_BORDER",
+      "costLimit": 12
+    },
+    {
+      "generators": [{"weight": 2, "cost": 1, "id": "enemy_fire_spirit"},
+        {"weight": 1, "cost": 2, "id": "enemy_fire_spirit"}],
+      "spawnTilePattern": "FULL_BORDER",
+      "costLimit": 18,
+      "advanceThresholdOverride": 1.0
+    },
+    {
+      "generators": [{"weight": 2, "cost": 1, "id": "enemy_fire_spirit"},
+        {"weight": 1, "cost": 2, "id": "enemy_fire_spirit"}],
+      "spawnTilePattern": "FULL_BORDER",
+      "costLimit": 27
+    }
+  ]
+}

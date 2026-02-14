@@ -1,4 +1,4 @@
-package cyv.app.render.game.gui.contents;
+package cyv.app.render.game.gui;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -6,12 +6,12 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import cyv.app.render.FontRenderer;
 import cyv.app.render.TextureManager;
 import cyv.app.render.game.GameScreen;
-import cyv.app.render.game.gui.Gui;
-import cyv.app.render.game.gui.GuiButton;
+import cyv.app.render.gui.Gui;
+import cyv.app.render.gui.GuiButton;
 
 import java.util.List;
 
-public class GuiPauseMenu extends Gui {
+public class GuiPauseMenu extends Gui<GameScreen> {
     public GuiPauseMenu(GameScreen parent, TextureManager manager) {
         super(parent, manager);
         final float WIDTH = 1280;

@@ -12,4 +12,9 @@ public class MathUtils {
         float diff = ((to - from + 540f) % 360f) - 180f; // shortest signed difference
         return from + diff * alpha;
     }
+
+    public static boolean inBounds(double x, double y, double left, double right,
+                                   double bottom, double top) {
+        return x >= left && x <= right && y >= bottom && y <= top;
+    }
 }

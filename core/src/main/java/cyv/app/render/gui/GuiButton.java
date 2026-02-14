@@ -1,4 +1,4 @@
-package cyv.app.render.game.gui;
+package cyv.app.render.gui;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;

@@ -28,7 +28,7 @@ public class BlueprintWaterPump extends AbstractBlueprint<UnitWaterPump> {
 
     @Override
     public Texture getTexture() {
-        return getGame().getAssets().getTexture("blueprint_empty");
+        return getGame().getAssets().getTexture("blueprint_water_pump");
     }
 
     @Override

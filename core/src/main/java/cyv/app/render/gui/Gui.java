@@ -1,7 +1,8 @@
-package cyv.app.render.game.gui;
+package cyv.app.render.gui;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import cyv.app.render.AbstractScreen;
 import cyv.app.render.FontRenderer;
 import cyv.app.render.TextureManager;
 import cyv.app.render.game.GameScreen;
@@ -9,8 +10,8 @@ import cyv.app.render.game.GameScreen;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Gui {
-    private final GameScreen parent;
+public abstract class Gui<T extends AbstractScreen> {
+    private final T parent;
     private final TextureManager manager;
     private float lastPressedX;
     private float lastPressedY;
@@ -18,7 +19,7 @@ public abstract class Gui {
     private float mouseY;
     private final List<GuiButton> buttons;
 
-    public Gui(GameScreen parent, TextureManager manager) {
+    public Gui(T parent, TextureManager manager) {
         this.parent = parent;
         this.manager = manager;
         this.buttons = new ArrayList<>();
@@ -28,7 +29,7 @@ public abstract class Gui {
         return buttons;
     }
 
-    protected GameScreen getFrontendIn() {
+    protected T getFrontendIn() {
         return parent;
     }
 

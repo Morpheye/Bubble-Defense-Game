@@ -49,10 +49,15 @@ public abstract class StandardLevel extends Level {
         }
 
         // schedule new wave once health drops
+        float waveAdvanceThreshold = (activeWave != null && activeWave.getAdvanceThresholdOverride() != -1f) ?
+            activeWave.getAdvanceThresholdOverride() : this.waveAdvanceThreshold;
+
         if (nextWaveStartTime < getTicks() && activeWave != null &&
             currentWaveIndex + 1 < waves.size() &&
             (float) activeWave.getCumulativeHealth() / activeWave.getStartingHealth()
                 <= (1 - waveAdvanceThreshold)) {
+            int waveDelay = (activeWave != null && activeWave.getWaveDelayOverride() != -1) ?
+                activeWave.getWaveDelayOverride() : this.waveDelay;
             nextWaveStartTime = getTicks() + waveDelay;
         }
     }
@@ -78,7 +83,13 @@ public abstract class StandardLevel extends Level {
                 generators.add(new LevelWave.EnemyGenerator(r.weight, r.cost,
                     EnemyGeneratorRegistry.getGenerator(r.id)));
             }
-            waves.add(new LevelWave(rawWave.costLimit, rawWave.spawnTiles, generators));
+            // attempt pattern matching
+            if (!rawWave.spawnTilePattern.isEmpty())
+                rawWave.spawnTiles = level.generateSpawnTiles(rawWave.spawnTilePattern);
+            LevelWave wave = new LevelWave(rawWave.costLimit, rawWave.spawnTiles, generators);
+            wave.setWaveDelayOverride(rawWave.waveDelayOverride);
+            wave.setAdvanceThresholdOverride(rawWave.advanceThresholdOverride);
+            waves.add(wave);
         }
 
         return new StandardLevel(level.sizeX, level.sizeY,
@@ -100,10 +111,38 @@ public abstract class StandardLevel extends Level {
         int waveDelay = 20 * 2;
         float waveAdvanceThreshold = 0.5f;
 
+        int[][] generateSpawnTiles(String pattern) {
+            List<int[]> tiles = new ArrayList<>();
+            switch (pattern) {
+                case "FULL_BORDER": {
+                    for (int i = 0; i < sizeX; i++) {
+                        tiles.add(new int[] {i, 0});
+                        tiles.add(new int[] {i, sizeY - 1});
+                    }
+                    for (int i = 1; i < sizeY - 1; i++) {
+                        tiles.add(new int[] {0, i});
+                        tiles.add(new int[] {sizeX - 1, i});
+                    }
+                }
+                case "THIRDS": {
+                    tiles.add(new int[] {sizeX - 1, sizeY / 2});
+                    tiles.add(new int[] {sizeX / 4, 0});
+                    tiles.add(new int[] {sizeX / 4, sizeY - 1});
+                }
+            }
+            return tiles.toArray(new int[0][0]);
+        }
+
         static class RawLevelWave {
             public Array<RawEnemyGenerator> generators;
-            public int[][] spawnTiles;
+            public int[][] spawnTiles = {};
+            public String spawnTilePattern = "";
             public int costLimit;
+            public boolean isHuge;
+
+            // overrides
+            public float advanceThresholdOverride = -1;
+            public int waveDelayOverride = -1;
 
             static class RawEnemyGenerator {
                 public int weight;
