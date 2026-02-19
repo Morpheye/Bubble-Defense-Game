@@ -9,6 +9,7 @@ import cyv.app.game.StandardLevel;
  */
 public class LevelProvider {
     private final String path;
+    private String parent = null;
 
     public LevelProvider(String path) {
         this.path = path;
@@ -24,5 +25,13 @@ public class LevelProvider {
 
     public final Level produce() {
         return StandardLevel.parseLevel(Gdx.files.internal(getLevelPath()).readString("UTF-8"));
+    }
+
+    public String getParent() {
+        return parent;
+    }
+
+    public void setParent(String parent) {
+        this.parent = parent;
     }
 }

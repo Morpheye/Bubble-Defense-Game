@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import cyv.app.BubbleGame;
 import cyv.app.contents.LevelGroup;
+import cyv.app.contents.LevelGroupRegistry;
 import cyv.app.contents.LevelProvider;
 import cyv.app.render.AbstractScreen;
 import cyv.app.render.InputController;
@@ -26,6 +27,11 @@ public class LevelSelectScreen extends AbstractScreen {
     public LevelSelectScreen(BubbleGame game, LevelGroup levelGroup) {
         super(game);
         this.levelGroup = levelGroup;
+
+        if (levelGroup == null) {
+            this.levelGroup = LevelGroupRegistry.getDefaultWorld();
+        }
+
         uiCamera = new OrthographicCamera();
         uiViewport = new FitViewport(1280, 720, uiCamera);
         uiViewport.apply();
@@ -83,14 +89,13 @@ public class LevelSelectScreen extends AbstractScreen {
                 float drawY = PANEL_BOTTOM + MARGIN + (LEVEL_SIZE + MARGIN) * (4 - y);
 
                 boolean guiBlocks = gui != null && gui.blocksInput();
-                if (!guiBlocks && MathUtils.inBounds(clickX, clickY, drawX, drawX + LEVEL_SIZE, drawY,
-                    drawY + LEVEL_SIZE) && (inputController.isInputDown() ||
-                    inputController.isInputJustReleased())) {
-                    if (MathUtils.inBounds(cX, cY, drawX, drawX + LEVEL_SIZE, drawY,
-                        drawY + LEVEL_SIZE)) {
-                        batch.setColor(0.115f, 0.85f, 1, 1);
-                        if (inputController.isInputJustReleased()) provider = level;
-                    } else batch.setColor(0.1f, 0.8f, 0.95f, 1);
+                if (!guiBlocks && MathUtils.inBounds(cX, cY, drawX, drawX + LEVEL_SIZE, drawY,
+                    drawY + LEVEL_SIZE)) {
+                    batch.setColor(0.1f, 0.85f, 0.95f, 1);
+                    if (MathUtils.inBounds(clickX, clickY, drawX, drawX + LEVEL_SIZE, drawY,
+                        drawY + LEVEL_SIZE) && inputController.isInputJustReleased()) {
+                        provider = level;
+                    }
                 } else batch.setColor(0, 0.7f, 0.85f, 1);
 
                 batch.draw(pix, drawX, drawY, LEVEL_SIZE, LEVEL_SIZE);
@@ -124,8 +129,7 @@ public class LevelSelectScreen extends AbstractScreen {
      * @param provider Provider
      */
     public void playlevel(LevelProvider provider) {
-        // TODO: create a smooth animation
-        game.setScreen(new GameScreen(game, provider.produce()));
+        game.beginLevel(provider, levelGroup);
         this.isValid = false;
     }
 

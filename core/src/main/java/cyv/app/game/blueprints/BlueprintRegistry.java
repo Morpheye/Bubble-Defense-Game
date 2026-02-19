@@ -13,15 +13,21 @@ import java.util.Set;
 public class BlueprintRegistry {
     private static final Map<String, AbstractBlueprint<?>> registry = new HashMap<>();
     private static final Set<String> ownedBlueprints = new HashSet<>();
-    // TODO: implement ownedBlueprints
 
     public static void registerBlueprints(BubbleGame game) {
         registry.put("blueprint_droplet_turret", new BlueprintDropletTurret(game));
         registry.put("blueprint_water_pump", new BlueprintWaterPump(game));
         registry.put("blueprint_ripple_turret", new BlueprintRippleTurret(game));
+
+        // TODO: implement ownedBlueprints
+        ownedBlueprints.add("blueprint_droplet_turret");
     }
 
     public static AbstractBlueprint<?> getBlueprint(String name) {
         return registry.get(name);
+    }
+
+    public static Set<String> getOwnedBlueprints() {
+        return ownedBlueprints;
     }
 }

@@ -19,25 +19,27 @@ public abstract class Gui<T extends AbstractScreen> {
     private float mouseY;
     private final List<GuiButton> buttons;
 
+    private Gui<T> subGui;
+
     public Gui(T parent, TextureManager manager) {
         this.parent = parent;
         this.manager = manager;
         this.buttons = new ArrayList<>();
     }
 
-    protected List<GuiButton> getButtons() {
+    protected final List<GuiButton> getButtons() {
         return buttons;
     }
 
-    protected T getFrontendIn() {
+    protected final T getFrontendIn() {
         return parent;
     }
 
-    protected TextureManager getTextureManager() {
+    protected final TextureManager getTextureManager() {
         return manager;
     }
 
-    public void updateMousePos(float x, float y, boolean justPressed) {
+    public final void updateMousePos(float x, float y, boolean justPressed) {
         this.mouseX = x;
         this.mouseY = y;
         if (justPressed) {
@@ -64,6 +66,20 @@ public abstract class Gui<T extends AbstractScreen> {
 
     public void onClose() {
 
+    }
+
+    public boolean acceptsSubGuis() {
+        return false;
+    }
+
+    public final Gui<T> getSubGui() {
+        return subGui;
+    }
+
+    public final void setSubGui(Gui<?> subGui) {
+        if (!acceptsSubGuis())
+            throw new UnsupportedOperationException("This GUI does not support sub GUIs.");
+        this.subGui = (Gui<T>) subGui;
     }
 
     /**

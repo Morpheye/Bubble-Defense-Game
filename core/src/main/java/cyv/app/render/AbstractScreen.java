@@ -19,7 +19,7 @@ public abstract class AbstractScreen implements Screen {
     protected boolean isValid = true;
 
     // gui
-    protected Gui gui = null;
+    protected Gui<?> gui = null;
 
     public AbstractScreen(BubbleGame game) {
         this.game = game;
@@ -30,10 +30,35 @@ public abstract class AbstractScreen implements Screen {
         fontRenderer = new FontRenderer(new BitmapFont());
     }
 
-    public void setGui(Gui newGui) {
-        if (gui != null) gui.onClose();
-        gui = newGui;
-        if (newGui != null) newGui.onOpen();
+    public void setGui(Gui<?> newGui) {
+        if (newGui == null) {
+            // if there's no current gui, do nothing
+            if (gui == null) return;
+
+            // simply close existing gui
+            gui.onClose();
+            // if it contains a sub gui, open it
+            Gui<?> subGui = gui.getSubGui();
+            if (subGui != null) {
+                gui = subGui;
+                subGui.onOpen();
+            } else gui = null;
+        } else if (gui == null) {
+            // a new gui is opened but there's no current gui
+            gui = newGui;
+            newGui.onOpen();
+        } else {
+            // a new gui is opened and there's an old gui
+            if (newGui.acceptsSubGuis()) {
+                // if the new gui accepts sub guis, don't close the old one
+                newGui.setSubGui(gui);
+            } else {
+                // close the old gui
+                gui.onClose();
+            }
+            gui = newGui;
+            newGui.onOpen();
+        }
     }
 
     @Override

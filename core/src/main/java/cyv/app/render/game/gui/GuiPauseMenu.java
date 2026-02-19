@@ -14,6 +14,7 @@ import java.util.List;
 public class GuiPauseMenu extends Gui<GameScreen> {
     public GuiPauseMenu(GameScreen parent, TextureManager manager) {
         super(parent, manager);
+
         final float WIDTH = 1280;
         final float HEIGHT = 720;
         List<GuiButton> buttons = getButtons();
@@ -21,11 +22,9 @@ public class GuiPauseMenu extends Gui<GameScreen> {
             "Back to Game", HEIGHT / 27,
             () -> parent.setGui(null)));
         buttons.add(new GuiButton(manager, WIDTH / 2, HEIGHT / 2, WIDTH / 3, HEIGHT / 9,
-            "Restart", HEIGHT / 27,
-            () -> {}));
+            "Restart", HEIGHT / 27, parent::restartLevel));
         buttons.add(new GuiButton(manager, WIDTH / 2, HEIGHT / 3, WIDTH / 3, HEIGHT / 9,
-            "Exit Level", HEIGHT / 27,
-            () -> {}));
+            "Exit Level", HEIGHT / 27, parent::exitToMenu));
     }
 
     @Override
@@ -44,6 +43,11 @@ public class GuiPauseMenu extends Gui<GameScreen> {
             boolean hovered = button.mouseOver(getMouseX(), getMouseY());
             button.render(batcher, fontRenderer, hovered);
         }
+    }
+
+    @Override
+    public boolean acceptsSubGuis() {
+        return true;
     }
 
     @Override

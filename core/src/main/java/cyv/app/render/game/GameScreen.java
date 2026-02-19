@@ -11,6 +11,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import cyv.app.BubbleGame;
+import cyv.app.contents.LevelGroupRegistry;
+import cyv.app.contents.LevelProvider;
 import cyv.app.game.Level;
 import cyv.app.game.PlayerController;
 import cyv.app.game.blueprints.AbstractBlueprint;
@@ -26,12 +28,20 @@ import cyv.app.render.game.gui.GuiPauseMenu;
 import cyv.app.render.game.renders.ObjectRenderer;
 import cyv.app.render.game.renders.RendererRegistry;
 import cyv.app.render.game.renders.UnitRenderer;
+import cyv.app.render.levelSelect.LevelSelectScreen;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class GameScreen extends AbstractScreen {
     public static final int TICK_LENGTH = 1000 / 20;
 
+    // non-gameplay
+    private final String parentWorld;
+    private final Supplier<Level> levelSupplier;
+
+    // rendering
     private final OrthographicCamera gameCamera;
     private final Viewport gameViewport;
     private final OrthographicCamera uiCamera;
@@ -47,10 +57,12 @@ public class GameScreen extends AbstractScreen {
     private final InputController uiInputController;
     private boolean isOverlappingBlueprints = false;
 
-    public GameScreen(BubbleGame game, Level level) {
+    public GameScreen(BubbleGame game, Supplier<Level> levelSupplier, String parentWorld) {
         super(game);
 
-        this.level = level;
+        this.levelSupplier = levelSupplier;
+        this.parentWorld = parentWorld;
+        this.level = levelSupplier.get();
 
         // set up camera
         float camWidth = level.getCameraScale();
@@ -449,15 +461,27 @@ public class GameScreen extends AbstractScreen {
         }
     }
 
+    private void pauseGame() {
+        if (controller != null) controller.setSelectedIndex(-1);
+        setGui(new GuiPauseMenu(this, manager));
+    }
+
+    public void restartLevel() {
+        // TODO: make a smooth transition
+        game.beginLevel(levelSupplier, parentWorld);
+        this.isValid = false;
+    }
+
+    public void exitToMenu() {
+        // TODO: make a smooth transition
+        game.setScreen(new LevelSelectScreen(game, LevelGroupRegistry.getWorld(parentWorld)));
+        this.isValid = false;
+    }
+
     @Override
     public void resize(int width, int height) {
         gameViewport.update(width, height, true);
         uiViewport.update(width, height, true);
-    }
-
-    private void pauseGame() {
-        if (controller != null) controller.setSelectedIndex(-1);
-        setGui(new GuiPauseMenu(this, manager));
     }
 
     @Override
