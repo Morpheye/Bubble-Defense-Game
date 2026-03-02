@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import cyv.app.contents.LevelProvider;
 import cyv.app.render.FontRenderer;
-import cyv.app.render.TextureManager;
+import cyv.app.render.ResourceManager;
 import cyv.app.render.gui.Gui;
 import cyv.app.render.gui.GuiButton;
 import cyv.app.render.levelSelect.LevelSelectScreen;
@@ -15,7 +15,7 @@ import java.util.List;
 public class GuiLevelInfo extends Gui<LevelSelectScreen> {
     private final LevelProvider provider;
 
-    public GuiLevelInfo(LevelSelectScreen parent, TextureManager manager, LevelProvider provider) {
+    public GuiLevelInfo(LevelSelectScreen parent, ResourceManager manager, LevelProvider provider) {
         super(parent, manager);
         final float WIDTH = 1280;
         final float HEIGHT = 720;
@@ -29,7 +29,7 @@ public class GuiLevelInfo extends Gui<LevelSelectScreen> {
 
     @Override
     public void render(SpriteBatch batcher, FontRenderer fontRenderer,
-                       TextureManager manager, Viewport viewport, float delta, boolean isFocused) {
+                       ResourceManager manager, Viewport viewport, float delta, boolean isFocused) {
         // draw gray overlay
         final float SCREEN_WIDTH = viewport.getScreenWidth();
         final float SCREEN_HEIGHT = viewport.getScreenHeight();

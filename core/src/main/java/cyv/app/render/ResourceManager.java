@@ -1,5 +1,8 @@
 package cyv.app.render;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -9,13 +12,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TextureManager {
+public class ResourceManager {
     public final Texture PIXEL;
     private final Map<String, Texture> textures = new HashMap<>();
     private final Map<String, TextureRegion[][]> textureMaps = new HashMap<>();
+    private final Map<String, Sound> sounds = new HashMap<>();
     private boolean texturesLoaded = false;
 
-    public TextureManager() {
+    public ResourceManager() {
         loadPregameTextures();
         PIXEL = textures.get("pixel");
     }
@@ -70,6 +74,10 @@ public class TextureManager {
         loadTextureMap("grass", "textures/tiles/grass.png", IMAGE_TILE_WIDTH, IMAGE_TILE_HEIGHT);
     }
 
+    public void loadSounds() {
+        loadSound("projectile_droplet_spawn", "sounds/projectiles/droplet_spawn.mp3");
+    }
+
     public void loadTexture(String id, String path) {
         if (textures.containsKey(id)) throw new IllegalArgumentException("Id " + id + " already exists.");
         Texture tex = new Texture(path);
@@ -105,6 +113,21 @@ public class TextureManager {
         return textureMaps.get(id);
     }
 
+    public void loadSound(String id, String path) {
+        if (sounds.containsKey(id)) throw new IllegalArgumentException("Id " + id + " already exists.");
+        Sound sound = Gdx.audio.newSound(Gdx.files.internal(path));
+        sounds.put(id, sound);
+    }
+
+    public void unloadSound(String id) {
+        Sound sound = sounds.remove(id);
+        if (sound != null) sound.dispose();
+    }
+
+    public Sound getSound(String id) {
+        return sounds.get(id);
+    }
+
     public void dispose() {
         for (String id : new ArrayList<>(textures.keySet())) {
             unloadTexture(id);
@@ -112,6 +135,10 @@ public class TextureManager {
 
         for (String id : new ArrayList<>(textureMaps.keySet())) {
             unloadTextureMap(id);
+        }
+
+        for (String id : new ArrayList<>(sounds.keySet())) {
+            unloadSound(id);
         }
     }
 }

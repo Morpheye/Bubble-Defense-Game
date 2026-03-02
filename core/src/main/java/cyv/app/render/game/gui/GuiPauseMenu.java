@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import cyv.app.render.FontRenderer;
-import cyv.app.render.TextureManager;
+import cyv.app.render.ResourceManager;
 import cyv.app.render.game.GameScreen;
 import cyv.app.render.gui.Gui;
 import cyv.app.render.gui.GuiButton;
@@ -13,7 +13,7 @@ import cyv.app.render.gui.GuiButton;
 import java.util.List;
 
 public class GuiPauseMenu extends Gui<GameScreen> {
-    public GuiPauseMenu(GameScreen parent, TextureManager manager) {
+    public GuiPauseMenu(GameScreen parent, ResourceManager manager) {
         super(parent, manager);
 
         final float WIDTH = Gdx.graphics.getWidth();
@@ -30,7 +30,7 @@ public class GuiPauseMenu extends Gui<GameScreen> {
 
     @Override
     public void render(SpriteBatch batcher, FontRenderer fontRenderer,
-                       TextureManager manager, Viewport viewport, float delta, boolean isFocused) {
+                       ResourceManager manager, Viewport viewport, float delta, boolean isFocused) {
         Gui<GameScreen> subGui = getSubGui();
         if (subGui != null) subGui.render(batcher, fontRenderer, manager, viewport, delta, false);
 

@@ -1,5 +1,6 @@
 package cyv.app.game.components.projectile;
 
+import com.badlogic.gdx.audio.Sound;
 import cyv.app.game.Level;
 import cyv.app.game.Team;
 
@@ -44,6 +45,10 @@ public abstract class Projectile {
         setY(getY() + getVy());
 
         this.timeLived++;
+    }
+
+    public String getSpawnSound() {
+        return null;
     }
 
     public boolean isValid() {

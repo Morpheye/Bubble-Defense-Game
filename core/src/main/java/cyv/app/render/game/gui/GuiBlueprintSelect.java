@@ -9,14 +9,13 @@ import cyv.app.game.PlayerController;
 import cyv.app.game.blueprints.AbstractBlueprint;
 import cyv.app.game.blueprints.BlueprintRegistry;
 import cyv.app.render.FontRenderer;
-import cyv.app.render.TextureManager;
+import cyv.app.render.ResourceManager;
 import cyv.app.render.game.GameScreen;
 import cyv.app.render.gui.Gui;
 import cyv.app.render.gui.GuiButton;
 import cyv.app.util.MathUtils;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class GuiBlueprintSelect extends Gui<GameScreen> {
@@ -31,7 +30,7 @@ public class GuiBlueprintSelect extends Gui<GameScreen> {
     private int page = 0; // current page
     private AbstractBlueprint<?> hoveredBlueprint = null;
 
-    public GuiBlueprintSelect(GameScreen parent, TextureManager manager) {
+    public GuiBlueprintSelect(GameScreen parent, ResourceManager manager) {
         super(parent, manager);
         this.parent = parent;
 
@@ -50,7 +49,7 @@ public class GuiBlueprintSelect extends Gui<GameScreen> {
     }
 
     @Override
-    public void render(SpriteBatch batcher, FontRenderer fontRenderer, TextureManager manager,
+    public void render(SpriteBatch batcher, FontRenderer fontRenderer, ResourceManager manager,
                        Viewport viewport, float delta, boolean isFocused) {
         // draw gray overlay
         final float SCREEN_WIDTH = viewport.getScreenWidth();

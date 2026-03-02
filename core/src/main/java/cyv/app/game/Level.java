@@ -1,5 +1,6 @@
 package cyv.app.game;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.MathUtils;
 import cyv.app.game.components.BallObject;
 import cyv.app.game.components.ILivingObject;
@@ -7,11 +8,10 @@ import cyv.app.game.components.particle.Particle;
 import cyv.app.game.components.particle.common.WaterParticle;
 import cyv.app.game.components.player.HearthObject;
 import cyv.app.game.components.projectile.Projectile;
+import cyv.app.render.game.GameScreen;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Consumer;
 
 public abstract class Level {
     // important constants
@@ -34,6 +34,7 @@ public abstract class Level {
     private float camera_center_x;
     private float camera_center_y;
     private float camera_scale; // corresponds to the width of the camera
+    private final Queue<ScheduledTask> frontendTasks = new PriorityQueue<>(Comparator.comparingInt(a -> a.tick));
 
     // internal
     private int enemyCount = 0;
@@ -338,6 +339,7 @@ public abstract class Level {
      */
     public void spawnProjectile(Projectile proj) {
         projectiles.add(proj);
+        frontendTasks.add(new ScheduledTask(getTicks() + 1, f -> f.playSound(proj.getSpawnSound())));
     }
 
     public Set<Particle> getParticles() {
@@ -382,5 +384,9 @@ public abstract class Level {
 
     public int getEnemyCount() {
         return enemyCount;
+    }
+
+    public Queue<ScheduledTask> getFrontendTasks() {
+        return frontendTasks;
     }
 }

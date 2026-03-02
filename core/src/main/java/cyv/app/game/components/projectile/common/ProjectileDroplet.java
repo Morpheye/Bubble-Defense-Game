@@ -1,7 +1,9 @@
 package cyv.app.game.components.projectile.common;
 
+import com.badlogic.gdx.audio.Sound;
 import cyv.app.game.Team;
 import cyv.app.game.components.projectile.DamageProjectile;
+import cyv.app.render.ResourceManager;
 
 public class ProjectileDroplet extends DamageProjectile {
     private static final float SPEED = 25;
@@ -12,6 +14,11 @@ public class ProjectileDroplet extends DamageProjectile {
             (float) Math.cos(Math.toRadians(r)) * SPEED,
             (float) Math.sin(Math.toRadians(r)) * SPEED,
             200, team);
+    }
+
+    @Override
+    public String getSpawnSound() {
+        return "projectile_droplet_spawn";
     }
 
     @Override

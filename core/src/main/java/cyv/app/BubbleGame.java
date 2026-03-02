@@ -12,7 +12,7 @@ import cyv.app.game.PlayerController;
 import cyv.app.game.StandardLevel;
 import cyv.app.game.blueprints.BlueprintRegistry;
 import cyv.app.game.components.enemy.EnemyGeneratorRegistry;
-import cyv.app.render.TextureManager;
+import cyv.app.render.ResourceManager;
 import cyv.app.render.game.GameScreen;
 import cyv.app.render.game.renders.RendererRegistry;
 import cyv.app.render.levelSelect.LevelSelectScreen;
@@ -22,14 +22,15 @@ import java.util.function.Supplier;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class BubbleGame extends Game {
-    private TextureManager assets;
+    private ResourceManager assets;
     private SpriteBatch batcher;
     private ShapeRenderer shapeRenderer;
 
     @Override
     public void create() {
-        this.assets = new TextureManager();
+        this.assets = new ResourceManager();
         assets.loadNormalTextures();
+        assets.loadSounds();
         RendererRegistry.registerRenders(this);
         BlueprintRegistry.registerBlueprints(this);
         EnemyGeneratorRegistry.registerGenerators();
@@ -37,26 +38,12 @@ public class BubbleGame extends Game {
         this.batcher = new SpriteBatch();
         this.shapeRenderer = new ShapeRenderer();
 
-        // TODO: make level select screen
-        if (true) {
-            setScreen(new LevelSelectScreen(this, new World1()));
-            return;
-        }
-
-        Level level = StandardLevel.parseLevel(Gdx.files.internal("levels/level_1_2.json").readString("UTF-8"));
-        GameScreen screen = new GameScreen(this, () -> level, null);
-        PlayerController controller = new PlayerController(Arrays.asList(
-            BlueprintRegistry.getBlueprint("blueprint_droplet_turret"),
-            BlueprintRegistry.getBlueprint("blueprint_water_pump"),
-            BlueprintRegistry.getBlueprint("blueprint_ripple_turret")
-        ));
-        screen.setPlayerController(controller);
-        setScreen(screen);
+        setScreen(new LevelSelectScreen(this, new World1()));
     }
 
     // Default utility objects
 
-    public TextureManager getAssets() {
+    public ResourceManager getAssets() {
         return this.assets;
     }
 

@@ -2,6 +2,7 @@ package cyv.app.render;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -10,7 +11,7 @@ import cyv.app.render.gui.Gui;
 
 public abstract class AbstractScreen implements Screen {
     protected final BubbleGame game;
-    protected final TextureManager manager;
+    protected final ResourceManager manager;
 
     protected final SpriteBatch batch;
     protected final ShapeRenderer shapeRenderer;
@@ -59,6 +60,13 @@ public abstract class AbstractScreen implements Screen {
             gui = newGui;
             newGui.onOpen();
         }
+    }
+
+    public void playSound(String handle) {
+        if (handle == null) return;
+        Sound sound = manager.getSound(handle);
+        if (sound == null) return;
+        sound.play();
     }
 
     @Override

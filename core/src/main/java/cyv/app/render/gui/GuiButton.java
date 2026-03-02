@@ -3,10 +3,10 @@ package cyv.app.render.gui;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import cyv.app.render.FontRenderer;
-import cyv.app.render.TextureManager;
+import cyv.app.render.ResourceManager;
 
 public class GuiButton {
-    private final TextureManager manager;
+    private final ResourceManager manager;
     private final float centerX;
     private final float centerY;
     private final float scaleX;
@@ -15,7 +15,7 @@ public class GuiButton {
     private final float textScale;
     private final Runnable function;
 
-    public GuiButton(TextureManager manager, float centerX, float centerY, float width, float height,
+    public GuiButton(ResourceManager manager, float centerX, float centerY, float width, float height,
                      String text, float textSize, Runnable function) {
         this.manager = manager;
         this.centerX = centerX;

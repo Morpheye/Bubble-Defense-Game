@@ -4,14 +4,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import cyv.app.render.AbstractScreen;
 import cyv.app.render.FontRenderer;
-import cyv.app.render.TextureManager;
+import cyv.app.render.ResourceManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Gui<T extends AbstractScreen> {
     private final T parent;
-    private final TextureManager manager;
+    private final ResourceManager manager;
     private float lastPressedX;
     private float lastPressedY;
     private float mouseX;
@@ -20,7 +20,7 @@ public abstract class Gui<T extends AbstractScreen> {
 
     private Gui<T> subGui;
 
-    public Gui(T parent, TextureManager manager) {
+    public Gui(T parent, ResourceManager manager) {
         this.parent = parent;
         this.manager = manager;
         this.buttons = new ArrayList<>();
@@ -34,7 +34,7 @@ public abstract class Gui<T extends AbstractScreen> {
         return parent;
     }
 
-    protected final TextureManager getTextureManager() {
+    protected final ResourceManager getTextureManager() {
         return manager;
     }
 
@@ -48,7 +48,7 @@ public abstract class Gui<T extends AbstractScreen> {
     }
 
     public abstract void render(SpriteBatch batcher, FontRenderer fontRenderer,
-                                TextureManager manager, Viewport viewport, float delta, boolean isFocused);
+                                ResourceManager manager, Viewport viewport, float delta, boolean isFocused);
 
     public void onInputReleased() {
         for (GuiButton button : getButtons()) {

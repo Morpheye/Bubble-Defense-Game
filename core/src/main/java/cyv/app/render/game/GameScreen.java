@@ -14,6 +14,7 @@ import cyv.app.BubbleGame;
 import cyv.app.contents.LevelGroupRegistry;
 import cyv.app.game.Level;
 import cyv.app.game.PlayerController;
+import cyv.app.game.ScheduledTask;
 import cyv.app.game.blueprints.AbstractBlueprint;
 import cyv.app.game.components.BallObject;
 import cyv.app.game.components.ILivingObject;
@@ -31,6 +32,7 @@ import cyv.app.render.game.renders.UnitRenderer;
 import cyv.app.render.levelSelect.LevelSelectScreen;
 
 import java.util.List;
+import java.util.Queue;
 import java.util.function.Supplier;
 
 public class GameScreen extends AbstractScreen {
@@ -107,6 +109,14 @@ public class GameScreen extends AbstractScreen {
             lastTickTime = now;
             level.tick();
             controller.tick();
+
+            Queue<ScheduledTask> tasks = level.getFrontendTasks();
+            ScheduledTask task = tasks.peek();
+            while (task != null && task.tick == level.getTicks()) {
+                task.task.accept(this);
+                tasks.remove();
+                task = tasks.peek();
+            }
         }
         float d = Math.min(1, (now - lastTickTime) / (float) TICK_LENGTH);
 
