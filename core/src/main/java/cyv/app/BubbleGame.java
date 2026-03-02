@@ -52,7 +52,6 @@ public class BubbleGame extends Game {
         ));
         screen.setPlayerController(controller);
         setScreen(screen);
-
     }
 
     // Default utility objects

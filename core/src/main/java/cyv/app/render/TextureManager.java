@@ -46,6 +46,7 @@ public class TextureManager {
 
         // blueprints
         loadTexture("blueprint_selected", "textures/gui/blueprint_selected.png");
+        loadTexture("blueprint_unselected", "textures/gui/blueprint_unselected.png");
         loadTexture("blueprint_empty", "textures/gui/blueprint_empty.png");
         loadTexture("blueprint_droplet_turret", "textures/gui/blueprints/droplet_turret.png");
         loadTexture("blueprint_water_pump", "textures/gui/blueprints/water_pump.png");

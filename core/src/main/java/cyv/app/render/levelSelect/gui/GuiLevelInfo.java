@@ -6,7 +6,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import cyv.app.contents.LevelProvider;
 import cyv.app.render.FontRenderer;
 import cyv.app.render.TextureManager;
-import cyv.app.render.game.GameScreen;
 import cyv.app.render.gui.Gui;
 import cyv.app.render.gui.GuiButton;
 import cyv.app.render.levelSelect.LevelSelectScreen;
@@ -30,7 +29,7 @@ public class GuiLevelInfo extends Gui<LevelSelectScreen> {
 
     @Override
     public void render(SpriteBatch batcher, FontRenderer fontRenderer,
-                       TextureManager manager, Viewport viewport, float delta) {
+                       TextureManager manager, Viewport viewport, float delta, boolean isFocused) {
         // draw gray overlay
         final float SCREEN_WIDTH = viewport.getScreenWidth();
         final float SCREEN_HEIGHT = viewport.getScreenHeight();

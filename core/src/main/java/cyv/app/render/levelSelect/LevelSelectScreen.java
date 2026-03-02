@@ -1,6 +1,7 @@
 package cyv.app.render.levelSelect;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,7 +13,6 @@ import cyv.app.contents.LevelGroupRegistry;
 import cyv.app.contents.LevelProvider;
 import cyv.app.render.AbstractScreen;
 import cyv.app.render.InputController;
-import cyv.app.render.game.GameScreen;
 import cyv.app.render.levelSelect.gui.GuiLevelInfo;
 import cyv.app.util.MathUtils;
 
@@ -107,7 +107,7 @@ public class LevelSelectScreen extends AbstractScreen {
             setGui(new GuiLevelInfo(this, manager, provider));
         }
 
-        if (gui != null) gui.render(batch, fontRenderer, manager, uiViewport, 0);
+        if (gui != null) gui.render(batch, fontRenderer, manager, uiViewport, 0, true);
 
         batch.end();
     }
@@ -120,6 +120,11 @@ public class LevelSelectScreen extends AbstractScreen {
                 inputController.isInputJustPressed());
             if (inputController.isInputJustReleased()) gui.onInputReleased();
         }
+
+        // escape / pause = escape gui
+        boolean pauseKeyPressed = Gdx.input.isKeyJustPressed(Input.Keys.P) ||
+            Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE);
+        if (pauseKeyPressed && gui != null) setGui(null);
 
         int i = 0;
     }

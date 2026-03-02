@@ -5,7 +5,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import cyv.app.render.AbstractScreen;
 import cyv.app.render.FontRenderer;
 import cyv.app.render.TextureManager;
-import cyv.app.render.game.GameScreen;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +48,7 @@ public abstract class Gui<T extends AbstractScreen> {
     }
 
     public abstract void render(SpriteBatch batcher, FontRenderer fontRenderer,
-                                TextureManager manager, Viewport viewport, float delta);
+                                TextureManager manager, Viewport viewport, float delta, boolean isFocused);
 
     public void onInputReleased() {
         for (GuiButton button : getButtons()) {
@@ -87,6 +86,13 @@ public abstract class Gui<T extends AbstractScreen> {
      */
     public boolean pausesGame() {
         return false;
+    }
+
+    /**
+     * Whether the gui can be closed at any time
+     */
+    public boolean isClosable() {
+        return true;
     }
 
     /**

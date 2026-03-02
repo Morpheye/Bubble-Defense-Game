@@ -12,7 +12,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import cyv.app.BubbleGame;
 import cyv.app.contents.LevelGroupRegistry;
-import cyv.app.contents.LevelProvider;
 import cyv.app.game.Level;
 import cyv.app.game.PlayerController;
 import cyv.app.game.blueprints.AbstractBlueprint;
@@ -24,6 +23,7 @@ import cyv.app.game.components.player.AbstractUnitObject;
 import cyv.app.game.components.projectile.Projectile;
 import cyv.app.render.AbstractScreen;
 import cyv.app.render.InputController;
+import cyv.app.render.game.gui.GuiBlueprintSelect;
 import cyv.app.render.game.gui.GuiPauseMenu;
 import cyv.app.render.game.renders.ObjectRenderer;
 import cyv.app.render.game.renders.RendererRegistry;
@@ -31,7 +31,6 @@ import cyv.app.render.game.renders.UnitRenderer;
 import cyv.app.render.levelSelect.LevelSelectScreen;
 
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class GameScreen extends AbstractScreen {
@@ -91,6 +90,9 @@ public class GameScreen extends AbstractScreen {
                 return worldPos.y;
             }
         );
+
+        // blueprint select
+        setGui(new GuiBlueprintSelect(this, game.getAssets()));
     }
 
     public void setPlayerController(PlayerController controller) {
@@ -417,7 +419,7 @@ public class GameScreen extends AbstractScreen {
         batch.setProjectionMatrix(uiCamera.combined);
         batch.begin();
 
-        gui.render(batch, fontRenderer, manager, uiViewport, delta);
+        gui.render(batch, fontRenderer, manager, uiViewport, delta, true);
 
         batch.end();
     }
@@ -456,7 +458,7 @@ public class GameScreen extends AbstractScreen {
         boolean pauseKeyPressed = Gdx.input.isKeyJustPressed(Input.Keys.P) ||
             Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE);
         if (pauseKeyPressed || (gui == null && inBounds && isInputJustPressed)) {
-            if (gui != null) setGui(null);
+            if (gui != null && gui.isClosable()) setGui(null);
             else pauseGame();
         }
     }

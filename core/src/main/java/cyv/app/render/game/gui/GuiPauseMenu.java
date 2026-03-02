@@ -1,5 +1,6 @@
 package cyv.app.render.game.gui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -15,8 +16,8 @@ public class GuiPauseMenu extends Gui<GameScreen> {
     public GuiPauseMenu(GameScreen parent, TextureManager manager) {
         super(parent, manager);
 
-        final float WIDTH = 1280;
-        final float HEIGHT = 720;
+        final float WIDTH = Gdx.graphics.getWidth();
+        final float HEIGHT = Gdx.graphics.getHeight();
         List<GuiButton> buttons = getButtons();
         buttons.add(new GuiButton(manager, WIDTH / 2, HEIGHT * 2 / 3, WIDTH / 3, HEIGHT / 9,
             "Back to Game", HEIGHT / 27,
@@ -29,18 +30,21 @@ public class GuiPauseMenu extends Gui<GameScreen> {
 
     @Override
     public void render(SpriteBatch batcher, FontRenderer fontRenderer,
-                       TextureManager manager, Viewport viewport, float delta) {
+                       TextureManager manager, Viewport viewport, float delta, boolean isFocused) {
+        Gui<GameScreen> subGui = getSubGui();
+        if (subGui != null) subGui.render(batcher, fontRenderer, manager, viewport, delta, false);
+
         // draw gray overlay
         final float SCREEN_WIDTH = viewport.getScreenWidth();
         final float SCREEN_HEIGHT = viewport.getScreenHeight();
         Texture pix = manager.PIXEL;
-        batcher.setColor(0, 0, 0, 0.5f);
+        batcher.setColor(0, 0, 0, getSubGui() != null ? 0.9f : 0.5f);
         batcher.draw(pix, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         batcher.setColor(1, 1, 1, 1);
 
         // draw buttons
         for (GuiButton button : getButtons()) {
-            boolean hovered = button.mouseOver(getMouseX(), getMouseY());
+            boolean hovered = isFocused && button.mouseOver(getMouseX(), getMouseY());
             button.render(batcher, fontRenderer, hovered);
         }
     }
