@@ -38,6 +38,10 @@ public class GuiLevelInfo extends Gui<LevelSelectScreen> {
         batcher.draw(pix, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         batcher.setColor(1, 1, 1, 1);
 
+        // draw level info
+        fontRenderer.setSize(75);
+        fontRenderer.drawCenterBoth(batcher, provider.getName(), SCREEN_WIDTH / 2, SCREEN_HEIGHT * 2 / 3);
+
         // draw buttons
         for (GuiButton button : getButtons()) {
             boolean hovered = button.mouseOver(getMouseX(), getMouseY());

@@ -9,10 +9,12 @@ import cyv.app.game.StandardLevel;
  */
 public class LevelProvider {
     private final String path;
+    private final String name;
     private String parent = null;
 
-    public LevelProvider(String path) {
+    public LevelProvider(String path, String name) {
         this.path = path;
+        this.name = name;
     }
 
     /**
@@ -21,6 +23,10 @@ public class LevelProvider {
      */
     public String getLevelPath() {
         return this.path;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     public final Level produce() {

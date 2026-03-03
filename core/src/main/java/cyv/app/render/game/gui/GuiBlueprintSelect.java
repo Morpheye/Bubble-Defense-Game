@@ -29,6 +29,7 @@ public class GuiBlueprintSelect extends Gui<GameScreen> {
     private final List<AbstractBlueprint<?>> selectedBlueprints = new ArrayList<>();
     private int page = 0; // current page
     private AbstractBlueprint<?> hoveredBlueprint = null;
+    private boolean pauseButtonHovered = false;
 
     public GuiBlueprintSelect(GameScreen parent, ResourceManager manager) {
         super(parent, manager);
@@ -59,6 +60,27 @@ public class GuiBlueprintSelect extends Gui<GameScreen> {
         batcher.draw(pix, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         batcher.setColor(1, 1, 1, 1);
 
+        // draw pause button
+        Texture pauseButtonTex = manager.getTexture("gui_pause_button");
+        final float PAUSE_MARGIN = 10f;
+        final float PAUSE_BUTTON_SIZE = 50f;
+        float x = SCREEN_WIDTH - PAUSE_BUTTON_SIZE - PAUSE_MARGIN;
+        float y = SCREEN_HEIGHT - PAUSE_BUTTON_SIZE - PAUSE_MARGIN;
+        batcher.draw(pauseButtonTex, x, y, PAUSE_BUTTON_SIZE, PAUSE_BUTTON_SIZE);
+
+        float inputUiX = getMouseX();
+        float inputUiY =  getMouseY();
+        pauseButtonHovered = false;
+        boolean inBounds = inputUiX >= x && inputUiY >= y && inputUiX <= x + PAUSE_BUTTON_SIZE &&
+            inputUiY <= y + PAUSE_BUTTON_SIZE;
+        if (inBounds && isFocused) {
+            batcher.setColor(0.2f, 0.8f, 1, 0.5f);
+            batcher.draw(manager.PIXEL, x, y, PAUSE_BUTTON_SIZE, PAUSE_BUTTON_SIZE);
+            batcher.setColor(1, 1, 1, 1);
+            pauseButtonHovered = true;
+        }
+
+
         // top text (TEMP)
         fontRenderer.setSize(60);
         fontRenderer.drawCenterBoth(batcher, "Select Blueprints", SCREEN_WIDTH / 2, SCREEN_HEIGHT * 9 / 10);
@@ -88,7 +110,7 @@ public class GuiBlueprintSelect extends Gui<GameScreen> {
                 (i + 1) * (BLUEPRINT_HEIGHT + BLUEPRINT_GAP);
 
             batcher.draw(tex, BLUEPRINT_X_MARGIN, y_start, BLUEPRINT_WIDTH, BLUEPRINT_HEIGHT);
-            boolean inBounds = MathUtils.inBounds(getMouseX(), getMouseY(),
+            inBounds = MathUtils.inBounds(getMouseX(), getMouseY(),
                 BLUEPRINT_X_MARGIN, BLUEPRINT_X_MARGIN + BLUEPRINT_WIDTH,
                 y_start, y_start + BLUEPRINT_HEIGHT);
             if (inBounds) {
@@ -118,8 +140,8 @@ public class GuiBlueprintSelect extends Gui<GameScreen> {
             int index = i + page * (GUI_X * GUI_Y);
             if (index >= availableBlueprints.size()) break;
             AbstractBlueprint<?> bp = availableBlueprints.get(index);
-            int x = i % GUI_X;
-            int y = i / GUI_X;
+            x = i % GUI_X;
+            y = i / GUI_X;
 
             float left = SCREEN_CENTER_X - BOX_X / 2 + BLUEPRINT_GAP + x * (BLUEPRINT_WIDTH + BLUEPRINT_GAP);
             float bottom = SCREEN_CENTER_Y + BOX_Y / 2 - (1 + y) * (BLUEPRINT_HEIGHT + BLUEPRINT_GAP);
@@ -160,6 +182,11 @@ public class GuiBlueprintSelect extends Gui<GameScreen> {
             }
         }
 
+        // pause button
+        if (pauseButtonHovered) {
+            getFrontendIn().setGui(new GuiPauseMenu(getFrontendIn(), getTextureManager()));
+        }
+
         super.onInputReleased();
     }
 
@@ -171,6 +198,11 @@ public class GuiBlueprintSelect extends Gui<GameScreen> {
     @Override
     public void onClose() {
         parent.setPlayerController(new PlayerController(selectedBlueprints));
+    }
+
+    @Override
+    public boolean pausesGame() {
+        return true;
     }
 
 }

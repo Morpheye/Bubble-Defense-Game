@@ -8,8 +8,8 @@ import java.util.Arrays;
 public class World1 extends LevelGroup {
     public World1() {
         super(Arrays.asList(
-            new LevelProvider("levels/level_1_1.json"),
-            new LevelProvider("levels/level_1_2.json")
+            new LevelProvider("levels/level_1_1.json", "Level 1"),
+            new LevelProvider("levels/level_1_2.json", "Level 2")
         ));
     }
 
