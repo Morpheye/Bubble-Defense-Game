@@ -40,9 +40,7 @@ public class GuiBlueprintSelect extends Gui<GameScreen> {
             availableBlueprints.add(BlueprintRegistry.getBlueprint(bs));
         }
 
-        final float WIDTH = viewport.getWorldWidth();
-        final float HEIGHT = viewport.getWorldHeight();
-        getButtons().add(new GuiButton(manager, WIDTH / 2, HEIGHT / 8, 200, 75, "Ready!", 25,
+        getButtons().add(new GuiButton(manager, 640, 90, 200, 75, "Ready!", 25,
             () -> {
                 parent.setPlayerController(new PlayerController(selectedBlueprints));
                 parent.setGui(null);

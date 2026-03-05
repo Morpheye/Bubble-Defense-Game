@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import cyv.app.BubbleGame;
+import cyv.app.Skydouser;
 import cyv.app.contents.LevelGroup;
 import cyv.app.contents.LevelGroupRegistry;
 import cyv.app.contents.LevelProvider;
@@ -25,7 +25,7 @@ public class LevelSelectScreen extends AbstractScreen {
     // input
     private final InputController inputController;
 
-    public LevelSelectScreen(BubbleGame game, LevelGroup levelGroup) {
+    public LevelSelectScreen(Skydouser game, LevelGroup levelGroup) {
         super(game);
         this.levelGroup = levelGroup;
 

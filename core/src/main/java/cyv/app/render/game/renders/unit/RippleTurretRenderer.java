@@ -3,7 +3,7 @@ package cyv.app.render.game.renders.unit;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import cyv.app.BubbleGame;
+import cyv.app.Skydouser;
 import cyv.app.game.Level;
 import cyv.app.game.components.BallObject;
 import cyv.app.game.components.player.HearthObject;
@@ -18,7 +18,7 @@ public class RippleTurretRenderer extends UnitRenderer {
     private final TextureRegion barrel;
     private final Texture aimTex;
 
-    public RippleTurretRenderer(BubbleGame gameIn) {
+    public RippleTurretRenderer(Skydouser gameIn) {
         super(gameIn);
         this.aimTex = gameIn.getAssets().getTexture("gui_aim_highlight");
         TextureRegion[][] reg = gameIn.getAssets().getTextureMap("unit_ripple_turret");

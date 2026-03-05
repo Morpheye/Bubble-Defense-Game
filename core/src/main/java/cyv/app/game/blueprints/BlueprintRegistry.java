@@ -1,6 +1,6 @@
 package cyv.app.game.blueprints;
 
-import cyv.app.BubbleGame;
+import cyv.app.Skydouser;
 import cyv.app.game.blueprints.contents.BlueprintDropletTurret;
 import cyv.app.game.blueprints.contents.BlueprintRippleTurret;
 import cyv.app.game.blueprints.contents.BlueprintWaterPump;
@@ -11,7 +11,7 @@ public class BlueprintRegistry {
     private static final Map<String, Integer> order = new HashMap<>();
     private static final LinkedHashMap<String, AbstractBlueprint<?>> registry = new LinkedHashMap<>();
 
-    public static void registerBlueprints(BubbleGame game) {
+    public static void registerBlueprints(Skydouser game) {
         registry.put("blueprint_droplet_turret", new BlueprintDropletTurret(game));
         registry.put("blueprint_water_pump", new BlueprintWaterPump(game));
         registry.put("blueprint_ripple_turret", new BlueprintRippleTurret(game));

@@ -2,14 +2,14 @@ package cyv.app.render.game.renders.unit;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import cyv.app.BubbleGame;
+import cyv.app.Skydouser;
 import cyv.app.game.components.BallObject;
 import cyv.app.render.game.renders.ObjectRenderer;
 
 public class HearthRenderer extends ObjectRenderer<BallObject> {
     private final Texture hTex;
 
-    public HearthRenderer(BubbleGame gameIn) {
+    public HearthRenderer(Skydouser gameIn) {
         super(gameIn);
         this.hTex = getGameIn().getAssets().getTexture("unit_hearth");
     }

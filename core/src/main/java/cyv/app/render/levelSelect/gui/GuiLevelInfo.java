@@ -18,11 +18,9 @@ public class GuiLevelInfo extends Gui<LevelSelectScreen> {
     public GuiLevelInfo(LevelSelectScreen parent, ResourceManager manager,
                         LevelProvider provider, Viewport viewport) {
         super(parent, manager, viewport);
-        final float WIDTH = 1280;
-        final float HEIGHT = 720;
         List<GuiButton> buttons = getButtons();
-        buttons.add(new GuiButton(manager, WIDTH / 2, HEIGHT / 3, WIDTH / 3, HEIGHT / 9,
-            "Play", HEIGHT / 27,
+        buttons.add(new GuiButton(manager, 640, 240, 420, 80,
+            "Play", 24,
             () -> parent.playlevel(provider)));
 
         this.provider = provider;

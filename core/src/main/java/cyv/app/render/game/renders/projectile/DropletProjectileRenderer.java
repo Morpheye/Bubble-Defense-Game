@@ -2,8 +2,7 @@ package cyv.app.render.game.renders.projectile;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import cyv.app.BubbleGame;
-import cyv.app.game.components.particle.Particle;
+import cyv.app.Skydouser;
 import cyv.app.game.components.projectile.Projectile;
 import cyv.app.render.game.renders.ObjectRenderer;
 import cyv.app.util.MathUtils;
@@ -11,7 +10,7 @@ import cyv.app.util.MathUtils;
 public class DropletProjectileRenderer extends ObjectRenderer<Projectile> {
     private final Texture tex;
 
-    public DropletProjectileRenderer(BubbleGame gameIn) {
+    public DropletProjectileRenderer(Skydouser gameIn) {
         super(gameIn);
         this.tex = getGameIn().getAssets().getTexture("projectile_droplet");
     }

@@ -2,7 +2,7 @@ package cyv.app.render.game;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import cyv.app.BubbleGame;
+import cyv.app.Skydouser;
 import cyv.app.game.Level;
 
 public class TileRenderer {
@@ -12,7 +12,7 @@ public class TileRenderer {
      * @param grid Tile grid
      * TODO: add support for multiple themes
      */
-    public static void renderTiles(BubbleGame game, SpriteBatch batch, int[][] grid) {
+    public static void renderTiles(Skydouser game, SpriteBatch batch, int[][] grid) {
         // temp: theme is always "grass"
         final String THEME = "grass";
         TextureRegion[][] tiles = game.getAssets().getTextureMap(THEME);

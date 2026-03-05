@@ -1,15 +1,12 @@
 package cyv.app;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import cyv.app.contents.LevelGroup;
 import cyv.app.contents.LevelProvider;
 import cyv.app.contents.levels.World1;
 import cyv.app.game.Level;
-import cyv.app.game.PlayerController;
-import cyv.app.game.StandardLevel;
 import cyv.app.game.blueprints.BlueprintRegistry;
 import cyv.app.game.components.enemy.EnemyGeneratorRegistry;
 import cyv.app.render.ResourceManager;
@@ -17,11 +14,10 @@ import cyv.app.render.game.GameScreen;
 import cyv.app.render.game.renders.RendererRegistry;
 import cyv.app.render.levelSelect.LevelSelectScreen;
 
-import java.util.Arrays;
 import java.util.function.Supplier;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
-public class BubbleGame extends Game {
+public class Skydouser extends Game {
     private ResourceManager assets;
     private SpriteBatch batcher;
     private ShapeRenderer shapeRenderer;

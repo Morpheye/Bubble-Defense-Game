@@ -40,6 +40,7 @@ public class ResourceManager {
         // core assets
         loadTexture("player_bubble_back", "textures/entities/player_bubble_back.png");
         loadTexture("enemy_bubble_back", "textures/entities/enemy_bubble_back.png");
+        loadTexture("bubble_selected", "textures/entities/bubble_selected.png");
         loadTexture("unit_hearth", "textures/entities/hearth.png");
         loadTexture("water_icon", "textures/gui/water_icon.png");
 

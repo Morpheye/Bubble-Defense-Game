@@ -3,12 +3,11 @@ package cyv.app.render.game.renders.unit;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import cyv.app.BubbleGame;
+import cyv.app.Skydouser;
 import cyv.app.game.Level;
 import cyv.app.game.components.BallObject;
 import cyv.app.game.components.player.HearthObject;
 import cyv.app.game.components.player.common.UnitDropletTurret;
-import cyv.app.render.game.renders.ObjectRenderer;
 import cyv.app.render.game.renders.UnitRenderer;
 import cyv.app.util.MathUtils;
 
@@ -19,7 +18,7 @@ public class DropletTurretRenderer extends UnitRenderer {
     private final TextureRegion barrel;
     private final Texture aimTex;
 
-    public DropletTurretRenderer(BubbleGame gameIn) {
+    public DropletTurretRenderer(Skydouser gameIn) {
         super(gameIn);
         this.aimTex = gameIn.getAssets().getTexture("gui_aim_highlight");
         TextureRegion[][] reg = gameIn.getAssets().getTextureMap("unit_droplet_turret");

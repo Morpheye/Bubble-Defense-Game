@@ -2,7 +2,7 @@ package cyv.app.render.game.renders.projectile;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import cyv.app.BubbleGame;
+import cyv.app.Skydouser;
 import cyv.app.game.components.projectile.Projectile;
 import cyv.app.game.components.projectile.common.ProjectileRipple;
 import cyv.app.render.game.renders.ObjectRenderer;
@@ -11,7 +11,7 @@ import cyv.app.util.MathUtils;
 public class RippleProjectileRenderer extends ObjectRenderer<Projectile> {
     private final Texture tex;
 
-    public RippleProjectileRenderer(BubbleGame gameIn) {
+    public RippleProjectileRenderer(Skydouser gameIn) {
         super(gameIn);
         this.tex = getGameIn().getAssets().getTexture("projectile_ripple");
     }

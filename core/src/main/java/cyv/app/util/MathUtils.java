@@ -17,4 +17,8 @@ public class MathUtils {
                                    double bottom, double top) {
         return x >= left && x <= right && y >= bottom && y <= top;
     }
+
+    public static boolean inBounds(double x, double y, double centerX, double centerY, double radius) {
+        return (centerX - x) * (centerX - x) + (centerY - y) * (centerY - y) <= radius * radius;
+    }
 }

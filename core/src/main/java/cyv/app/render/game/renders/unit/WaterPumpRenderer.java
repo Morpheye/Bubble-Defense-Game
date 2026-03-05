@@ -1,13 +1,11 @@
 package cyv.app.render.game.renders.unit;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import cyv.app.BubbleGame;
+import cyv.app.Skydouser;
 import cyv.app.game.Level;
 import cyv.app.game.components.BallObject;
 import cyv.app.game.components.player.common.UnitWaterPump;
-import cyv.app.render.game.renders.ObjectRenderer;
 import cyv.app.render.game.renders.UnitRenderer;
 
 import static cyv.app.game.components.player.AbstractUnitObject.UNIT_SIZE;
@@ -16,7 +14,7 @@ public class WaterPumpRenderer extends UnitRenderer {
     private final TextureRegion pumpTex;
     private final TextureRegion waterTex;
 
-    public WaterPumpRenderer(BubbleGame gameIn) {
+    public WaterPumpRenderer(Skydouser gameIn) {
         super(gameIn);
         TextureRegion[][] t = getGameIn().getAssets().getTextureMap("unit_water_pump");
         pumpTex = t[0][0];

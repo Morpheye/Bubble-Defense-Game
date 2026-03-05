@@ -1,18 +1,18 @@
 package cyv.app.render.game.renders;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import cyv.app.BubbleGame;
+import cyv.app.Skydouser;
 
 public abstract class ObjectRenderer<T> {
-    private final BubbleGame gameIn;
+    private final Skydouser gameIn;
 
-    public ObjectRenderer(BubbleGame gameIn) {
+    public ObjectRenderer(Skydouser gameIn) {
         this.gameIn = gameIn;
     }
 
     public abstract void render(SpriteBatch t, T obj, float delta);
 
-    protected BubbleGame getGameIn() {
+    protected Skydouser getGameIn() {
         return gameIn;
     }
 }

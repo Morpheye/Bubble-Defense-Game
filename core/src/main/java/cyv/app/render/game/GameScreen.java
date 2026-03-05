@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import cyv.app.BubbleGame;
+import cyv.app.Skydouser;
 import cyv.app.contents.LevelGroupRegistry;
 import cyv.app.game.Level;
 import cyv.app.game.PlayerController;
@@ -30,6 +30,7 @@ import cyv.app.render.game.renders.ObjectRenderer;
 import cyv.app.render.game.renders.RendererRegistry;
 import cyv.app.render.game.renders.UnitRenderer;
 import cyv.app.render.levelSelect.LevelSelectScreen;
+import cyv.app.util.MathUtils;
 
 import java.util.List;
 import java.util.Queue;
@@ -57,9 +58,12 @@ public class GameScreen extends AbstractScreen {
     private final InputController gameInputController;
     private final InputController uiInputController;
     private boolean isOverlappingBlueprints = false;
-    private final Vector3 tmp = new Vector3(); // reuse to avoid GC
 
-    public GameScreen(BubbleGame game, Supplier<Level> levelSupplier, String parentWorld) {
+    // cache and temp
+    private final Vector3 tmp = new Vector3(); // reuse to avoid GC
+    private BallObject hoveredUnit = null;
+
+    public GameScreen(Skydouser game, Supplier<Level> levelSupplier, String parentWorld) {
         super(game);
 
         this.levelSupplier = levelSupplier;
@@ -190,6 +194,8 @@ public class GameScreen extends AbstractScreen {
     private void drawBalls(float delta) {
         Texture pbTex = manager.getTexture("player_bubble_back");
         Texture ebTex = manager.getTexture("enemy_bubble_back");
+        Texture hTex = manager.getTexture("bubble_selected");
+        this.hoveredUnit = null;
 
         for (BallObject b : level.getBalls()) {
             float renderX = b.getLastX() * (1 - delta) + b.getX() * delta;
@@ -198,10 +204,10 @@ public class GameScreen extends AbstractScreen {
             float size = radius * 2f;
 
             // draw bubble back
-            if (b instanceof AbstractUnitObject)
-                batch.draw(pbTex, renderX - radius, renderY - radius, size, size);
-            else if (b instanceof AbstractEnemyObject)
-                batch.draw(ebTex, renderX - radius, renderY - radius, size, size);
+            Texture sel = null;
+            if (b instanceof AbstractUnitObject) sel = pbTex;
+            else if (b instanceof AbstractEnemyObject) sel = ebTex;
+            batch.draw(sel, renderX - radius, renderY - radius, size, size);
 
             // render inside entity
             ObjectRenderer<BallObject> renderer = RendererRegistry.getBallRenderer(b.getId());
@@ -209,6 +215,14 @@ public class GameScreen extends AbstractScreen {
                 renderer.render(batch, b, delta);
             } catch (ClassCastException e) {
                 Gdx.app.error("Renderer", "Invalid ball type", e);
+            }
+
+            // selection detection
+            if ((gui == null || !gui.blocksInput()) &&
+                MathUtils.inBounds(gameInputController.getX(), gameInputController.getY(),
+                renderX, renderY, radius)) {
+                hoveredUnit = b;
+                batch.draw(hTex, renderX - radius, renderY - radius, size, size);
             }
 
             // render healthbar

@@ -1,10 +1,9 @@
 package cyv.app.render.game.renders;
 
-import cyv.app.BubbleGame;
+import cyv.app.Skydouser;
 import cyv.app.game.components.BallObject;
 import cyv.app.game.components.particle.Particle;
 import cyv.app.game.components.projectile.Projectile;
-import cyv.app.render.game.renders.ObjectRenderer;
 import cyv.app.render.game.renders.particle.AttackParticleRenderer;
 import cyv.app.render.game.renders.projectile.DropletProjectileRenderer;
 import cyv.app.render.game.renders.particle.WaterParticleRenderer;
@@ -22,7 +21,7 @@ public class RendererRegistry {
     private static final Map<String, ObjectRenderer<Particle>> particleRenders = new HashMap<>();
     private static final Map<String, ObjectRenderer<Projectile>> projectileRenders = new HashMap<>();
 
-    public static void registerRenders(BubbleGame game) {
+    public static void registerRenders(Skydouser game) {
         ballRenderers.clear();
         particleRenders.clear();
         projectileRenders.clear();
@@ -33,7 +32,7 @@ public class RendererRegistry {
         registerProjectiles(game);
     }
 
-    private static void registerUnits(BubbleGame game) {
+    private static void registerUnits(Skydouser game) {
         ballRenderers.put("unit_hearth", new HearthRenderer(game));
 
         ballRenderers.put("unit_droplet_turret", new DropletTurretRenderer(game));
@@ -41,16 +40,16 @@ public class RendererRegistry {
         ballRenderers.put("unit_ripple_turret", new RippleTurretRenderer(game));
     }
 
-    private static void registerEnemies(BubbleGame game) {
+    private static void registerEnemies(Skydouser game) {
 
     }
 
-    private static void registerParticles(BubbleGame game) {
+    private static void registerParticles(Skydouser game) {
         particleRenders.put("particle_attack", new AttackParticleRenderer(game));
         particleRenders.put("particle_water", new WaterParticleRenderer(game));
     }
 
-    private static void registerProjectiles(BubbleGame game) {
+    private static void registerProjectiles(Skydouser game) {
         projectileRenders.put("projectile_droplet", new DropletProjectileRenderer(game));
         projectileRenders.put("projectile_ripple", new RippleProjectileRenderer(game));
     }

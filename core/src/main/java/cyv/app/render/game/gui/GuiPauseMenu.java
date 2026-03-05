@@ -1,6 +1,5 @@
 package cyv.app.render.game.gui;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -16,16 +15,13 @@ public class GuiPauseMenu extends Gui<GameScreen> {
     public GuiPauseMenu(GameScreen parent, ResourceManager manager, Viewport viewport) {
         super(parent, manager, viewport);
 
-        final float WIDTH = viewport.getWorldWidth();
-        final float HEIGHT = viewport.getWorldHeight();
         List<GuiButton> buttons = getButtons();
-        buttons.add(new GuiButton(manager, WIDTH / 2, HEIGHT * 2 / 3, WIDTH / 3, HEIGHT / 9,
-            "Back to Game", HEIGHT / 27,
-            () -> parent.setGui(null)));
-        buttons.add(new GuiButton(manager, WIDTH / 2, HEIGHT / 2, WIDTH / 3, HEIGHT / 9,
-            "Restart", HEIGHT / 27, parent::restartLevel));
-        buttons.add(new GuiButton(manager, WIDTH / 2, HEIGHT / 3, WIDTH / 3, HEIGHT / 9,
-            "Exit Level", HEIGHT / 27, parent::exitToMenu));
+        buttons.add(new GuiButton(manager, 640, 480, 420, 80,
+            "Back to Game", 30, () -> parent.setGui(null)));
+        buttons.add(new GuiButton(manager, 640, 360, 420, 80,
+            "Restart", 30, parent::restartLevel));
+        buttons.add(new GuiButton(manager, 640, 240, 420, 80,
+            "Exit Level", 30, parent::exitToMenu));
     }
 
     @Override

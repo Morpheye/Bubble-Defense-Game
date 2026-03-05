@@ -1,12 +1,12 @@
 package cyv.app.render.game.renders;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import cyv.app.BubbleGame;
+import cyv.app.Skydouser;
 import cyv.app.game.Level;
 import cyv.app.game.components.BallObject;
 
 public abstract class UnitRenderer extends ObjectRenderer<BallObject> {
-    public UnitRenderer(BubbleGame gameIn) {
+    public UnitRenderer(Skydouser gameIn) {
         super(gameIn);
     }
 

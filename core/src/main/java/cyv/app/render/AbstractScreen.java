@@ -6,11 +6,11 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import cyv.app.BubbleGame;
+import cyv.app.Skydouser;
 import cyv.app.render.gui.Gui;
 
 public abstract class AbstractScreen implements Screen {
-    protected final BubbleGame game;
+    protected final Skydouser game;
     protected final ResourceManager manager;
 
     protected final SpriteBatch batch;
@@ -22,7 +22,7 @@ public abstract class AbstractScreen implements Screen {
     // gui
     protected Gui<?> gui = null;
 
-    public AbstractScreen(BubbleGame game) {
+    public AbstractScreen(Skydouser game) {
         this.game = game;
         this.manager = game.getAssets();
 

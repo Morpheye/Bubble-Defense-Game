@@ -1,7 +1,7 @@
 package cyv.app.game.blueprints;
 
 import com.badlogic.gdx.graphics.Texture;
-import cyv.app.BubbleGame;
+import cyv.app.Skydouser;
 import cyv.app.game.components.player.AbstractUnitObject;
 import cyv.app.render.game.renders.RendererRegistry;
 import cyv.app.render.game.renders.UnitRenderer;
@@ -12,10 +12,10 @@ import cyv.app.render.game.renders.UnitRenderer;
  * @param <T>
  */
 public abstract class AbstractBlueprint<T extends AbstractUnitObject> {
-    private final BubbleGame game;
+    private final Skydouser game;
     private UnitRenderer cachedUnitRenderer;
 
-    public AbstractBlueprint(BubbleGame game) {
+    public AbstractBlueprint(Skydouser game) {
         this.game = game;
     }
 
@@ -47,7 +47,7 @@ public abstract class AbstractBlueprint<T extends AbstractUnitObject> {
      */
     public abstract T produce(float x, float y);
 
-    protected BubbleGame getGame() {
+    protected Skydouser getGame() {
         return game;
     }
 

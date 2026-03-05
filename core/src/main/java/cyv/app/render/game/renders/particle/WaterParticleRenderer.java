@@ -2,14 +2,14 @@ package cyv.app.render.game.renders.particle;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import cyv.app.BubbleGame;
+import cyv.app.Skydouser;
 import cyv.app.game.components.particle.Particle;
 import cyv.app.render.game.renders.ObjectRenderer;
 
 public class WaterParticleRenderer extends ObjectRenderer<Particle> {
     private final Texture tex;
 
-    public WaterParticleRenderer(BubbleGame gameIn) {
+    public WaterParticleRenderer(Skydouser gameIn) {
         super(gameIn);
         this.tex = getGameIn().getAssets().getTexture("water_icon");
     }

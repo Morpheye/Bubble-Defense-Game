@@ -1,12 +1,12 @@
 package cyv.app.game.blueprints.contents;
 
 import com.badlogic.gdx.graphics.Texture;
-import cyv.app.BubbleGame;
+import cyv.app.Skydouser;
 import cyv.app.game.blueprints.AbstractBlueprint;
 import cyv.app.game.components.player.common.UnitRippleTurret;
 
 public class BlueprintRippleTurret extends AbstractBlueprint<UnitRippleTurret> {
-    public BlueprintRippleTurret(BubbleGame game) {
+    public BlueprintRippleTurret(Skydouser game) {
         super(game);
     }
 
