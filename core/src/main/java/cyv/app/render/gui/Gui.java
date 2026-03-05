@@ -17,17 +17,23 @@ public abstract class Gui<T extends AbstractScreen> {
     private float mouseX;
     private float mouseY;
     private final List<GuiButton> buttons;
+    private final Viewport viewport;
 
     private Gui<T> subGui;
 
-    public Gui(T parent, ResourceManager manager) {
+    public Gui(T parent, ResourceManager manager, Viewport viewport) {
         this.parent = parent;
         this.manager = manager;
         this.buttons = new ArrayList<>();
+        this.viewport = viewport;
     }
 
     protected final List<GuiButton> getButtons() {
         return buttons;
+    }
+
+    protected final Viewport getViewport() {
+        return viewport;
     }
 
     protected final T getFrontendIn() {

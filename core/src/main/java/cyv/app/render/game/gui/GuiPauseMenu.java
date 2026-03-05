@@ -13,11 +13,11 @@ import cyv.app.render.gui.GuiButton;
 import java.util.List;
 
 public class GuiPauseMenu extends Gui<GameScreen> {
-    public GuiPauseMenu(GameScreen parent, ResourceManager manager) {
-        super(parent, manager);
+    public GuiPauseMenu(GameScreen parent, ResourceManager manager, Viewport viewport) {
+        super(parent, manager, viewport);
 
-        final float WIDTH = Gdx.graphics.getWidth();
-        final float HEIGHT = Gdx.graphics.getHeight();
+        final float WIDTH = viewport.getWorldWidth();
+        final float HEIGHT = viewport.getWorldHeight();
         List<GuiButton> buttons = getButtons();
         buttons.add(new GuiButton(manager, WIDTH / 2, HEIGHT * 2 / 3, WIDTH / 3, HEIGHT / 9,
             "Back to Game", HEIGHT / 27,
@@ -35,8 +35,8 @@ public class GuiPauseMenu extends Gui<GameScreen> {
         if (subGui != null) subGui.render(batcher, fontRenderer, manager, viewport, delta, false);
 
         // draw gray overlay
-        final float SCREEN_WIDTH = viewport.getScreenWidth();
-        final float SCREEN_HEIGHT = viewport.getScreenHeight();
+        final float SCREEN_WIDTH = viewport.getWorldWidth();
+        final float SCREEN_HEIGHT = viewport.getWorldHeight();
         Texture pix = manager.PIXEL;
         batcher.setColor(0, 0, 0, getSubGui() != null ? 0.9f : 0.5f);
         batcher.draw(pix, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);

@@ -57,6 +57,7 @@ public class GameScreen extends AbstractScreen {
     private final InputController gameInputController;
     private final InputController uiInputController;
     private boolean isOverlappingBlueprints = false;
+    private final Vector3 tmp = new Vector3(); // reuse to avoid GC
 
     public GameScreen(BubbleGame game, Supplier<Level> levelSupplier, String parentWorld) {
         super(game);
@@ -81,20 +82,34 @@ public class GameScreen extends AbstractScreen {
         uiViewport = new FitViewport(1280, 720, uiCamera);
         uiViewport.apply();
 
-        uiInputController = new InputController(x -> x, y -> uiViewport.getScreenHeight() - y);
-        gameInputController = new InputController(x -> {
-                Vector3 worldPos = new Vector3(x, 0, 0);
-                gameViewport.unproject(worldPos);
-                return worldPos.x;
-            }, y -> {
-                Vector3 worldPos = new Vector3(0, y, 0);
-                gameViewport.unproject(worldPos);
-                return worldPos.y;
+        uiInputController = new InputController(
+            x -> {
+                tmp.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+                uiViewport.unproject(tmp);
+                return tmp.x;
+            },
+            y -> {
+                tmp.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+                uiViewport.unproject(tmp);
+                return tmp.y;
+            }
+        );
+
+        gameInputController = new InputController(
+            x -> {
+                tmp.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+                gameViewport.unproject(tmp);
+                return tmp.x;
+            },
+            y -> {
+                tmp.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+                gameViewport.unproject(tmp);
+                return tmp.y;
             }
         );
 
         // blueprint select
-        setGui(new GuiBlueprintSelect(this, game.getAssets()));
+        setGui(new GuiBlueprintSelect(this, game.getAssets(), uiViewport));
     }
 
     public void setPlayerController(PlayerController controller) {
@@ -256,8 +271,8 @@ public class GameScreen extends AbstractScreen {
         // draw pause button
         if (gui == null || !gui.pausesGame()) {
             Texture pauseButtonTex = manager.getTexture("gui_pause_button");
-            float x = uiViewport.getScreenWidth() - PAUSE_BUTTON_SIZE - PAUSE_MARGIN;
-            float y = uiViewport.getScreenHeight() - PAUSE_BUTTON_SIZE - PAUSE_MARGIN;
+            float x = uiViewport.getWorldWidth() - PAUSE_BUTTON_SIZE - PAUSE_MARGIN;
+            float y = uiViewport.getWorldHeight() - PAUSE_BUTTON_SIZE - PAUSE_MARGIN;
             batch.draw(pauseButtonTex, x, y, PAUSE_BUTTON_SIZE, PAUSE_BUTTON_SIZE);
 
             float inputUiX = uiInputController.getX();
@@ -278,7 +293,7 @@ public class GameScreen extends AbstractScreen {
         // water indicator
         Texture wiTex = manager.getTexture("gui_water_indicator");
         Texture sTex = manager.getTexture("blueprint_selected");
-        final float SCREEN_HEIGHT = uiViewport.getScreenHeight();
+        final float SCREEN_HEIGHT = uiViewport.getWorldHeight();
         // internal rendering constants
         float WIDTH = 150f;
         float HEIGHT = 50f;
@@ -397,8 +412,8 @@ public class GameScreen extends AbstractScreen {
         if (controller == null) return;
         float inputUiX = uiInputController.getX();
         float inputUiY =  uiInputController.getY();
-        if (inputUiX < 0 || inputUiX > uiViewport.getScreenWidth() ||
-            inputUiY < 0 || inputUiY > uiViewport.getScreenHeight()) return;
+        if (inputUiX < 0 || inputUiX > uiViewport.getWorldWidth() ||
+            inputUiY < 0 || inputUiY > uiViewport.getWorldHeight()) return;
         float inputGameX = gameInputController.getX();
         float inputGameY =  gameInputController.getY();
         if (level.isTileSolid(inputGameX, inputGameY)) return;
@@ -447,8 +462,8 @@ public class GameScreen extends AbstractScreen {
         if (controller != null && checkGameInput && isInputJustReleased &&
             controller.getSelectedIndex() != -1 && !isOverlappingBlueprints) {
             // don't deploy if out of bounds, or over a solid tile
-            if (inputUiX < 0 || inputUiX > uiViewport.getScreenWidth() ||
-                inputUiY < 0 || inputUiY > uiViewport.getScreenHeight()) return;
+            if (inputUiX < 0 || inputUiX > uiViewport.getWorldWidth() ||
+                inputUiY < 0 || inputUiY > uiViewport.getWorldHeight()) return;
             if (level.isTileSolid(inputGameX, inputGameY)) return;
 
             AbstractBlueprint<?> blueprint = controller.getBlueprints().get(controller.getSelectedIndex());
@@ -475,7 +490,7 @@ public class GameScreen extends AbstractScreen {
 
     private void pauseGame() {
         if (controller != null) controller.setSelectedIndex(-1);
-        setGui(new GuiPauseMenu(this, manager));
+        setGui(new GuiPauseMenu(this, manager, uiViewport));
     }
 
     public void restartLevel() {
@@ -494,6 +509,8 @@ public class GameScreen extends AbstractScreen {
     public void resize(int width, int height) {
         gameViewport.update(width, height, true);
         uiViewport.update(width, height, true);
+        gameViewport.apply();
+        uiViewport.apply();
     }
 
     @Override

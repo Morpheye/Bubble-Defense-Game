@@ -26,7 +26,7 @@ public class Lwjgl3Launcher {
         int height = Math.round(width * 9f / 16f);
 
         config.setWindowedMode(width, height);
-        config.setResizable(false); // optional but recommended
+        // config.setResizable(false); // optional but recommended
 
         return config;
     }

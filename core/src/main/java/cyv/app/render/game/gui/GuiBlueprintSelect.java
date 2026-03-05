@@ -31,8 +31,8 @@ public class GuiBlueprintSelect extends Gui<GameScreen> {
     private AbstractBlueprint<?> hoveredBlueprint = null;
     private boolean pauseButtonHovered = false;
 
-    public GuiBlueprintSelect(GameScreen parent, ResourceManager manager) {
-        super(parent, manager);
+    public GuiBlueprintSelect(GameScreen parent, ResourceManager manager, Viewport viewport) {
+        super(parent, manager, viewport);
         this.parent = parent;
 
         availableBlueprints = new ArrayList<>();
@@ -40,8 +40,8 @@ public class GuiBlueprintSelect extends Gui<GameScreen> {
             availableBlueprints.add(BlueprintRegistry.getBlueprint(bs));
         }
 
-        final float WIDTH = Gdx.graphics.getWidth();
-        final float HEIGHT = Gdx.graphics.getHeight();
+        final float WIDTH = viewport.getWorldWidth();
+        final float HEIGHT = viewport.getWorldHeight();
         getButtons().add(new GuiButton(manager, WIDTH / 2, HEIGHT / 8, 200, 75, "Ready!", 25,
             () -> {
                 parent.setPlayerController(new PlayerController(selectedBlueprints));
@@ -53,8 +53,8 @@ public class GuiBlueprintSelect extends Gui<GameScreen> {
     public void render(SpriteBatch batcher, FontRenderer fontRenderer, ResourceManager manager,
                        Viewport viewport, float delta, boolean isFocused) {
         // draw gray overlay
-        final float SCREEN_WIDTH = viewport.getScreenWidth();
-        final float SCREEN_HEIGHT = viewport.getScreenHeight();
+        final float SCREEN_WIDTH = viewport.getWorldWidth();
+        final float SCREEN_HEIGHT = viewport.getWorldHeight();
         Texture pix = manager.PIXEL;
         batcher.setColor(0, 0, 0, 0.5f);
         batcher.draw(pix, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -184,7 +184,7 @@ public class GuiBlueprintSelect extends Gui<GameScreen> {
 
         // pause button
         if (pauseButtonHovered) {
-            getFrontendIn().setGui(new GuiPauseMenu(getFrontendIn(), getTextureManager()));
+            getFrontendIn().setGui(new GuiPauseMenu(getFrontendIn(), getTextureManager(), getViewport()));
         }
 
         super.onInputReleased();

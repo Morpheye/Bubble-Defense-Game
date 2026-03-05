@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import cyv.app.BubbleGame;
@@ -36,7 +37,18 @@ public class LevelSelectScreen extends AbstractScreen {
         uiViewport = new FitViewport(1280, 720, uiCamera);
         uiViewport.apply();
 
-        this.inputController = new InputController(x -> x, y -> uiViewport.getScreenHeight() - y);
+        this.inputController = new InputController(
+            x -> {
+                Vector3 v = new Vector3(x, Gdx.input.getY(), 0);
+                uiViewport.unproject(v);
+                return v.x;
+            },
+            y -> {
+                Vector3 v = new Vector3(Gdx.input.getX(), y, 0);
+                uiViewport.unproject(v);
+                return v.y;
+            }
+        );
     }
 
     @Override
@@ -104,7 +116,7 @@ public class LevelSelectScreen extends AbstractScreen {
         }
 
         if (provider != null) {
-            setGui(new GuiLevelInfo(this, manager, provider));
+            setGui(new GuiLevelInfo(this, manager, provider, uiViewport));
         }
 
         if (gui != null) gui.render(batch, fontRenderer, manager, uiViewport, 0, true);
@@ -141,5 +153,6 @@ public class LevelSelectScreen extends AbstractScreen {
     @Override
     public void resize(int width, int height) {
         uiViewport.update(width, height, true);
+        uiViewport.apply();
     }
 }

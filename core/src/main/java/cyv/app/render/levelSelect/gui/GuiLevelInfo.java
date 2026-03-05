@@ -15,8 +15,9 @@ import java.util.List;
 public class GuiLevelInfo extends Gui<LevelSelectScreen> {
     private final LevelProvider provider;
 
-    public GuiLevelInfo(LevelSelectScreen parent, ResourceManager manager, LevelProvider provider) {
-        super(parent, manager);
+    public GuiLevelInfo(LevelSelectScreen parent, ResourceManager manager,
+                        LevelProvider provider, Viewport viewport) {
+        super(parent, manager, viewport);
         final float WIDTH = 1280;
         final float HEIGHT = 720;
         List<GuiButton> buttons = getButtons();
@@ -31,8 +32,8 @@ public class GuiLevelInfo extends Gui<LevelSelectScreen> {
     public void render(SpriteBatch batcher, FontRenderer fontRenderer,
                        ResourceManager manager, Viewport viewport, float delta, boolean isFocused) {
         // draw gray overlay
-        final float SCREEN_WIDTH = viewport.getScreenWidth();
-        final float SCREEN_HEIGHT = viewport.getScreenHeight();
+        final float SCREEN_WIDTH = viewport.getWorldWidth();
+        final float SCREEN_HEIGHT = viewport.getWorldHeight();
         Texture pix = manager.PIXEL;
         batcher.setColor(0, 0, 0, 0.5f);
         batcher.draw(pix, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
