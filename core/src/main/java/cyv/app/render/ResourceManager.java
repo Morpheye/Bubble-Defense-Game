@@ -47,7 +47,13 @@ public class ResourceManager {
         // gui
         loadTexture("gui_aim_highlight", "textures/gui/aim_highlight.png");
         loadTexture("gui_water_indicator", "textures/gui/water_indicator.png");
-        loadTexture("gui_pause_button", "textures/gui/pause.png");
+        loadTexture("gui_pause_button", "textures/gui/buttons/pause.png");
+
+        // buttons
+        loadTexture("gui_button_wide", "textures/gui/buttons/wide_normal.png");
+        loadTexture("gui_button_wide_hovered", "textures/gui/buttons/wide_hovered.png");
+        loadTexture("gui_button_standard", "textures/gui/buttons/standard_normal.png");
+        loadTexture("gui_button_standard_hovered", "textures/gui/buttons/standard_hovered.png");
 
         // blueprints
         loadTexture("blueprint_selected", "textures/gui/blueprint_selected.png");
