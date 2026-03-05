@@ -498,7 +498,10 @@ public class GameScreen extends AbstractScreen {
             Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE);
         if (pauseKeyPressed || (gui == null && inBounds && isInputJustPressed)) {
             if (gui != null && gui.isClosable()) setGui(null);
-            else pauseGame();
+            else {
+                if (isInputJustPressed) playSound("gui_click");
+                pauseGame();
+            }
         }
     }
 

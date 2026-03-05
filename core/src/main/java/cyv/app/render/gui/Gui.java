@@ -59,6 +59,7 @@ public abstract class Gui<T extends AbstractScreen> {
     public void onInputReleased() {
         for (GuiButton button : getButtons()) {
             if (button.mouseOver(mouseX, mouseY) && button.mouseOver(lastPressedX, lastPressedY)) {
+                manager.getSound("gui_click").play();
                 button.run();
                 return;
             }

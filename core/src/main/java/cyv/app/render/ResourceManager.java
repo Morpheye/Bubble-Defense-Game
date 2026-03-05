@@ -1,6 +1,7 @@
 package cyv.app.render;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -17,6 +18,7 @@ public class ResourceManager {
     private final Map<String, Texture> textures = new HashMap<>();
     private final Map<String, TextureRegion[][]> textureMaps = new HashMap<>();
     private final Map<String, Sound> sounds = new HashMap<>();
+    private final Map<String, Music> music = new HashMap<>();;
     private boolean texturesLoaded = false;
 
     public ResourceManager() {
@@ -82,7 +84,15 @@ public class ResourceManager {
     }
 
     public void loadSounds() {
+        // gui
+        loadSound("gui_click", "sounds/gui/click.wav");
+
+        // in-game
         loadSound("projectile_droplet_spawn", "sounds/projectiles/droplet_spawn.mp3");
+        loadSound("projectile_droplet_hit", "sounds/projectiles/droplet_hit.mp3");
+
+        // music
+        loadMusic("01_stolen_by_the_sky", "sounds/music/01_stolen_by_the_sky.mp3");
     }
 
     public void loadTexture(String id, String path) {
@@ -135,6 +145,21 @@ public class ResourceManager {
         return sounds.get(id);
     }
 
+    public void loadMusic(String id, String path) {
+        if (music.containsKey(id)) throw new IllegalArgumentException("Id " + id + " already exists.");
+        Music music = Gdx.audio.newMusic(Gdx.files.internal(path));
+        this.music.put(id, music);
+    }
+
+    public void unloadMusic(String id) {
+        Music music = this.music.remove(id);
+        if (music != null) music.dispose();
+    }
+
+    public Music getMusic(String id) {
+        return music.get(id);
+    }
+
     public void dispose() {
         for (String id : new ArrayList<>(textures.keySet())) {
             unloadTexture(id);
@@ -146,6 +171,10 @@ public class ResourceManager {
 
         for (String id : new ArrayList<>(sounds.keySet())) {
             unloadSound(id);
+        }
+
+        for (String id : new ArrayList<>(music.keySet())) {
+            unloadMusic(id);
         }
     }
 }

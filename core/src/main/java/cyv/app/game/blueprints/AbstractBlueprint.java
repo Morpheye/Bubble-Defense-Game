@@ -6,6 +6,8 @@ import cyv.app.game.components.player.AbstractUnitObject;
 import cyv.app.render.game.renders.RendererRegistry;
 import cyv.app.render.game.renders.UnitRenderer;
 
+import static cyv.app.Skydouser.DEV;
+
 /**
  * Represents an abstract factory that can be added to the player controller to allow
  * the player to deploy units to the board.
@@ -36,7 +38,7 @@ public abstract class AbstractBlueprint<T extends AbstractUnitObject> {
      * @return Ready on start
      */
     public boolean readyOnStart() {
-        return false;
+        return DEV;
     }
 
     public abstract Texture getTexture();

@@ -8,6 +8,8 @@ import cyv.app.game.components.player.HearthObject;
 
 import java.util.*;
 
+import static cyv.app.Skydouser.DEV;
+
 /**
  * Standard level with waves
  */
@@ -27,7 +29,7 @@ public abstract class StandardLevel extends Level {
                          int spawnDelay, int waveDelay, float waveAdvanceThreshold) {
         super(sizeX, sizeY, hearth);
         this.waves = waves;
-        this.spawnDelay = spawnDelay;
+        this.spawnDelay = DEV ? 1 : spawnDelay;
         this.waveDelay = waveDelay;
         this.waveAdvanceThreshold = waveAdvanceThreshold;
     }

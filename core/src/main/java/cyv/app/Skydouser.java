@@ -1,6 +1,7 @@
 package cyv.app;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import cyv.app.contents.LevelGroup;
@@ -18,6 +19,7 @@ import java.util.function.Supplier;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Skydouser extends Game {
+    public static final boolean DEV = false;
     private ResourceManager assets;
     private SpriteBatch batcher;
     private ShapeRenderer shapeRenderer;
@@ -35,6 +37,10 @@ public class Skydouser extends Game {
         this.shapeRenderer = new ShapeRenderer();
 
         setScreen(new LevelSelectScreen(this, new World1()));
+
+        Music music = assets.getMusic("01_stolen_by_the_sky");
+        music.setLooping(true);
+        music.play();
     }
 
     // Default utility objects

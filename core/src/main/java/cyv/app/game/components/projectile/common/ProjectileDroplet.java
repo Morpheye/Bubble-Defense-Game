@@ -22,6 +22,11 @@ public class ProjectileDroplet extends DamageProjectile {
     }
 
     @Override
+    public String getHitSound() {
+        return "projectile_droplet_hit";
+    }
+
+    @Override
     public int getDamage() {
         return 10;
     }

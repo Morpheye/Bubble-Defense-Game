@@ -1,6 +1,7 @@
 package cyv.app.game.components.projectile;
 
 import cyv.app.game.Level;
+import cyv.app.game.ScheduledTask;
 import cyv.app.game.Team;
 import cyv.app.game.components.BallObject;
 import cyv.app.game.components.ILivingObject;
@@ -14,6 +15,10 @@ public abstract class DamageProjectile extends Projectile {
                             int lifetime, Team team) {
         super(id, x, y, radius, r, vx, vy, lifetime);
         this.team = team;
+    }
+
+    public String getHitSound() {
+        return null;
     }
 
     /**
@@ -55,7 +60,7 @@ public abstract class DamageProjectile extends Projectile {
             // check if within melee range
             if (distSq <= range * range) {
                 // close enough, damage the target
-                collide(b);
+                collide(b, levelIn);
                 if (shouldInvalidateAfterCollision()) invalidate();
             }
 
@@ -82,7 +87,7 @@ public abstract class DamageProjectile extends Projectile {
      * Deals damage to the target.
      * @param b Target
      */
-    private void collide(BallObject b) {
+    private void collide(BallObject b, Level levelIn) {
         // deal damage
         if (b instanceof ILivingObject) {
             ILivingObject l = (ILivingObject) b;
@@ -99,6 +104,8 @@ public abstract class DamageProjectile extends Projectile {
             b.setVx(b.getVx() + vx / normal * kb);
             b.setVy(b.getVy() + vy / normal * kb);
         }
+        levelIn.getFrontendTasks().add(new ScheduledTask(
+            levelIn.getTicks() + 1, f -> f.playSound(getHitSound())));
     }
 
     /**

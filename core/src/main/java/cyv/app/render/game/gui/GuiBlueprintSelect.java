@@ -173,6 +173,7 @@ public class GuiBlueprintSelect extends Gui<GameScreen> {
     public void onInputReleased() {
         // detect clicks on blueprints
         if (hoveredBlueprint != null) {
+            getTextureManager().getSound("gui_click").play();
             if (selectedBlueprints.contains(hoveredBlueprint)) {
                 selectedBlueprints.remove(hoveredBlueprint);
             } else if (selectedBlueprints.size() < LIST_SIZE) {
@@ -182,6 +183,7 @@ public class GuiBlueprintSelect extends Gui<GameScreen> {
 
         // pause button
         if (pauseButtonHovered) {
+            getTextureManager().getSound("gui_click").play();
             getFrontendIn().setGui(new GuiPauseMenu(getFrontendIn(), getTextureManager(), getViewport()));
         }
 

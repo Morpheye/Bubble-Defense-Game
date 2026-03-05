@@ -116,6 +116,7 @@ public class LevelSelectScreen extends AbstractScreen {
         }
 
         if (provider != null) {
+            playSound("gui_click");
             setGui(new GuiLevelInfo(this, manager, provider, uiViewport));
         }
 
