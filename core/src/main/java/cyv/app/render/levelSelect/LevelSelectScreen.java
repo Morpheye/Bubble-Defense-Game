@@ -76,9 +76,9 @@ public class LevelSelectScreen extends AbstractScreen {
         final float PANEL_SIZE = 640;
         final float PANEL_LEFT = SCREEN_WIDTH / 2 - PANEL_SIZE / 2;
         final float PANEL_BOTTOM = SCREEN_HEIGHT / 2 - PANEL_SIZE / 2;
-        Texture pix = manager.PIXEL;
-        batch.setColor(0, 0.25f, 0.3f, 1);
-        batch.draw(pix, PANEL_LEFT, PANEL_BOTTOM, PANEL_SIZE, PANEL_SIZE);
+        Texture panel = manager.getTexture("level_select_panel");
+        batch.setColor(0, 0.3f, 0.45f, 1);
+        batch.draw(panel, PANEL_LEFT, PANEL_BOTTOM, PANEL_SIZE, PANEL_SIZE);
         batch.setColor(1, 1, 1, 1);
 
         // individual levels
@@ -103,15 +103,18 @@ public class LevelSelectScreen extends AbstractScreen {
                 boolean guiBlocks = gui != null && gui.blocksInput();
                 if (!guiBlocks && MathUtils.inBounds(cX, cY, drawX, drawX + LEVEL_SIZE, drawY,
                     drawY + LEVEL_SIZE)) {
-                    batch.setColor(0.1f, 0.85f, 0.95f, 1);
+                    batch.setColor(0.1f, 0.85f, 1f, 1);
                     if (MathUtils.inBounds(clickX, clickY, drawX, drawX + LEVEL_SIZE, drawY,
                         drawY + LEVEL_SIZE) && inputController.isInputJustReleased()) {
                         provider = level;
                     }
                 } else batch.setColor(0, 0.7f, 0.85f, 1);
 
-                batch.draw(pix, drawX, drawY, LEVEL_SIZE, LEVEL_SIZE);
+                Texture levelPanel = manager.getTexture("level_select_level_panel");
+                batch.draw(levelPanel, drawX, drawY, LEVEL_SIZE, LEVEL_SIZE);
                 batch.setColor(1, 1, 1, 1);
+                fontRenderer.setSize(50);
+                fontRenderer.drawCenterBoth(batch, i + "", drawX + LEVEL_SIZE / 2, drawY + LEVEL_SIZE / 2);
             }
         }
 
