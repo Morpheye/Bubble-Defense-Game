@@ -47,10 +47,13 @@ public abstract class StandardLevel extends Level {
             currentWaveIndex++;
             LevelWave newWave = waves.get(currentWaveIndex);
             activeWave = newWave.create();
+            getFrontendTasks().add(new ScheduledTask(getTicks() + 1,
+                f -> f.setCurrentWave(currentWaveIndex + 1)));
             for (AbstractEnemyObject e : activeWave.getEnemies()) spawnBall(e);
         }
 
-        // schedule new wave once health drops
+        // if there's no wave scheduled, a wave is active and the next wave exists,
+        // and the remaining health ratio is below the threshold, schedule the next wave.
         float waveAdvanceThreshold = (activeWave != null && activeWave.getAdvanceThresholdOverride() != -1f) ?
             activeWave.getAdvanceThresholdOverride() : this.waveAdvanceThreshold;
 
@@ -68,6 +71,10 @@ public abstract class StandardLevel extends Level {
     public boolean victoryConditionMet() {
         // victory is met if the currentWaveIndex >= waves.size() and no enemies remain
         return currentWaveIndex >= waves.size() && getEnemyCount() < 1;
+    }
+
+    public List<LevelWave> getWaves() {
+        return waves;
     }
 
     public static StandardLevel parseLevel(String content) {

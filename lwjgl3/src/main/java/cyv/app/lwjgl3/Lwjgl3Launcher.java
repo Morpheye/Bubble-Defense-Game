@@ -19,7 +19,7 @@ public class Lwjgl3Launcher {
         Lwjgl3ApplicationConfiguration config =
             new Lwjgl3ApplicationConfiguration();
 
-        config.setTitle("Bubble Game");
+        config.setTitle("Skydouser");
         config.useVsync(true);
 
         int width = 1280;

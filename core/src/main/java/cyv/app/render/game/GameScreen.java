@@ -15,6 +15,7 @@ import cyv.app.contents.LevelGroupRegistry;
 import cyv.app.game.Level;
 import cyv.app.game.PlayerController;
 import cyv.app.game.ScheduledTask;
+import cyv.app.game.StandardLevel;
 import cyv.app.game.blueprints.AbstractBlueprint;
 import cyv.app.game.components.BallObject;
 import cyv.app.game.components.ILivingObject;
@@ -61,7 +62,10 @@ public class GameScreen extends AbstractScreen {
 
     // cache and temp
     private final Vector3 tmp = new Vector3(); // reuse to avoid GC
-    private BallObject hoveredUnit = null;
+    private BallObject hoveredObject = null; // currently hovered object (unit or enemy)
+    private int waveCount = 1;
+    private int currentWave = 0;
+    private float waveProgress = 0.0f;
 
     public GameScreen(Skydouser game, Supplier<Level> levelSupplier, String parentWorld) {
         super(game);
@@ -112,6 +116,11 @@ public class GameScreen extends AbstractScreen {
             }
         );
 
+        // waves
+        if (level instanceof StandardLevel) {
+            waveCount = ((StandardLevel) level).getWaves().size();
+        }
+
         // blueprint select
         setGui(new GuiBlueprintSelect(this, game.getAssets(), uiViewport));
     }
@@ -125,16 +134,23 @@ public class GameScreen extends AbstractScreen {
     public void render(float delta) {
         long now = System.currentTimeMillis();
         if (controller != null && now - lastTickTime >= TICK_LENGTH && (gui == null || !gui.pausesGame())) {
+            // tick level and controller
             lastTickTime = now;
             level.tick();
             controller.tick();
 
+            // run tasks
             Queue<ScheduledTask> tasks = level.getFrontendTasks();
             ScheduledTask task = tasks.peek();
             while (task != null && task.tick == level.getTicks()) {
                 task.task.accept(this);
                 tasks.remove();
                 task = tasks.peek();
+            }
+
+            // update level wave status
+            if (waveProgress < (float) currentWave / waveCount) {
+                waveProgress += (float) Math.min(0.001, (float) currentWave / waveCount - waveProgress);
             }
         }
         float d = Math.min(1, (now - lastTickTime) / (float) TICK_LENGTH);
@@ -195,7 +211,7 @@ public class GameScreen extends AbstractScreen {
         Texture pbTex = manager.getTexture("player_bubble_back");
         Texture ebTex = manager.getTexture("enemy_bubble_back");
         Texture hTex = manager.getTexture("bubble_selected");
-        this.hoveredUnit = null;
+        this.hoveredObject = null;
 
         for (BallObject b : level.getBalls()) {
             float renderX = b.getLastX() * (1 - delta) + b.getX() * delta;
@@ -221,7 +237,7 @@ public class GameScreen extends AbstractScreen {
             if ((gui == null || !gui.blocksInput()) &&
                 MathUtils.inBounds(gameInputController.getX(), gameInputController.getY(),
                 renderX, renderY, radius)) {
-                hoveredUnit = b;
+                hoveredObject = b;
                 batch.draw(hTex, renderX - radius, renderY - radius, size, size);
             }
 
@@ -307,6 +323,7 @@ public class GameScreen extends AbstractScreen {
         // water indicator
         Texture wiTex = manager.getTexture("gui_water_indicator");
         Texture sTex = manager.getTexture("blueprint_selected");
+        final float SCREEN_WIDTH = uiViewport.getWorldWidth();
         final float SCREEN_HEIGHT = uiViewport.getWorldHeight();
         // internal rendering constants
         float WIDTH = 150f;
@@ -386,6 +403,21 @@ public class GameScreen extends AbstractScreen {
             textY = blueprintY + PADDING + desiredTextHeight;
             fontRenderer.drawRight(batch, costText, textX, textY);
         }
+
+        // draw wave progress
+        final float LP_SIZEX = 200;
+        final float LP_SIZEY = 50;
+        final float LP_CENTERX = SCREEN_WIDTH - PAUSE_MARGIN - LP_SIZEX / 2;
+        final float LP_CENTERY = PAUSE_MARGIN + LP_SIZEY / 2;
+        final float LPC_LENGTH = 175;
+        final float LPC_HEIGHT = 25;
+
+        batch.draw(manager.PIXEL, LP_CENTERX - LP_SIZEX / 2, LP_CENTERY - LP_SIZEY / 2,
+            LP_SIZEX, LP_SIZEY);
+        batch.setColor(1, 0, 0, 1);
+        batch.draw(manager.PIXEL, LP_CENTERX - LPC_LENGTH / 2, LP_CENTERY - LPC_HEIGHT / 2,
+            LPC_LENGTH * waveProgress, LPC_HEIGHT);
+        batch.setColor(1, 1, 1, 1);
     }
 
     private void handleInput() {
@@ -508,6 +540,10 @@ public class GameScreen extends AbstractScreen {
     private void pauseGame() {
         if (controller != null) controller.setSelectedIndex(-1);
         setGui(new GuiPauseMenu(this, manager, uiViewport));
+    }
+
+    public void setCurrentWave(int wave) {
+        this.currentWave = wave;
     }
 
     public void restartLevel() {
