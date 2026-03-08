@@ -51,6 +51,8 @@ public class ResourceManager {
         loadTexture("gui_water_indicator", "textures/gui/water_indicator.png");
         loadTexture("gui_pause_button", "textures/gui/buttons/pause.png");
 
+        loadTexture("wave_progress_indicator", "textures/gui/wave_progress.png");
+
         loadTexture("level_select_panel", "textures/gui/level_select_panel.png");
         loadTexture("level_select_level_panel", "textures/gui/level_select_level_panel.png");
 

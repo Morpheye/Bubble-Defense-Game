@@ -412,12 +412,23 @@ public class GameScreen extends AbstractScreen {
         final float LPC_LENGTH = 175;
         final float LPC_HEIGHT = 25;
 
-        batch.draw(manager.PIXEL, LP_CENTERX - LP_SIZEX / 2, LP_CENTERY - LP_SIZEY / 2,
-            LP_SIZEX, LP_SIZEY);
-        batch.setColor(1, 0, 0, 1);
+        // lerp color
+        Color cr = new Color(0.8f, 0, 0, 1);
+        Color cy = new Color(1.0f, 0.9f, 0, 1);
+        float tickX = level.getTicks() + delta;
+        float alpha = (float) Math.sin(tickX / 50) / 2 + 0.5f;
+        Color cf = new Color(MathUtils.lerp(cr.r, cy.r, alpha), MathUtils.lerp(cr.g, cy.g, alpha),
+            MathUtils.lerp(cr.b, cy.b, alpha), 1);
+
+        batch.setColor(0, 0, 0, 1);
+        batch.draw(manager.PIXEL, LP_CENTERX - LPC_LENGTH / 2, LP_CENTERY - LPC_HEIGHT / 2,
+            LPC_LENGTH, LPC_HEIGHT);
+        batch.setColor(cf);
         batch.draw(manager.PIXEL, LP_CENTERX - LPC_LENGTH / 2, LP_CENTERY - LPC_HEIGHT / 2,
             LPC_LENGTH * waveProgress, LPC_HEIGHT);
         batch.setColor(1, 1, 1, 1);
+        batch.draw(manager.getTexture("wave_progress_indicator"), LP_CENTERX - LP_SIZEX / 2,
+            LP_CENTERY - LP_SIZEY / 2, LP_SIZEX, LP_SIZEY);
     }
 
     private void handleInput() {
@@ -434,7 +445,7 @@ public class GameScreen extends AbstractScreen {
         // blueprint overlap check
         if (controller != null) {
             isOverlappingBlueprints = false;
-            final float SCREEN_HEIGHT = uiViewport.getScreenHeight();
+            final float SCREEN_HEIGHT = uiViewport.getWorldHeight();
             List<AbstractBlueprint<?>> blueprints = controller.getBlueprints();
             for (int i = 0; i < blueprints.size(); i++) {
                 final float B_YOFFSET = BLUEPRINT_Y_MARGIN + 50f + (i + 1) * BLUEPRINT_Y_GAP + i * BLUEPRINT_HEIGHT; // 50 = water indicator height
@@ -522,8 +533,8 @@ public class GameScreen extends AbstractScreen {
         }
 
         // pause logic
-        float x = uiViewport.getScreenWidth() - PAUSE_BUTTON_SIZE - PAUSE_MARGIN;
-        float y = uiViewport.getScreenHeight() - PAUSE_BUTTON_SIZE - PAUSE_MARGIN;
+        float x = uiViewport.getWorldWidth() - PAUSE_BUTTON_SIZE - PAUSE_MARGIN;
+        float y = uiViewport.getWorldHeight() - PAUSE_BUTTON_SIZE - PAUSE_MARGIN;
         boolean inBounds = inputUiX >= x && inputUiY >= y && inputUiX <= x + PAUSE_BUTTON_SIZE &&
             inputUiY <= y + PAUSE_BUTTON_SIZE;
         boolean pauseKeyPressed = Gdx.input.isKeyJustPressed(Input.Keys.P) ||

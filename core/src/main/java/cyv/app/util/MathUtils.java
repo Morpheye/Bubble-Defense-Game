@@ -13,6 +13,10 @@ public class MathUtils {
         return from + diff * alpha;
     }
 
+    public static float lerp(float from, float to, float alpha) {
+        return from + (to - from) * alpha;
+    }
+
     public static boolean inBounds(double x, double y, double left, double right,
                                    double bottom, double top) {
         return x >= left && x <= right && y >= bottom && y <= top;
