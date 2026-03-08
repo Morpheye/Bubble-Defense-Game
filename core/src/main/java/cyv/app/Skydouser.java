@@ -38,9 +38,12 @@ public class Skydouser extends Game {
 
         setScreen(new LevelSelectScreen(this, new World1()));
 
+        /*
         Music music = assets.getMusic("01_stolen_by_the_sky");
         music.setLooping(true);
         music.play();
+         */
+
     }
 
     // Default utility objects

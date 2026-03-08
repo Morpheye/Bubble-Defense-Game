@@ -72,12 +72,16 @@ public abstract class StandardLevel extends Level {
 
             // final wave?
             if (currentWaveIndex + 2 == waves.size()){
-                getFrontendTasks().add(new ScheduledTask(getTicks() + 1,
+                getFrontendTasks().add(new ScheduledTask(getTicks() + 21,
                     f -> f.queueEffect(new EffectFinalWaveApproach(f))));
             }
         }
 
-        if (victoryConditionMet() && !levelFinished) {
+        // level failed / complete
+        if (getHearth().isDead() && !levelFinished) {
+            levelFinished = true;
+            getFrontendTasks().add(new ScheduledTask(getTicks() + 21, GameScreen::setLevelFailed));
+        } else if (victoryConditionMet() && !levelFinished) {
             levelFinished = true;
             getFrontendTasks().add(new ScheduledTask(getTicks() + 41, GameScreen::setLevelComplete));
         }
@@ -121,7 +125,7 @@ public abstract class StandardLevel extends Level {
 
             // specific to wave prior to final
             if (index == level.waves.size - 2) {
-                wave.setWaveDelayOverride(80);
+                wave.setWaveDelayOverride(100);
                 wave.setAdvanceThresholdOverride(1.0f);
             }
 
