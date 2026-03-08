@@ -11,15 +11,11 @@ import cyv.app.render.gui.GuiButton;
 
 import java.util.List;
 
-public class GuiPauseMenu extends Gui<GameScreen> {
-    public GuiPauseMenu(GameScreen parent, ResourceManager manager, Viewport viewport) {
+public class GuiLevelComplete extends Gui<GameScreen> {
+    public GuiLevelComplete(GameScreen parent, ResourceManager manager, Viewport viewport) {
         super(parent, manager, viewport);
 
         List<GuiButton> buttons = getButtons();
-        buttons.add(new GuiButton(manager, 640, 480, 420, 80,
-            "Back to Game", 30, () -> parent.setGui(null)));
-        buttons.add(new GuiButton(manager, 640, 360, 420, 80,
-            "Restart", 30, parent::restartLevel));
         buttons.add(new GuiButton(manager, 640, 240, 420, 80,
             "Exit Level", 30, parent::exitToMenu));
     }
@@ -38,9 +34,9 @@ public class GuiPauseMenu extends Gui<GameScreen> {
         batcher.draw(pix, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         batcher.setColor(1, 1, 1, 1);
 
-        fontRenderer.setColor(1, 1, 1, 1);
+        // draw level info
         fontRenderer.setSize(50);
-        fontRenderer.drawCenterBoth(batcher, "Game Paused", 640, 600);
+        fontRenderer.drawCenterBoth(batcher, "Level Complete", 640, 480);
 
         // draw buttons
         for (GuiButton button : getButtons()) {
@@ -50,12 +46,12 @@ public class GuiPauseMenu extends Gui<GameScreen> {
     }
 
     @Override
-    public boolean acceptsSubGuis() {
+    public boolean pausesGame() {
         return true;
     }
 
     @Override
-    public boolean pausesGame() {
-        return true;
+    public boolean isClosable() {
+        return false;
     }
 }

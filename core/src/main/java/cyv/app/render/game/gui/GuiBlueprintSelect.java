@@ -24,7 +24,6 @@ public class GuiBlueprintSelect extends Gui<GameScreen> {
     private final int GUI_X = 5;
     private final int GUI_Y = LIST_SIZE;
 
-    private final GameScreen parent;
     private final List<AbstractBlueprint<?>> availableBlueprints;
     private final List<AbstractBlueprint<?>> selectedBlueprints = new ArrayList<>();
     private int page = 0; // current page
@@ -33,8 +32,6 @@ public class GuiBlueprintSelect extends Gui<GameScreen> {
 
     public GuiBlueprintSelect(GameScreen parent, ResourceManager manager, Viewport viewport) {
         super(parent, manager, viewport);
-        this.parent = parent;
-
         availableBlueprints = new ArrayList<>();
         for (String bs : SaveManager.getInstance().getOwnedBlueprints()) {
             availableBlueprints.add(BlueprintRegistry.getBlueprint(bs));
@@ -197,7 +194,7 @@ public class GuiBlueprintSelect extends Gui<GameScreen> {
 
     @Override
     public void onClose() {
-        parent.setPlayerController(new PlayerController(selectedBlueprints));
+        getParent().setPlayerController(new PlayerController(selectedBlueprints));
     }
 
     @Override

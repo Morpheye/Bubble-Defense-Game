@@ -53,8 +53,7 @@
       "generators": [{"weight": 2, "cost": 1, "id": "enemy_fire_spirit"},
         {"weight": 1, "cost": 2, "id": "enemy_fire_spirit"}],
       "spawnTilePattern": "FULL_BORDER",
-      "costLimit": 18,
-      "advanceThresholdOverride": 1.0
+      "costLimit": 18
     },
     {
       "generators": [{"weight": 2, "cost": 1, "id": "enemy_fire_spirit"},

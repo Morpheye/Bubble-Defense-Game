@@ -44,6 +44,10 @@ public abstract class Gui<T extends AbstractScreen> {
         return manager;
     }
 
+    protected T getParent() {
+        return parent;
+    }
+
     public final void updateMousePos(float x, float y, boolean justPressed) {
         this.mouseX = x;
         this.mouseY = y;

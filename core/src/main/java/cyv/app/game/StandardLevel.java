@@ -6,6 +6,7 @@ import cyv.app.Skydouser;
 import cyv.app.game.components.enemy.AbstractEnemyObject;
 import cyv.app.game.components.enemy.EnemyGeneratorRegistry;
 import cyv.app.game.components.player.HearthObject;
+import cyv.app.render.game.GameScreen;
 import cyv.app.render.game.effects.EffectFinalWaveApproach;
 import cyv.app.render.game.effects.GameScreenEffect;
 
@@ -27,6 +28,7 @@ public abstract class StandardLevel extends Level {
     private ActiveLevelWave activeWave = null;
     private int currentWaveIndex = -1;
     private int nextWaveStartTime;
+    private boolean levelFinished = false;
 
     public StandardLevel(int sizeX, int sizeY, HearthObject hearth, List<LevelWave> waves,
                          int spawnDelay, int waveDelay, float waveAdvanceThreshold) {
@@ -66,7 +68,6 @@ public abstract class StandardLevel extends Level {
                 <= (1 - waveAdvanceThreshold)) {
             int waveDelay = (activeWave != null && activeWave.getWaveDelayOverride() != -1) ?
                 activeWave.getWaveDelayOverride() : this.waveDelay;
-            System.out.println("Scheduled next wave " + waveDelay + " ticks later.");
             nextWaveStartTime = getTicks() + waveDelay;
 
             // final wave?
@@ -75,12 +76,17 @@ public abstract class StandardLevel extends Level {
                     f -> f.queueEffect(new EffectFinalWaveApproach(f))));
             }
         }
+
+        if (victoryConditionMet() && !levelFinished) {
+            levelFinished = true;
+            getFrontendTasks().add(new ScheduledTask(getTicks() + 41, GameScreen::setLevelComplete));
+        }
     }
 
     @Override
     public boolean victoryConditionMet() {
-        // victory is met if the currentWaveIndex >= waves.size() and no enemies remain
-        return currentWaveIndex >= waves.size() && getEnemyCount() < 1;
+        // victory is met if the currentWaveIndex is at the last wave and no enemies remain
+        return currentWaveIndex >= waves.size() - 1 && getEnemyCount() < 1;
     }
 
     public List<LevelWave> getWaves() {

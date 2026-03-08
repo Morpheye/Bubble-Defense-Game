@@ -35,8 +35,7 @@
     {
       "generators": [{"weight": 1, "cost": 1, "id": "enemy_fire_spirit"}],
       "spawnTiles": [[0, 7], [17, 3], [0, 0], [4, 10], [13, 0], [17, 10]],
-      "costLimit": 8,
-      "advanceThresholdOverride": 1.0
+      "costLimit": 8
     },
     {
       "generators": [{"weight": 1, "cost": 1, "id": "enemy_fire_spirit"}],

@@ -27,6 +27,7 @@ import cyv.app.render.AbstractScreen;
 import cyv.app.render.InputController;
 import cyv.app.render.game.effects.GameScreenEffect;
 import cyv.app.render.game.gui.GuiBlueprintSelect;
+import cyv.app.render.game.gui.GuiLevelComplete;
 import cyv.app.render.game.gui.GuiPauseMenu;
 import cyv.app.render.game.renders.ObjectRenderer;
 import cyv.app.render.game.renders.RendererRegistry;
@@ -64,6 +65,7 @@ public class GameScreen extends AbstractScreen {
     // cache and temp
     private final Vector3 tmp = new Vector3(); // reuse to avoid GC
     private BallObject hoveredObject = null; // currently hovered object (unit or enemy)
+    private boolean levelComplete = false;
     private int waveCount = 1;
     private int currentWave = 0;
     private float waveProgress = 0.0f;
@@ -134,7 +136,8 @@ public class GameScreen extends AbstractScreen {
     @Override
     public void render(float delta) {
         long now = System.currentTimeMillis();
-        if (controller != null && now - lastTickTime >= TICK_LENGTH && (gui == null || !gui.pausesGame())) {
+        if (!levelComplete && controller != null && now - lastTickTime >= TICK_LENGTH &&
+            (gui == null || !gui.pausesGame())) {
             // tick level, controller, and effects
             lastTickTime = now;
             level.tick();
@@ -572,6 +575,11 @@ public class GameScreen extends AbstractScreen {
 
     public void setCurrentWave(int wave) {
         this.currentWave = wave;
+    }
+
+    public void setLevelComplete() {
+        this.levelComplete = true;
+        this.setGui(new GuiLevelComplete(this, manager, uiViewport));
     }
 
     public void queueEffect(GameScreenEffect effect) {

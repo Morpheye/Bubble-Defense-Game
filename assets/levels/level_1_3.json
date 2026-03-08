@@ -1,0 +1,21 @@
+{
+  "sizeX": 18,
+  "sizeY": 11,
+  "waterGenerationDelay": 50,
+  "startingWater": 50,
+  "spawnDelay": 20,
+  "waveDelay": 40,
+  "waveAdvanceThreshold": 0.8,
+  "waves": [
+    {
+      "generators": [{"weight": 1, "cost": 1, "id": "enemy_fire_spirit"}],
+      "spawnTilePattern": "FULL_BORDER",
+      "costLimit": 1
+    },
+    {
+      "generators": [{"weight": 1, "cost": 1, "id": "enemy_fire_spirit"}],
+      "spawnTilePattern": "FULL_BORDER",
+      "costLimit": 1
+    }
+  ]
+}

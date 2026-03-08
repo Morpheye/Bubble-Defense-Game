@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Skydouser extends Game {
-    public static final boolean DEV = true;
+    public static final boolean DEV = false;
     private ResourceManager assets;
     private SpriteBatch batcher;
     private ShapeRenderer shapeRenderer;
