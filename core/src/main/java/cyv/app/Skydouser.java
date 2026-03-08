@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Skydouser extends Game {
-    public static final boolean DEV = false;
+    public static final boolean DEV = true;
     private ResourceManager assets;
     private SpriteBatch batcher;
     private ShapeRenderer shapeRenderer;
@@ -61,7 +61,7 @@ public class Skydouser extends Game {
 
     /**
      * Begins a new level from the given level group
-     * @param provider Levle provider
+     * @param provider Level provider
      * @param parent Level group
      */
     public void beginLevel(LevelProvider provider, LevelGroup parent) {

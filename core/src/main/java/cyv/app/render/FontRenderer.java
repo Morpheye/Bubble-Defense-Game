@@ -25,6 +25,13 @@ public class FontRenderer {
     }
 
     /**
+     * Sets the font's color
+     */
+    public void setColor(float r, float g, float b, float a) {
+        font.setColor(r, g, b, a);
+    }
+
+    /**
      * Draw text left-aligned at (x, y)
      */
     public void drawLeft(SpriteBatch batch, String text, float x, float y) {

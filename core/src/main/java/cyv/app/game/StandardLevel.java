@@ -2,9 +2,12 @@ package cyv.app.game;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
+import cyv.app.Skydouser;
 import cyv.app.game.components.enemy.AbstractEnemyObject;
 import cyv.app.game.components.enemy.EnemyGeneratorRegistry;
 import cyv.app.game.components.player.HearthObject;
+import cyv.app.render.game.effects.EffectFinalWaveApproach;
+import cyv.app.render.game.effects.GameScreenEffect;
 
 import java.util.*;
 
@@ -63,7 +66,14 @@ public abstract class StandardLevel extends Level {
                 <= (1 - waveAdvanceThreshold)) {
             int waveDelay = (activeWave != null && activeWave.getWaveDelayOverride() != -1) ?
                 activeWave.getWaveDelayOverride() : this.waveDelay;
+            System.out.println("Scheduled next wave " + waveDelay + " ticks later.");
             nextWaveStartTime = getTicks() + waveDelay;
+
+            // final wave?
+            if (currentWaveIndex + 2 == waves.size()){
+                getFrontendTasks().add(new ScheduledTask(getTicks() + 1,
+                    f -> f.queueEffect(new EffectFinalWaveApproach(f))));
+            }
         }
     }
 
@@ -86,12 +96,15 @@ public abstract class StandardLevel extends Level {
 
         SimpleLevel level = JSON.fromJson(SimpleLevel.class, content);
         List<LevelWave> waves = new ArrayList<>();
+        int index = 0;
         for (SimpleLevel.RawLevelWave rawWave : level.waves) {
+            // add enemy generator
             Set<LevelWave.EnemyGenerator> generators = new HashSet<>();
             for (SimpleLevel.RawLevelWave.RawEnemyGenerator r : rawWave.generators) {
                 generators.add(new LevelWave.EnemyGenerator(r.weight, r.cost,
                     EnemyGeneratorRegistry.getGenerator(r.id)));
             }
+
             // attempt pattern matching
             if (!rawWave.spawnTilePattern.isEmpty())
                 rawWave.spawnTiles = level.generateSpawnTiles(rawWave.spawnTilePattern);
@@ -99,6 +112,14 @@ public abstract class StandardLevel extends Level {
             wave.setWaveDelayOverride(rawWave.waveDelayOverride);
             wave.setAdvanceThresholdOverride(rawWave.advanceThresholdOverride);
             waves.add(wave);
+
+            // specific to wave prior to final
+            if (index == level.waves.size - 2) {
+                wave.setWaveDelayOverride(80);
+                wave.setAdvanceThresholdOverride(1.0f);
+            }
+
+            index++;
         }
 
         return new StandardLevel(level.sizeX, level.sizeY,

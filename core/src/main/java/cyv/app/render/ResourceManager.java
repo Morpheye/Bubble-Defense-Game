@@ -96,6 +96,8 @@ public class ResourceManager {
         loadSound("projectile_droplet_spawn", "sounds/projectiles/droplet_spawn.mp3");
         loadSound("projectile_droplet_hit", "sounds/projectiles/droplet_hit.mp3");
 
+        loadSound("thunder", "sounds/effects/thunder.mp3");
+
         // music
         loadMusic("01_stolen_by_the_sky", "sounds/music/01_stolen_by_the_sky.mp3");
     }

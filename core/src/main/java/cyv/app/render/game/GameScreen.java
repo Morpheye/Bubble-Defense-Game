@@ -25,6 +25,7 @@ import cyv.app.game.components.player.AbstractUnitObject;
 import cyv.app.game.components.projectile.Projectile;
 import cyv.app.render.AbstractScreen;
 import cyv.app.render.InputController;
+import cyv.app.render.game.effects.GameScreenEffect;
 import cyv.app.render.game.gui.GuiBlueprintSelect;
 import cyv.app.render.game.gui.GuiPauseMenu;
 import cyv.app.render.game.renders.ObjectRenderer;
@@ -33,8 +34,7 @@ import cyv.app.render.game.renders.UnitRenderer;
 import cyv.app.render.levelSelect.LevelSelectScreen;
 import cyv.app.util.MathUtils;
 
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class GameScreen extends AbstractScreen {
@@ -49,6 +49,7 @@ public class GameScreen extends AbstractScreen {
     private final Viewport gameViewport;
     private final OrthographicCamera uiCamera;
     private final Viewport uiViewport;
+    private final Set<GameScreenEffect> effects = new LinkedHashSet<>();
 
     // game components
     private final Level level;
@@ -134,10 +135,12 @@ public class GameScreen extends AbstractScreen {
     public void render(float delta) {
         long now = System.currentTimeMillis();
         if (controller != null && now - lastTickTime >= TICK_LENGTH && (gui == null || !gui.pausesGame())) {
-            // tick level and controller
+            // tick level, controller, and effects
             lastTickTime = now;
             level.tick();
             controller.tick();
+            effects.forEach(GameScreenEffect::tick);
+            effects.removeIf(e -> e.getTicks() >= e.getLifetime());
 
             // run tasks
             Queue<ScheduledTask> tasks = level.getFrontendTasks();
@@ -164,6 +167,7 @@ public class GameScreen extends AbstractScreen {
         drawGame(d);
         drawIngameGui(d);
         drawHologram(d);
+        drawEffects(d);
         drawExternalGui(d);
         doLogic();
 
@@ -495,6 +499,19 @@ public class GameScreen extends AbstractScreen {
         batch.end();
     }
 
+    private void drawEffects(float delta) {
+        uiViewport.apply();
+        uiCamera.update();
+        batch.setProjectionMatrix(uiCamera.combined);
+
+        batch.begin();
+        effects.forEach(f -> {
+            batch.setColor(1, 1, 1, 1);
+            f.render(batch, manager, uiViewport, fontRenderer, delta);
+        });
+        batch.end();
+    }
+
     private void drawExternalGui(float delta) {
         if (gui == null) return;
         uiViewport.apply();
@@ -555,6 +572,10 @@ public class GameScreen extends AbstractScreen {
 
     public void setCurrentWave(int wave) {
         this.currentWave = wave;
+    }
+
+    public void queueEffect(GameScreenEffect effect) {
+        this.effects.add(effect);
     }
 
     public void restartLevel() {
