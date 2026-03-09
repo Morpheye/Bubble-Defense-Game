@@ -19,7 +19,7 @@ public class GuiLevelFailed extends Gui<GameScreen> {
         buttons.add(new GuiButton(manager, 640, 360, 420, 80,
             "Try Again", 30, parent::restartLevel));
         buttons.add(new GuiButton(manager, 640, 240, 420, 80,
-            "Exit Level", 30, parent::exitToMenu));
+            "Exit Level", 30, () -> parent.exitToMenu(null)));
     }
 
     @Override

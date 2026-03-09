@@ -150,7 +150,7 @@ public class LevelSelectScreen extends AbstractScreen {
      * @param provider Provider
      */
     public void playlevel(LevelProvider provider) {
-        game.beginLevel(provider, levelGroup);
+        game.beginLevel(provider, LevelProvider::produce, levelGroup);
         this.isValid = false;
     }
 

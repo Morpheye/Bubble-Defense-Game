@@ -15,6 +15,7 @@ import cyv.app.render.game.GameScreen;
 import cyv.app.render.game.renders.RendererRegistry;
 import cyv.app.render.levelSelect.LevelSelectScreen;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
@@ -67,12 +68,8 @@ public class Skydouser extends Game {
      * @param provider Level provider
      * @param parent Level group
      */
-    public void beginLevel(LevelProvider provider, LevelGroup parent) {
-        beginLevel(provider::produce, parent.getName());
-    }
-
-    public void beginLevel(Supplier<Level> provider, String parent) {
-        GameScreen gameScreen = new GameScreen(this, provider, parent);
+    public void beginLevel(LevelProvider provider, Function<LevelProvider, Level> func, LevelGroup parent) {
+        GameScreen gameScreen = new GameScreen(this, provider, func, parent.getName());
         setScreen(gameScreen);
     }
 

@@ -22,6 +22,10 @@ public class BlueprintRegistry {
         }
     }
 
+    public static Set<String> getBlueprints() {
+        return registry.keySet();
+    }
+
     public static AbstractBlueprint<?> getBlueprint(String name) {
         return registry.get(name);
     }

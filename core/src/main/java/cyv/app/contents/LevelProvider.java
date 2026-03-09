@@ -8,11 +8,13 @@ import cyv.app.game.StandardLevel;
  * Represents an object which can produce a singular level
  */
 public class LevelProvider {
+    private final String id;
     private final String path;
     private final String name;
     private String parent = null;
 
-    public LevelProvider(String path, String name) {
+    public LevelProvider(String id, String path, String name) {
+        this.id = id;
         this.path = path;
         this.name = name;
     }
@@ -23,6 +25,10 @@ public class LevelProvider {
      */
     public String getLevelPath() {
         return this.path;
+    }
+
+    public String getId() {
+        return this.id;
     }
 
     public String getName() {

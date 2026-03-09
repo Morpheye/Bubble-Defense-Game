@@ -96,7 +96,6 @@ public class BasicFireSpirit extends AbstractEnemyObject {
         if (target == null) return;
 
         // now, melee attack the target if within distance and not on cooldown
-        // TODO: introduce a more robust attack system
         float range = getAttackRange() + getRadius() + target.getRadius();
         if (getTimeLived() - getLastMeleeAttackTime() >= getAttackCooldown() &&
             closestDistSq <= range * range) {

@@ -2,15 +2,17 @@ package cyv.app.game;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
-import cyv.app.Skydouser;
+import cyv.app.contents.LevelReward;
 import cyv.app.game.components.enemy.AbstractEnemyObject;
 import cyv.app.game.components.enemy.EnemyGeneratorRegistry;
 import cyv.app.game.components.player.HearthObject;
 import cyv.app.render.game.GameScreen;
 import cyv.app.render.game.effects.EffectFinalWaveApproach;
-import cyv.app.render.game.effects.GameScreenEffect;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static cyv.app.Skydouser.DEV;
 
@@ -97,6 +99,8 @@ public abstract class StandardLevel extends Level {
         return waves;
     }
 
+    public abstract LevelReward getReward(boolean isFirstCompletion);
+
     public static StandardLevel parseLevel(String content) {
         if (JSON == null) {
             JSON = new Json();
@@ -135,8 +139,19 @@ public abstract class StandardLevel extends Level {
         return new StandardLevel(level.sizeX, level.sizeY,
             new HearthObject((level.sizeX * TILE_SIZE) / 2f, (level.sizeY * TILE_SIZE) / 2f),
             waves, level.spawnDelay, level.waveDelay, level.waveAdvanceThreshold) {
-            public int waterGenerationDelay() {return level.waterGenerationDelay;}
-            public int getStartingWater() {return level.startingWater;}
+
+            public int waterGenerationDelay() {
+                return level.waterGenerationDelay;
+            }
+
+            public int getStartingWater() {
+                return level.startingWater;
+            }
+
+            public LevelReward getReward(boolean isFirstCompletion) {
+                SimpleLevel.SimpleLevelReward s = isFirstCompletion ? level.repeatRewards : level.rewards;
+                return new LevelReward(s.coins, s.blueprints);
+            }
         };
     }
 
@@ -150,6 +165,9 @@ public abstract class StandardLevel extends Level {
         int spawnDelay = 20 * 10;
         int waveDelay = 20 * 2;
         float waveAdvanceThreshold = 0.5f;
+
+        SimpleLevelReward rewards = new SimpleLevelReward();
+        SimpleLevelReward repeatRewards = new SimpleLevelReward();
 
         int[][] generateSpawnTiles(String pattern) {
             List<int[]> tiles = new ArrayList<>();
@@ -190,5 +208,11 @@ public abstract class StandardLevel extends Level {
                 public String id;
             }
         }
+
+        static class SimpleLevelReward {
+            public int coins = 0;
+            public String[] blueprints = new String[] {};
+        }
+
     }
 }

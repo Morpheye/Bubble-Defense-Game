@@ -21,7 +21,7 @@ public class GuiPauseMenu extends Gui<GameScreen> {
         buttons.add(new GuiButton(manager, 640, 360, 420, 80,
             "Restart", 30, parent::restartLevel));
         buttons.add(new GuiButton(manager, 640, 240, 420, 80,
-            "Exit Level", 30, parent::exitToMenu));
+            "Exit Level", 30, () -> parent.exitToMenu(null)));
     }
 
     @Override

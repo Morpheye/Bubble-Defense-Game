@@ -12,6 +12,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import cyv.app.Skydouser;
 import cyv.app.contents.LevelGroupRegistry;
+import cyv.app.contents.LevelProvider;
+import cyv.app.contents.LevelReward;
+import cyv.app.contents.SaveManager;
 import cyv.app.game.Level;
 import cyv.app.game.PlayerController;
 import cyv.app.game.ScheduledTask;
@@ -37,6 +40,7 @@ import cyv.app.render.levelSelect.LevelSelectScreen;
 import cyv.app.util.MathUtils;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class GameScreen extends AbstractScreen {
@@ -44,7 +48,8 @@ public class GameScreen extends AbstractScreen {
 
     // non-gameplay
     private final String parentWorld;
-    private final Supplier<Level> levelSupplier;
+    private final LevelProvider levelProvider;
+    private final Function<LevelProvider, Level> levelSupplier;
 
     // rendering
     private final OrthographicCamera gameCamera;
@@ -71,12 +76,14 @@ public class GameScreen extends AbstractScreen {
     private int currentWave = 0;
     private float waveProgress = 0.0f;
 
-    public GameScreen(Skydouser game, Supplier<Level> levelSupplier, String parentWorld) {
+    public GameScreen(Skydouser game, LevelProvider provider,
+                      Function<LevelProvider, Level> levelSupplier, String parentWorld) {
         super(game);
 
         this.levelSupplier = levelSupplier;
         this.parentWorld = parentWorld;
-        this.level = levelSupplier.get();
+        this.levelProvider = provider;
+        this.level = levelSupplier.apply(levelProvider);
 
         // set up camera
         float camWidth = level.getCameraScale();
@@ -580,7 +587,13 @@ public class GameScreen extends AbstractScreen {
 
     public void setLevelComplete() {
         this.levelEnded = true;
-        this.setGui(new GuiLevelComplete(this, manager, uiViewport));
+        LevelReward reward = null;
+        if (level instanceof StandardLevel) {
+            boolean firstCompletion = SaveManager.getInstance().getLevelCompletions()
+                .getOrDefault(levelProvider.getId(), 0) > 0;
+            reward = ((StandardLevel) level).getReward(firstCompletion);
+        }
+        this.setGui(new GuiLevelComplete(this, manager, uiViewport, reward));
     }
 
     public void setLevelFailed() {
@@ -594,13 +607,17 @@ public class GameScreen extends AbstractScreen {
 
     public void restartLevel() {
         // TODO: make a smooth transition
-        game.beginLevel(levelSupplier, parentWorld);
+        game.beginLevel(levelProvider, levelSupplier, LevelGroupRegistry.getWorld(parentWorld));
         this.isValid = false;
     }
 
-    public void exitToMenu() {
+    public void exitToMenu(LevelReward reward) {
         // TODO: make a smooth transition
         game.setScreen(new LevelSelectScreen(game, LevelGroupRegistry.getWorld(parentWorld)));
+        if (reward != null) {
+            SaveManager.handleReward(reward);
+            SaveManager.completeLevel(levelProvider.getId());
+        }
         this.isValid = false;
     }
 
