@@ -40,11 +40,11 @@ public abstract class AbstractBlueprint<T extends AbstractUnitObject> {
     public abstract int getCooldown();
 
     /**
-     * Gets whether the blueprint is off cooldown at the start of the level
-     * @return Ready on start
+     * Gets how much of the cooldown remains when the level is just started
+     * @return Ratio from 0 to 1
      */
-    public boolean readyOnStart() {
-        return DEV;
+    public float startCooldownRatio() {
+        return DEV ? 1.0f : 0.0f;
     }
 
     public abstract Texture getTexture();

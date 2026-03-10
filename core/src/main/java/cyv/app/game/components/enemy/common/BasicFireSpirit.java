@@ -2,7 +2,7 @@ package cyv.app.game.components.enemy.common;
 
 import cyv.app.game.Level;
 import cyv.app.game.components.BallObject;
-import cyv.app.game.components.IAnchorObject;
+import cyv.app.game.components.player.categories.IAnchorObject;
 import cyv.app.game.components.ILivingObject;
 import cyv.app.game.components.enemy.AbstractEnemyObject;
 

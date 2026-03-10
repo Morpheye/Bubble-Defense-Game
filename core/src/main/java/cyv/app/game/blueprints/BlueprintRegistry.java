@@ -4,6 +4,7 @@ import cyv.app.Skydouser;
 import cyv.app.game.blueprints.contents.BlueprintDropletTurret;
 import cyv.app.game.blueprints.contents.BlueprintRippleTurret;
 import cyv.app.game.blueprints.contents.BlueprintWaterPump;
+import cyv.app.game.blueprints.contents.BlueprintWaterShield;
 
 import java.util.*;
 
@@ -15,6 +16,7 @@ public class BlueprintRegistry {
         registry.put("blueprint_droplet_turret", new BlueprintDropletTurret(game));
         registry.put("blueprint_water_pump", new BlueprintWaterPump(game));
         registry.put("blueprint_ripple_turret", new BlueprintRippleTurret(game));
+        registry.put("blueprint_water_shield", new BlueprintWaterShield(game));
 
         int i = 0;
         for (String key : registry.keySet()) {

@@ -1,12 +1,12 @@
 package cyv.app.game.components.player.common;
 
 import cyv.app.game.Level;
+import cyv.app.game.components.player.categories.IWaterProducer;
 import cyv.app.game.components.particle.common.WaterParticle;
 import cyv.app.game.components.player.AbstractUnitObject;
 
-public class UnitWaterPump extends AbstractUnitObject {
-    public static final int MAX_PRODUCTION_TIME = 20 * 15;
-    private long nextProductionTime = 20 * 5;
+public class UnitWaterPump extends AbstractUnitObject implements IWaterProducer {
+    private long nextProductionTime = getStartingProductionTime();
 
     public UnitWaterPump(float x, float y) {
         super("unit_water_pump", x, y, 1);
@@ -17,8 +17,26 @@ public class UnitWaterPump extends AbstractUnitObject {
         return 50;
     }
 
+    // specific to water producers
+
+    @Override
     public long getNextProductionTime() {
         return nextProductionTime;
+    }
+
+    @Override
+    public int getMinProductionTime() {
+        return 20 * 10;
+    }
+
+    @Override
+    public int getMaxProductionTime() {
+        return 20 * 15;
+    }
+
+    @Override
+    public int getStartingProductionTime() {
+        return 20 * 5;
     }
 
     @Override
@@ -26,11 +44,11 @@ public class UnitWaterPump extends AbstractUnitObject {
         super.doLogic(levelIn);
         if (getTimeLived() >= nextProductionTime) {
             // produce water
-            // 2 water at a time, initial delay is 5 seconds, then produce water
-            // every 10 to 15 seconds.
             levelIn.getController().addWater(2);
             levelIn.spawnParticle(new WaterParticle(getX(), getY(), 20));
-            nextProductionTime += 20 * 10 + (int) (Math.random() * (20 * 6));
+            int min = getMinProductionTime();
+            int max = getMaxProductionTime();
+            nextProductionTime = getTimeLived() + min + (int) (Math.random() * (max - min + 1));
         }
     }
 }

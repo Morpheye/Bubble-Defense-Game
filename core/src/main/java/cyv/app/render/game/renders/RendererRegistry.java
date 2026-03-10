@@ -8,10 +8,7 @@ import cyv.app.render.game.renders.particle.AttackParticleRenderer;
 import cyv.app.render.game.renders.projectile.DropletProjectileRenderer;
 import cyv.app.render.game.renders.particle.WaterParticleRenderer;
 import cyv.app.render.game.renders.projectile.RippleProjectileRenderer;
-import cyv.app.render.game.renders.unit.DropletTurretRenderer;
-import cyv.app.render.game.renders.unit.HearthRenderer;
-import cyv.app.render.game.renders.unit.RippleTurretRenderer;
-import cyv.app.render.game.renders.unit.WaterPumpRenderer;
+import cyv.app.render.game.renders.unit.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +35,7 @@ public class RendererRegistry {
         ballRenderers.put("unit_droplet_turret", new DropletTurretRenderer(game));
         ballRenderers.put("unit_water_pump", new WaterPumpRenderer(game));
         ballRenderers.put("unit_ripple_turret", new RippleTurretRenderer(game));
+        ballRenderers.put("unit_water_shield", new WaterShieldRenderer(game));
     }
 
     private static void registerEnemies(Skydouser game) {

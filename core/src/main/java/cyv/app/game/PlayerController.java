@@ -21,7 +21,8 @@ public class PlayerController {
         this.blueprints = blueprints;
         this.timesLastUsed = new int[blueprints.size()];
         for (int i = 0; i < blueprints.size(); i++) {
-            timesLastUsed[i] = blueprints.get(i).readyOnStart() ? -10000 : 0;
+            AbstractBlueprint<?> bp = blueprints.get(i);
+            timesLastUsed[i] = (int) (-bp.startCooldownRatio() * bp.getCooldown());
         }
     }
 

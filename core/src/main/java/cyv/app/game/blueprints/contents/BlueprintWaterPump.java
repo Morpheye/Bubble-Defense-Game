@@ -21,8 +21,8 @@ public class BlueprintWaterPump extends AbstractBlueprint<UnitWaterPump> {
     }
 
     @Override
-    public boolean readyOnStart() {
-        return true;
+    public float startCooldownRatio() {
+        return 1.0f;
     }
 
     @Override

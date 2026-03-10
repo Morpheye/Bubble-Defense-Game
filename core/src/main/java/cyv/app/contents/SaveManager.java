@@ -6,7 +6,7 @@ import cyv.app.game.blueprints.BlueprintRegistry;
 import java.util.*;
 
 public class SaveManager {
-    private static SaveManager instance = new SaveManager(Set.of("blueprint_droplet_turret"));
+    private static SaveManager instance = new SaveManager(Set.of("blueprint_droplet_turret", "blueprint_water_shield"));
 
     public static SaveManager getInstance() {
         return instance;

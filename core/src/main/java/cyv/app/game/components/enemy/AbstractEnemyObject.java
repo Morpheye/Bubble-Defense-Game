@@ -64,7 +64,7 @@ public abstract class AbstractEnemyObject extends BallObject implements ILivingO
 
         // damage target
         ILivingObject lt = (ILivingObject) target;
-        lt.setHealth(lt.getHealth() - getFinalMeleeDamage());
+        lt.damage(getFinalMeleeDamage());
 
         // create particle
         double direction = Math.atan2(target.getY() - getY(), target.getX() - getX());

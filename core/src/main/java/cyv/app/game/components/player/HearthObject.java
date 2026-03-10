@@ -1,8 +1,7 @@
 package cyv.app.game.components.player;
 
 import cyv.app.game.Level;
-import cyv.app.game.components.GravityType;
-import cyv.app.game.components.IAnchorObject;
+import cyv.app.game.components.player.categories.IAnchorObject;
 
 import static cyv.app.game.Level.INSIGNIFICANT_F;
 

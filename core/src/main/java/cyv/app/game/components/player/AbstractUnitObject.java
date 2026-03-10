@@ -3,10 +3,12 @@ package cyv.app.game.components.player;
 import cyv.app.game.Level;
 import cyv.app.game.Team;
 import cyv.app.game.components.BallObject;
-import cyv.app.game.components.IAnchorObject;
 import cyv.app.game.components.ILivingObject;
+import cyv.app.game.components.player.categories.IAnchorObject;
+import cyv.app.game.components.player.categories.IShieldObject;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.TreeSet;
 
 import static cyv.app.game.Level.INSIGNIFICANT_F;
 
@@ -17,7 +19,15 @@ public abstract class AbstractUnitObject extends BallObject implements ILivingOb
     public static final float UNIT_SIZE = 40f;
     private long timeLastDamaged = -10000;
     private int health = getMaxHealth();
+
+    // physics and combat
     private BallObject lastAnchor = null;
+    private final TreeSet<AbstractUnitObject> shields = new TreeSet<>((o1, o2) -> {
+        // sort by health, descending order
+        int cmp = Float.compare(o2.getHealth(), o1.getHealth());
+        if (cmp != 0) return cmp;
+        return System.identityHashCode(o1) - System.identityHashCode(o2);
+    });
 
     public AbstractUnitObject(String id, float x, float y, float density) {
         super(id, x, y, UNIT_SIZE, density);
@@ -26,8 +36,6 @@ public abstract class AbstractUnitObject extends BallObject implements ILivingOb
 
     @Override
     public void setHealth(int health) {
-        // TODO: move timeLastDamaged logic to someplace else ts is stupid
-        if (health < this.health) timeLastDamaged = getTimeLived();
         this.health = health;
     }
 
@@ -43,13 +51,9 @@ public abstract class AbstractUnitObject extends BallObject implements ILivingOb
         return 20 * 10;
     }
 
-    public int getRegenerationAmount() {
-        // regeneration rate bottoms out at 1 health per tick (20 hp/sec)
-        // For every 100 health the object has, it regenerates 1 extra health per tick
-
-        // Ex: for the standard unit with 50 health, it fully regenerates in 2.5 seconds.
-        // For a tanky unit with 2000 health, it fully regenerates in 4.76 seconds.
-        return 1 + getMaxHealth() / 100;
+    public int getRegenerationInterval() {
+        // at x, regenerate 1 health every x ticks.
+        return 1;
     }
 
     /**
@@ -69,12 +73,16 @@ public abstract class AbstractUnitObject extends BallObject implements ILivingOb
         this.lastAnchor = anchor;
     }
 
+    public TreeSet<AbstractUnitObject> getShields() {
+        return shields;
+    }
+
     @Override
     public void doAcceleration(Level levelIn) {
         final float HOMING_FORCE = 1f;
 
-        float closestDistSq = Float.POSITIVE_INFINITY;
-        BallObject closest = null;
+        float anchorClosestDistSq = Float.POSITIVE_INFINITY;
+        BallObject closestAnchor = null;
 
         for (BallObject obj : levelIn.getBalls()) {
             if (obj == this) continue;
@@ -84,22 +92,22 @@ public abstract class AbstractUnitObject extends BallObject implements ILivingOb
             float dy = obj.getY() - getY();
             float distSq = dx * dx + dy * dy;
 
-            if (distSq < closestDistSq && distSq > INSIGNIFICANT_F * INSIGNIFICANT_F) {
-                closestDistSq = distSq;
-                closest = obj;
+            if (distSq < anchorClosestDistSq && distSq > INSIGNIFICANT_F * INSIGNIFICANT_F) {
+                anchorClosestDistSq = distSq;
+                closestAnchor = obj;
             }
         }
 
-        if (closest != null) {
-            float dx = closest.getX() - getX();
-            float dy = closest.getY() - getY();
-            float dist = (float) Math.sqrt(closestDistSq);
+        if (closestAnchor != null) {
+            float dx = closestAnchor.getX() - getX();
+            float dy = closestAnchor.getY() - getY();
+            float dist = (float) Math.sqrt(anchorClosestDistSq);
 
             addVx(dx / dist * Math.min(dist, HOMING_FORCE));
             addVy(dy / dist * Math.min(dist, HOMING_FORCE));
         }
 
-        lastAnchor = closest;
+        lastAnchor = closestAnchor;
     }
 
     @Override
@@ -107,9 +115,53 @@ public abstract class AbstractUnitObject extends BallObject implements ILivingOb
         // regenerate health if not damaged in a sufficient amount of time
         long timeSinceDamaged = getTimeLived() - getTimeLastDamaged();
         if (timeSinceDamaged >= getRegenerationDelay()) {
-            setHealth(Math.min(getMaxHealth(), getHealth() + getRegenerationAmount()));
+            int interval = getRegenerationInterval();
+            if (interval < 1) interval = 1;
+
+            // regenerate 1 health at a time
+            if (getTimeLived() % interval == 0)
+                setHealth(Math.min(getMaxHealth(), getHealth() + 1));
         }
 
         super.finishTick();
+    }
+
+    @Override
+    public void damage(int amount) {
+        // Shields should not redirect their own damage
+        if (this instanceof IShieldObject) {
+            ILivingObject.super.damage(amount);
+            timeLastDamaged = getTimeLived();
+            return;
+        }
+
+        int damageRemaining = amount;
+
+        // Snapshot so each shield processes only once
+        for (AbstractUnitObject shield : new ArrayList<>(shields)) {
+            if (damageRemaining <= 0) break;
+
+            // Remove already-dead shields
+            if (shield.isDead()) {
+                shields.remove(shield);
+                continue;
+            }
+
+            IShieldObject cShield = (IShieldObject) shield;
+
+            int redirectedDamage = cShield.redirectDamage(this, damageRemaining);
+            damageRemaining -= redirectedDamage;
+
+            if (shield.isDead()) {
+                shields.remove(shield);
+            }
+        }
+
+        // Apply leftover damage to this unit
+        if (damageRemaining > 0) {
+            ILivingObject.super.damage(damageRemaining);
+        }
+
+        timeLastDamaged = getTimeLived();
     }
 }

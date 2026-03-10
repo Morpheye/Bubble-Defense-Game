@@ -32,7 +32,7 @@ public class WaterPumpRenderer extends UnitRenderer {
         UnitWaterPump u = (UnitWaterPump) b;
         long np = u.getNextProductionTime();
         long t = u.getTimeLived();
-        float ratio = 1 - (np - (t - 1 + delta)) / UnitWaterPump.MAX_PRODUCTION_TIME;
+        float ratio = 1 - (np - (t - 1 + delta)) / u.getMaxProductionTime();
         float d = 0.25f + (0.5f - 0.25f) * ratio;
 
         batch.setColor(0, 0.75f, 1, 0.75f);

@@ -99,7 +99,7 @@ public class ProjectileRipple extends Projectile {
         if (b instanceof ILivingObject) {
             ILivingObject l = (ILivingObject) b;
             int damage = getDamage();
-            l.setHealth(l.getHealth() - damage);
+            l.damage(damage);
         }
 
         // deal knockback

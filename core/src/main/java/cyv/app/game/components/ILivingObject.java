@@ -19,6 +19,11 @@ public interface ILivingObject {
 
     // helper methods
 
+    public default void damage(int damageAmount) {
+        int newHealth = Math.max(0, getHealth() - damageAmount);
+        setHealth(newHealth);
+    }
+
     /**
      * Checks if the enemy is dead. Most of the time this is just if the enemy has 0 or less health.
      * In rare cases (such as bosses) this may be false even if health is 0.
