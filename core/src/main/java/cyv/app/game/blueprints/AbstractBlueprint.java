@@ -15,10 +15,16 @@ import static cyv.app.Skydouser.DEV;
  */
 public abstract class AbstractBlueprint<T extends AbstractUnitObject> {
     private final Skydouser game;
+    private final String name;
     private UnitRenderer cachedUnitRenderer;
 
-    public AbstractBlueprint(Skydouser game) {
+    public AbstractBlueprint(Skydouser game, String name) {
         this.game = game;
+        this.name = name;
+    }
+
+    public final String getName() {
+        return name;
     }
 
     /**

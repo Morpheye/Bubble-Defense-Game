@@ -7,7 +7,7 @@ import cyv.app.game.components.player.common.UnitWaterPump;
 
 public class BlueprintWaterPump extends AbstractBlueprint<UnitWaterPump> {
     public BlueprintWaterPump(Skydouser game) {
-        super(game);
+        super(game, "Water Pump");
     }
 
     @Override

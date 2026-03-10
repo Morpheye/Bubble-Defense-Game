@@ -4,20 +4,24 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import cyv.app.contents.LevelReward;
+import cyv.app.game.blueprints.BlueprintRegistry;
 import cyv.app.render.FontRenderer;
 import cyv.app.render.ResourceManager;
 import cyv.app.render.game.GameScreen;
 import cyv.app.render.gui.Gui;
 import cyv.app.render.gui.GuiButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GuiLevelComplete extends Gui<GameScreen> {
-    private LevelReward reward;
+    private final LevelReward reward;
 
     public GuiLevelComplete(GameScreen parent, ResourceManager manager, Viewport viewport,
                             LevelReward reward) {
         super(parent, manager, viewport);
+
+        this.reward = reward;
 
         List<GuiButton> buttons = getButtons();
         buttons.add(new GuiButton(manager, 640, 240, 420, 80,
@@ -41,6 +45,16 @@ public class GuiLevelComplete extends Gui<GameScreen> {
         // draw level info
         fontRenderer.setSize(50);
         fontRenderer.drawCenterBoth(batcher, "Level Complete", 640, 480);
+
+        // draw reward info
+        List<String> rewardText = new ArrayList<>();
+        rewardText.add("Rewards:");
+        for (String blueprint : reward.blueprints) {
+            rewardText.add(BlueprintRegistry.getBlueprint(blueprint).getName());
+        }
+        if (reward.coins > 0) rewardText.add(reward.coins + " coins");
+        fontRenderer.setSize(30);
+        fontRenderer.drawCenterBoth(batcher, rewardText, 640, 380);
 
         // draw buttons
         for (GuiButton button : getButtons()) {

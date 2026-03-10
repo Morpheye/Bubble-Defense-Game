@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import java.util.List;
+
 public class FontRenderer {
     private final BitmapFont font;
     private final GlyphLayout layout;
@@ -63,6 +65,33 @@ public class FontRenderer {
         font.draw(batch, layout,
             x - layout.width / 2f,
             y + layout.height / 2f);
+    }
+
+    /**
+     * Draw text centered both horizontally and vertically around (x, y)
+     */
+    public void drawCenterBoth(SpriteBatch batch, List<String> text, float x, float y) {
+        if (text == null || text.isEmpty()) return;
+        float fontHeight = font.getData().scaleY * baseCapHeight;
+        float totalHeight = 0f;
+
+        // Calculate total height
+        int i = 0;
+        for (String line : text) {
+            layout.setText(font, line);
+            totalHeight += layout.height;
+            if (i != 0) totalHeight += fontHeight / 5;
+            i++;
+        }
+
+        float currentY = y + totalHeight / 2f;
+
+        // Draw each line centered
+        for (String line : text) {
+            layout.setText(font, line);
+            font.draw(batch, layout, x - layout.width / 2f, currentY);
+            currentY -= layout.height + fontHeight / 5;
+        }
     }
 
     public float getTextWidth(String text) {

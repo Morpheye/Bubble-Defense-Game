@@ -7,7 +7,7 @@ import cyv.app.game.components.player.common.UnitRippleTurret;
 
 public class BlueprintRippleTurret extends AbstractBlueprint<UnitRippleTurret> {
     public BlueprintRippleTurret(Skydouser game) {
-        super(game);
+        super(game, "Ripple Turret");
     }
 
     @Override

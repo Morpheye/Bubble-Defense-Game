@@ -7,7 +7,7 @@ import cyv.app.game.components.player.common.UnitDropletTurret;
 
 public class BlueprintDropletTurret extends AbstractBlueprint<UnitDropletTurret> {
     public BlueprintDropletTurret(Skydouser game) {
-        super(game);
+        super(game, "Droplet Turret");
     }
 
     @Override
