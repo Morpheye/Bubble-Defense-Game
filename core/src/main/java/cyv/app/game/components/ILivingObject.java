@@ -17,6 +17,8 @@ public interface ILivingObject {
 
     public long getTimeLastDamaged();
 
+    public int getLastDamageTakenAmount();
+
     // helper methods
 
     public default void damage(int damageAmount) {

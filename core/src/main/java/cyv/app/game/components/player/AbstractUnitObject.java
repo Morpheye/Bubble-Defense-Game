@@ -18,6 +18,7 @@ import static cyv.app.game.Level.INSIGNIFICANT_F;
 public abstract class AbstractUnitObject extends BallObject implements ILivingObject {
     public static final float UNIT_SIZE = 40f;
     private long timeLastDamaged = -10000;
+    private int lastDamageTaken = 0;
     private int health = getMaxHealth();
 
     // physics and combat
@@ -63,6 +64,11 @@ public abstract class AbstractUnitObject extends BallObject implements ILivingOb
     @Override
     public long getTimeLastDamaged() {
         return timeLastDamaged;
+    }
+
+    @Override
+    public int getLastDamageTakenAmount() {
+        return lastDamageTaken;
     }
 
     public BallObject getLastAnchor() {
@@ -131,6 +137,8 @@ public abstract class AbstractUnitObject extends BallObject implements ILivingOb
         // Shields should not redirect their own damage
         if (this instanceof IShieldObject) {
             ILivingObject.super.damage(amount);
+            lastDamageTaken = getTimeLived() - timeLastDamaged > 5 ? amount :
+                Math.max(amount, lastDamageTaken);
             timeLastDamaged = getTimeLived();
             return;
         }
@@ -162,6 +170,8 @@ public abstract class AbstractUnitObject extends BallObject implements ILivingOb
             ILivingObject.super.damage(damageRemaining);
         }
 
+        lastDamageTaken = getTimeLived() - timeLastDamaged > 5 ? amount :
+            Math.max(amount, lastDamageTaken);
         timeLastDamaged = getTimeLived();
     }
 }

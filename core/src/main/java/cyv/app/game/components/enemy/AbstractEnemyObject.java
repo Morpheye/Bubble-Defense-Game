@@ -6,12 +6,17 @@ import cyv.app.game.Team;
 import cyv.app.game.components.BallObject;
 import cyv.app.game.components.ILivingObject;
 import cyv.app.game.components.particle.common.AttackParticle;
+import cyv.app.game.components.player.AbstractUnitObject;
+import cyv.app.game.components.player.categories.IShieldObject;
+
+import java.util.ArrayList;
 
 /**
  * Represents any ball object that is an enemy.
  */
 public abstract class AbstractEnemyObject extends BallObject implements ILivingObject {
     private long timeLastDamaged = -10000;
+    private int lastDamageTaken = 0;
     private long timeLastMeleeAttacked = -10000;
     private int health = getMaxHealth();
     private ActiveLevelWave wave = null; // enemies can be part of a wave
@@ -97,12 +102,18 @@ public abstract class AbstractEnemyObject extends BallObject implements ILivingO
 
     @Override
     public void setHealth(int health) {
-        if (health < this.health) timeLastDamaged = getTimeLived();
         int difference = health - this.health;
         this.health = health;
 
         // if part of a wave, update its cumulative health
         if (wave != null) wave.changeCumulativeHealth(difference);
+    }
+
+    @Override
+    public void damage(int amount) {
+        ILivingObject.super.damage(amount);
+        lastDamageTaken = getTimeLived() - timeLastDamaged > 5 ? amount : Math.max(amount, lastDamageTaken);
+        timeLastDamaged = getTimeLived();
     }
 
     @Override
@@ -122,6 +133,11 @@ public abstract class AbstractEnemyObject extends BallObject implements ILivingO
     @Override
     public long getTimeLastDamaged() {
         return timeLastDamaged;
+    }
+
+    @Override
+    public int getLastDamageTakenAmount() {
+        return lastDamageTaken;
     }
 
     public void setWave(ActiveLevelWave wave) {

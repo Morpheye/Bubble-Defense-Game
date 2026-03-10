@@ -248,6 +248,20 @@ public class GameScreen extends AbstractScreen {
                 Gdx.app.error("Renderer", "Invalid ball type", e);
             }
 
+            // hurt effect
+            if (b instanceof ILivingObject) {
+                ILivingObject lb = ((ILivingObject) b);
+                float timeSinceHurt = lb.getTimeLived() - lb.getTimeLastDamaged() + delta;
+                final float HURT_EFFECT_LENGTH = 5.0f;
+                if (timeSinceHurt < HURT_EFFECT_LENGTH) {
+                    float magnitude = Math.min(1.0f, lb.getLastDamageTakenAmount() / 25.0f);
+                    batch.setColor(1, 1, 1, magnitude * (1 - timeSinceHurt / HURT_EFFECT_LENGTH));
+                    batch.draw(manager.getTexture("hurt_effect"), renderX - radius,
+                        renderY - radius, size, size);
+                    batch.setColor(1, 1, 1, 1);
+                }
+            }
+
             // selection detection
             if ((gui == null || !gui.blocksInput()) &&
                 MathUtils.inBounds(gameInputController.getX(), gameInputController.getY(),
