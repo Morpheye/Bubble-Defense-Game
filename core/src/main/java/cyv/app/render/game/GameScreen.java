@@ -252,7 +252,8 @@ public class GameScreen extends AbstractScreen {
             if (b instanceof ILivingObject) {
                 ILivingObject lb = ((ILivingObject) b);
                 float timeSinceHurt = lb.getTimeLived() - lb.getTimeLastDamaged() + delta;
-                final float HURT_EFFECT_LENGTH = 5.0f;
+                float lastDamageTaken = lb.getLastDamageTakenAmount();
+                final float HURT_EFFECT_LENGTH = Math.min(15, Math.max(5, lastDamageTaken));
                 if (timeSinceHurt < HURT_EFFECT_LENGTH) {
                     float magnitude = Math.min(1.0f, Math.max(0.25f, lb.getLastDamageTakenAmount() / 25.0f));
                     batch.setColor(1, 1, 1, magnitude * (1 - timeSinceHurt / HURT_EFFECT_LENGTH));
