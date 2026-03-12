@@ -7,8 +7,7 @@ import cyv.app.game.components.ILivingObject;
 import cyv.app.game.components.player.categories.IAnchorObject;
 import cyv.app.game.components.player.categories.IShieldObject;
 
-import java.util.ArrayList;
-import java.util.TreeSet;
+import java.util.*;
 
 import static cyv.app.game.Level.INSIGNIFICANT_F;
 
@@ -23,12 +22,7 @@ public abstract class AbstractUnitObject extends BallObject implements ILivingOb
 
     // physics and combat
     private BallObject lastAnchor = null;
-    private final TreeSet<AbstractUnitObject> shields = new TreeSet<>((o1, o2) -> {
-        // sort by health, descending order
-        int cmp = Float.compare(o2.getHealth(), o1.getHealth());
-        if (cmp != 0) return cmp;
-        return System.identityHashCode(o1) - System.identityHashCode(o2);
-    });
+    private final Set<AbstractUnitObject> shields = new HashSet<>();
 
     public AbstractUnitObject(String id, float x, float y, float density) {
         super(id, x, y, UNIT_SIZE, density);
@@ -79,7 +73,7 @@ public abstract class AbstractUnitObject extends BallObject implements ILivingOb
         this.lastAnchor = anchor;
     }
 
-    public TreeSet<AbstractUnitObject> getShields() {
+    public Set<AbstractUnitObject> getShields() {
         return shields;
     }
 
@@ -146,7 +140,9 @@ public abstract class AbstractUnitObject extends BallObject implements ILivingOb
         int damageRemaining = amount;
 
         // Snapshot so each shield processes only once
-        for (AbstractUnitObject shield : new ArrayList<>(shields)) {
+        List<AbstractUnitObject> tempList = new ArrayList<>(shields);
+        tempList.sort((o1, o2) -> Integer.compare(o2.getHealth(), o1.getHealth()));
+        for (AbstractUnitObject shield : tempList) {
             if (damageRemaining <= 0) break;
 
             // Remove already-dead shields
@@ -170,8 +166,8 @@ public abstract class AbstractUnitObject extends BallObject implements ILivingOb
             ILivingObject.super.damage(damageRemaining);
         }
 
-        lastDamageTaken = getTimeLived() - timeLastDamaged > 5 ? amount :
-            Math.max(amount, lastDamageTaken);
+        lastDamageTaken = getTimeLived() - timeLastDamaged > 5 ? damageRemaining :
+            Math.max(amount, damageRemaining);
         timeLastDamaged = getTimeLived();
     }
 }
