@@ -11,6 +11,7 @@ public abstract class BallObject {
     private Level levelIn;
     private long timeLived = 0;
     private Team team;
+    private boolean isValid;
     private final int seed = ThreadLocalRandom.current().nextInt();
 
     // constants
@@ -71,6 +72,14 @@ public abstract class BallObject {
 
     protected void setTeam(Team team) {
         this.team = team;
+    }
+
+    public boolean isValid() {
+        return this.isValid;
+    }
+
+    public void setValid(boolean valid) {
+        this.isValid = valid;
     }
 
     /**

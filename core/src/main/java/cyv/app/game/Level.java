@@ -277,7 +277,10 @@ public abstract class Level {
             if (!(b instanceof ILivingObject)) return false;
             ILivingObject l = (ILivingObject) b;
             boolean toRemove = l.isDead();
-            if (toRemove && b.getTeam() == Team.ENEMY) enemyCount--;
+            if (toRemove) {
+                b.setValid(false);
+                if (b.getTeam() == Team.ENEMY) enemyCount--;
+            }
             return toRemove;
         });
 
@@ -325,6 +328,7 @@ public abstract class Level {
      */
     public void spawnBall(BallObject obj) {
         balls.add(obj);
+        obj.setValid(true);
         if (obj.getTeam() == Team.ENEMY) enemyCount++;
         obj.onSpawn(this);
     }

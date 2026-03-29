@@ -255,7 +255,7 @@ public class GameScreen extends AbstractScreen {
                 float lastDamageTaken = lb.getLastDamageTakenAmount();
                 final float HURT_EFFECT_LENGTH = Math.min(15, Math.max(5, lastDamageTaken));
                 if (timeSinceHurt < HURT_EFFECT_LENGTH) {
-                    float magnitude = Math.min(1.0f, Math.max(0.25f, lb.getLastDamageTakenAmount() / 25.0f));
+                    float magnitude = Math.min(1.0f, Math.max(0.15f, lb.getLastDamageTakenAmount() / 50.0f));
                     batch.setColor(1, 1, 1, magnitude * (1 - timeSinceHurt / HURT_EFFECT_LENGTH));
                     batch.draw(manager.getTexture("hurt_effect"), renderX - radius,
                         renderY - radius, size, size);

@@ -145,8 +145,8 @@ public abstract class AbstractUnitObject extends BallObject implements ILivingOb
         for (AbstractUnitObject shield : tempList) {
             if (damageRemaining <= 0) break;
 
-            // Remove already-dead shields
-            if (shield.isDead()) {
+            // Remove already-dead shields or shields which no longer exist
+            if (shield.isDead() || !shield.isValid()) {
                 shields.remove(shield);
                 continue;
             }
